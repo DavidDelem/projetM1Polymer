@@ -1,0 +1,258 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../shared-styles.html">
+<link rel="import" href="../app-data.html">
+<link rel="import" href="components/actions-invitation.html">
+
+<dom-module id="page-invitations-detail">
+  <template>
+    <style include="shared-styles">
+      .expandable brainy-tr[expanded] {
+        margin: 10px 0;
+
+        @apply(--shadow-elevation-3dp);
+        }
+        
+        brainy-tr brainy-td {
+            font-family: Roboto;
+            font-size: 13px;
+            font-weight: 400;
+        }
+        
+        .hiddencheckbox {
+            opacity: 0;
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .fixposition {
+            position: relative;
+        }
+        
+        .special-paper-menu paper-menu {
+            padding: 0;
+        }
+        
+        .special-paper-menu paper-menu paper-item {
+            background-color: #fafafa;
+            color: #646464;
+            cursor: pointer;
+        }
+        
+        .special-paper-menu paper-menu paper-item:hover {
+            background-color: #eeeeee;
+            color: #303030;
+        }
+        
+        .special-paper-menu span {
+            padding-left: 10px;
+        }
+        
+        .paper-fab-flotant {
+            position: absolute;
+            right: 40px;
+            bottom: -20px;
+        }
+        
+        .paper-fab-section {
+            position: absolute;
+            bottom: 5px;
+            right: 40px;
+        }
+        
+        .paper-fab-section paper-fab {
+            display: inline-block;
+            margin-right: 15px;
+        }
+    </style>
+      
+    <iron-meta id="meta"></iron-meta>
+    <iron-localstorage name="data-storage" value="{{storedData}}" on-iron-localstorage-load="_generateRequests"></iron-localstorage>
+    <app-data key="storedData" data="{{storedData}}"></app-data> 
+    
+    <iron-signals on-iron-signal-action-success="_handleActionSuccessEvent"></iron-signals> 
+    <iron-signals on-iron-signal-modal-projet-success="_handleModalProjetSuccessEvent"></iron-signals> 
+    <iron-signals on-iron-signal-modal-suppression-success="_handleModalSuppressionSuccessEvent"></iron-signals> 
+      
+    <iron-ajax 
+        id="invitationsRequest"
+        method="GET"
+        headers="{{_computeHeaders(storedData.token)}}"
+        url="{{serverUrl}}/projets/{{projet}}/invitations"
+        handle-as="json"
+        last-response="{{invitations}}"
+        on-error="_handleInvitationsError"></iron-ajax>
+      
+    <iron-ajax 
+        id="projetRequest" 
+        method="GET"
+        headers="{{_computeHeaders(storedData.token)}}"
+        url="{{serverUrl}}/projets/{{projet}}"
+        handle-as="json"
+        last-response="{{projetDetail}}"
+        on-error="_handleProjetError"></iron-ajax>
+      
+        <div class="col-md-8">
+            <div class="card">
+                <brainy-table id="brainytable" class="expandable" page-size="5" items="{{invitations}}">
+                    <brainy-table-column name="Email" sort-by="email">
+                      <template>[[item.email]]</template>
+                    </brainy-table-column>
+                    <brainy-table-column name="Identité" sort-by="prenom">
+                      <template>[[item.prenom]] [[item.nom]]</template>
+                    </brainy-table-column>
+                    <brainy-table-column name="Etat du dossier">
+                      <template>
+                        <template is="dom-if" if="{{_lastHistoriqueIs(item, 'RECEPTION_INVITATION')}}">
+                            Invitation envoyée
+                        </template>
+                        <template is="dom-if" if="{{_lastHistoriqueIs(item, 'ENVOI_BIODATAS')}}">
+                            Biodatas reçues
+                        </template>
+                        <template is="dom-if" if="{{_lastHistoriqueIs(item, 'VALIDATION_BIODATAS')}}">
+                            Biodatas validées
+                        </template>
+                        <template is="dom-if" if="{{_lastHistoriqueIs(item, 'REFUS_BIODATAS')}}">
+                            Biodatas refusées
+                        </template>
+                        <template is="dom-if" if="{{_lastHistoriqueIs(item, 'TRANSFERT_AUTORITES')}}">
+                            Transféré aux autorités
+                        </template>
+                        <template is="dom-if" if="{{_lastHistoriqueIs(item, 'DEMANDE_ACCESS_OK')}}">
+                            Clos
+                        </template>
+                        <template is="dom-if" if="{{_lastHistoriqueIs(item, 'DEMANDE_ACCESS_KO')}}">
+                            Clos
+                        </template>
+                
+                      </template>
+                    </brainy-table-column>
+                    <brainy-table-column width="20px" align-right>
+                        <template>
+                            <template is="dom-if" if="{{item.identifiantParent}}">
+                                <iron-icon icon="av:recent-actors"></iron-icon>
+                            </template>
+                        </template>
+                    </brainy-table-column>
+                    <brainy-table-column width="50px" align-right>
+                        <template>
+                          <div class="fixposition">
+                              <paper-checkbox class="hiddencheckbox" checked="{{expanded}}"></paper-checkbox>
+                              <template is="dom-if" if="[[!expanded]]">
+                                <iron-icon icon="icons:expand-more"></iron-icon>
+                              </template>
+                              <template is="dom-if" if="[[expanded]]">
+                                <iron-icon icon="icons:expand-less"></iron-icon>
+                              </template>
+                          </div>
+                          <actions-invitation invitation="[[item]]" projet="[[projetDetail]]"></actions-invitation>
+                        </template>
+                    </brainy-table-column>
+                    <template is="row-detail">
+                        <template is="dom-repeat" items="{{item.historique}}">
+                            [[item.type]]
+                        </template>
+                    </template>
+                </brainy-table>
+                <paper-fab class="paper-fab-flotant" icon="add" on-tap="_openAddInvitationModal"></paper-fab>
+            </div>
+        </div>
+      <div class="col-md-4">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <p>{{projetDetail.nom}}</p>  
+                    <p><iron-icon icon="icons:description"></iron-icon> Profil de formulaire: [[projetDetail.nomProfil]]</p>
+                    <p><iron-icon icon="icons:event"></iron-icon> Date de création: [[projetDetail.dateCreation]]</p>
+                    <p><iron-icon icon="icons:date-range"></iron-icon> Date limite: [[projetDetail.dateLimite]]</p>
+                    <div class="paper-fab-section">
+                        <paper-fab class="paper-fab" icon="icons:create" on-tap="_openModificationProjetModal"></paper-fab>
+                        <paper-fab class="paper-fab" icon="icons:delete" on-tap="_openSuppressionProjetModal"></paper-fab>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="card">
+                    <p>Rappels automatisés</p>
+                    <paper-toggle-button checked="true">Activer l'envoi automatique des rappels pour ce projet</paper-toggle-button>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="card">
+                    <p>Délégation d'invitation</p>
+                    <paper-toggle-button checked="true">Autoriser la délégation d'invitation</paper-toggle-button>
+                    <p><iron-icon icon="av:recent-actors"></iron-icon>3 invitations déléguées</p>
+                </div>
+            </div>
+        </div>
+      </div>
+
+        
+  </template>
+
+  <script>
+    Polymer({
+      is: 'page-invitations-detail',
+      properties: {
+        projet: String,
+        projetDetail: Object,
+        invitations: Object,
+        serverUrl: String,
+        baseUrl: String
+      },
+      ready: function () {
+        this.serverUrl = this.$.meta.byKey("server-url");
+        this.baseUrl = this.$.meta.byKey("base-url");
+      },
+      attributeChanged : function(name, type){
+          if(this.getAttribute('class').includes('iron-selected')){
+            this._generateRequests();
+          }
+      },
+      _computeHeaders: function(token) {
+        return {"Authorization": "JWT " + token };
+      },
+      _generateRequests: function () {
+        this.$.invitationsRequest.generateRequest();
+        this.$.projetRequest.generateRequest();
+      },
+      _handleInvitationsError: function(event) {
+        this.fire('connexion-administrateur-denied-event', {});
+      },
+      _handleProjetError: function(event) {
+        this.fire('connexion-administrateur-denied-event', {});
+      },
+      _openAddInvitationModal: function(event) {
+        this.fire('iron-signal', {name: 'open-ajout-invitation-modal', data: {projet: this.projetDetail}});
+      },
+      _openRemoveInvitationModal: function(event) {
+        this.fire('iron-signal', {name: 'open-suppression-invitation-modal', data: {projet: this.projetDetail, invitation: event.model.get('item')}});
+      },
+      _openSuppressionProjetModal: function(event) {
+        this.fire('iron-signal', {name: 'open-suppression-projet-modal', data: {projet: this.projetDetail}});
+      },
+      _openModificationProjetModal: function(event) {
+        this.fire('iron-signal', {name: 'open-modification-projet-modal', data: {projet: this.projetDetail}});
+      },
+      _handleActionSuccessEvent: function(event) {
+        this._generateRequests();
+      },
+      _handleModalProjetSuccessEvent: function(event) {
+        this._generateRequests();
+      },
+      _handleModalSuppressionSuccessEvent: function(event) {
+        window.location.href = this.baseUrl + '/section-administrateur/page-invitations/';
+      },
+      _lastHistoriqueIs: function(invitation, type) {
+          var lastHistorique = invitation.historique[invitation.historique.length-1];
+          
+          if(lastHistorique && lastHistorique.type && lastHistorique.type == type) {
+              return true;
+          } else {
+              return false;
+          }
+      }
+    });
+  </script>
+</dom-module>

@@ -1,0 +1,118 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../shared-styles.html">
+<link rel="import" href="../app-data.html">
+
+<dom-module id="page-profils">
+  <template>
+    <style include="shared-styles">
+        :host {
+            display: block;
+            padding: 10px;
+        }
+        
+        paper-fab.float-paper-fab {
+            position: fixed;
+            right: 30px;
+            bottom: 30px;          
+        }
+        
+        
+        .card-profil {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        
+        .nom-profil {
+            display: inline-block;
+            padding-top: 8px;
+        }
+
+        .profil-btn {
+            float: right;
+            padding-bottom: 5px;
+        }
+        
+        .floating-text {
+            color: #555555;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+    </style>
+      
+    <iron-meta id="meta"></iron-meta>
+    <iron-localstorage name="data-storage" value="{{storedData}}" on-iron-localstorage-load="_generateRequests"></iron-localstorage>
+    <app-data key="storedData" data="{{storedData}}"></app-data>
+    
+    <iron-signals on-iron-signal-modal-success="_handleModalSuccessEvent"></iron-signals>  
+      
+    <iron-ajax 
+        id="profilsRequest" 
+        method="GET"
+        content-type="application/x-www-form-urlencoded"
+        headers="{{_computeHeaders(storedData.token)}}"
+        url="{{serverUrl}}/profils"
+        handle-as="json"
+        last-response="{{profils}}"
+        last-error="{{lastError}}"
+        on-error="_handleProfilsError"></iron-ajax>
+      
+    <div class="col-md-12">
+        <p class="floating-text">Profils de formulaire</p>
+    </div>
+    <template is="dom-repeat" items="{{profils}}">
+        <div class="col-md-4">
+            <paper-card class="card-profil">
+                <div class="card-actions">
+                    <span class="nom-profil">{{item.nom}}</span>
+                    <div class="profil-btn">
+                        <paper-icon-button icon="icons:create" on-tap="_openUpdateProfilModal"></paper-icon-button>
+                        <paper-icon-button icon="icons:clear" on-tap="_openRemoveProfilModal"></paper-icon-button>
+                    </div>
+                </div>
+            </paper-card>
+        </div>
+    </template>
+      
+    <paper-fab class="float-paper-fab" icon="add" on-tap="_openAddProfilModal"></paper-fab>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'page-profils',
+      properties: {
+        serverUrl: String
+      },
+      ready: function () {
+        this.serverUrl = this.$.meta.byKey("server-url");
+      },
+      attributeChanged : function(name, type){
+          if(this.getAttribute('class').includes('iron-selected')){
+            this._generateRequests();
+          }
+      },
+      _computeHeaders: function(token) {
+        return {"Authorization": "JWT " + token };
+      },
+      _generateRequests: function () {
+        this.$.profilsRequest.generateRequest();
+      },
+      _handleProfilsError: function(event) {
+        console.log(event.detail.request.__data__.status);
+        this.fire('connexion-administrateur-denied-event', {});
+      },
+      _openAddProfilModal: function(event) {
+        this.fire('iron-signal', {name: 'open-ajout-profil-modal', data: {}});
+      },
+      _openRemoveProfilModal: function(event) {
+        this.fire('iron-signal', {name: 'open-suppression-profil-modal', data: {profil: event.model.get('item')}});
+      },
+      _openUpdateProfilModal: function(event) {
+        this.fire('iron-signal', {name: 'open-modification-profil-modal', data: {profil: event.model.get('item')}});
+      },
+      _handleModalSuccessEvent: function(event) {
+        this._generateRequests();
+      }
+    });
+  </script>
+</dom-module>

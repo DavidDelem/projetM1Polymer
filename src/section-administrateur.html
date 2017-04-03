@@ -1,0 +1,172 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="administrateur/toasts/toasts-administration.html">
+<link rel="import" href="administrateur/modals/ajout-projet-modal.html">
+<link rel="import" href="administrateur/modals/modification-projet-modal.html">
+<link rel="import" href="administrateur/modals/suppression-projet-modal.html">
+<link rel="import" href="administrateur/modals/ajout-invitation-modal.html">
+<link rel="import" href="administrateur/modals/suppression-invitation-modal.html">
+<link rel="import" href="administrateur/modals/suppression-rappel-modal.html">
+<link rel="import" href="administrateur/modals/ajout-rappel-modal.html">
+<link rel="import" href="administrateur/modals/suppression-profil-modal.html">
+<link rel="import" href="administrateur/modals/ajout-profil-modal.html">
+<link rel="import" href="administrateur/modals/modification-profil-modal.html">
+<link rel="import" href="app-data.html">
+
+<dom-module id="section-administrateur">
+  <template>
+      
+    <style>
+      :host {
+        --app-primary-color: #4285f4;
+        --app-secondary-color: black;
+        display: block;
+      }
+
+                
+     app-drawer {
+        --app-drawer-content-container: {
+          /*box-shadow: 1px 0 2px 1px rgba(0,0,0,0.18);*/
+            /*background: #f5f5f5;*/
+        }
+        /*--app-drawer-scrim-background: rgba(179, 157, 219, 0.5);*/
+      }
+        
+      app-header {
+        color: #fff;
+        background-color: var(--app-primary-color);
+      }
+      app-header paper-icon-button {
+        --paper-icon-button-ink-color: white;
+      }
+
+      .drawer-list {
+        margin: 0 20px;
+      }
+
+      .drawer-elem {
+        display: block;
+        padding: 0 16px;
+        text-decoration: none;
+        color: var(--app-secondary-color);
+        line-height: 40px;
+      }
+
+      .drawer-elem.iron-selected {
+        color: black;
+        font-weight: bold;
+      }
+    </style>
+      <iron-meta id="meta"></iron-meta>
+      
+      <iron-localstorage name="data-storage" value="{{storedData}}"></iron-localstorage>
+      <app-data key="storedData" data="{{storedData}}"></app-data>
+      <app-route
+    route="{{route}}"
+    pattern="/:sub_page/:p2"
+    data="{{routeData}}"
+    tail={{tail}}></app-route>
+      
+      <app-drawer-layout fullbleed>
+      <!-- Drawer content -->
+      <app-drawer id="drawer">
+        <app-toolbar>Menu</app-toolbar>
+        <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
+            <a class="drawer-elem" name="page-actualite" href="{{baseUrl}}/section-administrateur/page-actualite/">Fil d'actualité</a>
+            <a class="drawer-elem" name="page-invitations" href="{{baseUrl}}/section-administrateur/page-invitations/">Invitations</a>
+            <a class="drawer-elem" name="page-profils" href="{{baseUrl}}/section-administrateur/page-profils/">Profils de formulaires</a>
+            <a class="drawer-elem" name="page-rappels" href="{{baseUrl}}/section-administrateur/page-rappels/">Rappels</a>
+        </iron-selector>
+      </app-drawer>
+          
+      <!-- Main content -->
+      <app-header-layout has-scrolling-region>
+
+        <app-header condenses reveals full effects="waterfall">
+          <app-toolbar>
+            <paper-icon-button icon="my-icons:menu" drawer-toggle></paper-icon-button>
+            <div main-title>Administration</div>
+            <paper-icon-button icon="icons:power-settings-new" on-tap="_disconnect" ></paper-icon-button>
+          </app-toolbar>
+        </app-header>
+
+        <iron-pages
+            selected="[[page]]"
+            attr-for-selected="name"
+            fallback-selection="view404"
+            role="main">
+          <page-actualite name="page-actualite"></page-actualite>
+          <page-invitations name="page-invitations"></page-invitations> 
+          <page-invitations-detail projet="{{routeData.p2}}" name="page-invitations-detail"></page-invitations-detail>
+          <page-profils name="page-profils"></page-profils>
+          <page-rappels name="page-rappels"></page-rappels>
+          <view-404 name="view404"></view-404>
+        </iron-pages>
+      </app-header-layout>
+    </app-drawer-layout>
+    
+    <ajout-projet-modal></ajout-projet-modal>
+    <modification-projet-modal></modification-projet-modal>
+    <suppression-projet-modal></suppression-projet-modal>
+      
+      
+    <ajout-invitation-modal></ajout-invitation-modal>  
+    <suppression-invitation-modal></suppression-invitation-modal>  
+      
+    <suppression-rappel-modal></suppression-rappel-modal>
+    <ajout-rappel-modal></ajout-rappel-modal>
+      
+    <suppression-profil-modal></suppression-profil-modal>
+    <ajout-profil-modal></ajout-profil-modal>
+    <modification-profil-modal></modification-profil-modal>
+      
+    <toasts-administration></toasts-administration>
+  </template>
+  <script>
+    Polymer({
+      is: 'section-administrateur',
+      ready: function () {
+        this.baseUrl = this.$.meta.byKey("base-url");
+      },
+      properties: {
+        page: {
+          type: String,
+          reflectToAttribute: true,
+          observer: '_pageChanged',
+        },
+        baseUrl: String,
+        storedData: Object
+      },
+      observers: [
+        '_routePageChanged(routeData.sub_page)',
+      ],
+      listeners: {
+        'connexion-administrateur-denied-event': '_handleConnexionAdministrateurDeniedEvent',
+      },
+      _handleConnexionAdministrateurDeniedEvent: function(event) {
+        this._disconnect();
+      },
+      _disconnect: function() {
+          //this.storedData = null;
+          page.redirect('/#/section-public/page-connexion-administrateur'); 
+      },
+      _routePageChanged: function(page) {
+        console.log(this.routeData);
+        this.page = page || 'page-actualite';
+        if (!this.$.drawer.persistent) {
+          this.$.drawer.close();
+        }
+      },
+      _pageChanged: function(page) {
+        // Load page import on demand. Show 404 page if fails
+         // console.log(this.test);
+          console.log(this.routeData);
+        var resolvedPageUrl = this.resolveUrl('administrateur/' + page + '.html');
+        this.importHref(resolvedPageUrl, null, this._showPage404, true);  
+      },
+      _showPage404: function() {
+        this.page = 'page-actualite';
+      }
+    });
+  </script>
+</dom-module>

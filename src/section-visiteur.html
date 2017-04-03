@@ -1,0 +1,127 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="section-visiteur">
+  <template>
+      
+    <style>
+      :host {
+        --app-primary-color: #4285f4;
+        --app-secondary-color: black;
+
+        display: block;
+      }
+
+      app-header {
+        color: #fff;
+        background-color: var(--app-primary-color);
+      }
+      app-header paper-icon-button {
+        --paper-icon-button-ink-color: white;
+      }
+
+      .drawer-list {
+        margin: 0 20px;
+      }
+
+      .drawer-elem {
+        display: block;
+        padding: 0 16px;
+        text-decoration: none;
+        color: var(--app-secondary-color);
+        line-height: 40px;
+      }
+
+      .drawer-elem.iron-selected {
+        color: black;
+        font-weight: bold;
+      }
+    </style>
+      
+      <iron-meta id="meta"></iron-meta>
+      <iron-localstorage name="data-storage" value="{{storedData}}"></iron-localstorage>
+      <app-route
+    route="{{route}}"
+    pattern="/:sub_page"
+    data="{{routeData}}"></app-route>
+      
+      <app-drawer-layout fullbleed>
+      <!-- Drawer content -->
+      <app-drawer id="drawer">
+        <app-toolbar>Menu</app-toolbar>
+        <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
+            <a class="drawer-elem" name="page-dossier" href="{{baseUrl}}/section-visiteur/page-dossier">Mon dossier</a>
+            <a class="drawer-elem" name="page-biodatas" href="{{baseUrl}}/section-visiteur/page-biodatas">Envoi des biodatas</a>
+            <a class="drawer-elem" name="page-delegation" href="{{baseUrl}}/section-visiteur/page-delegation">Délégation d'invitation</a>
+        </iron-selector>
+      </app-drawer>
+
+      <!-- Main content -->
+      <app-header-layout has-scrolling-region>
+
+        <app-header condenses reveals effects="waterfall">
+          <app-toolbar>
+            <paper-icon-button icon="my-icons:menu" drawer-toggle></paper-icon-button>
+            <div main-title>Visiteurs</div>
+            <paper-icon-button icon="icons:power-settings-new" on-tap="_disconnect" ></paper-icon-button>
+          </app-toolbar>
+        </app-header>
+
+        <iron-pages
+            selected="[[page]]"
+            attr-for-selected="name"
+            fallback-selection="view404"
+            role="main">
+          <page-dossier name="page-dossier"></page-dossier>
+          <page-biodatas name="page-biodatas"></page-biodatas>
+          <page-delegation name="page-delegation"></page-delegation>
+          <view-404 name="view404"></view-404>
+        </iron-pages>
+      </app-header-layout>
+    </app-drawer-layout>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'section-visiteur',
+      ready: function () {
+        this.baseUrl = this.$.meta.byKey("base-url");
+      },
+      properties: {
+        page: {
+          type: String,
+          reflectToAttribute: true,
+          observer: '_pageChanged',
+        },
+        baseUrl: String
+      },
+      observers: [
+        '_routePageChanged(routeData.sub_page)',
+      ],
+      listeners: {
+        'connexion-visiteur-denied-event': '_handleConnexionAdministrateurDeniedEvent',
+      },
+      _handleConnexionVisiteurDeniedEvent: function(event) {
+        this._disconnect();
+      },
+      _disconnect: function() {
+          this.storedData = null;
+          page.redirect('/#/section-public/page-connexion-visiteur'); 
+      },
+      _routePageChanged: function(page) {
+        this.page = page || 'page-actualite';
+        if (!this.$.drawer.persistent) {
+          this.$.drawer.close();
+        }
+      },
+      _pageChanged: function(page) {
+        // Load page import on demand. Show 404 page if fails
+        var resolvedPageUrl = this.resolveUrl('visiteur/' + page + '.html');
+        this.importHref(resolvedPageUrl, null, this._showPage404, true);    
+      },
+      _showPage404: function() {
+        this.page = 'page-dossier';
+      },
+    });
+  </script>
+</dom-module>

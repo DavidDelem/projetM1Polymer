@@ -1,0 +1,120 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../shared-styles.html">
+<link rel="import" href="../../app-data.html">
+
+<script src="../../../bower_components/moment/moment.js"></script>
+<script src="../../../bower_components/moment/locale/fr.js"></script>
+
+<dom-module id="modification-projet-modal">
+  <template>
+    <style>
+      :host {
+      }        
+    </style>
+    
+    <iron-meta id="meta"></iron-meta>
+    <iron-localstorage name="data-storage" value="{{storedData}}"></iron-localstorage>
+    <app-data key="storedData" data="{{storedData}}"></app-data>
+      
+    <iron-signals on-iron-signal-open-modification-projet-modal="_handleOpenModificationProjetModalEvent"></iron-signals>  
+      
+    <iron-ajax 
+    id="modificationProjetRequest"
+    method="PUT"
+    content-type="application/x-www-form-urlencoded"   
+    headers="{{_computeHeaders(storedData)}}"
+    url="{{serverUrl}}/projets/{{identifiantProjet}}"
+    on-response="_handleModificationProjetResponse"
+    on-error="_handleModificationProjetError"></iron-ajax>
+      
+    <iron-ajax 
+    id="profilsRequest"
+    method="GET"
+    headers="{{_computeHeaders(storedData)}}"
+    url="{{serverUrl}}/profils"
+    handle-as="json"
+    last-response="{{profils}}"></iron-ajax>      
+      
+    <paper-dialog id="dialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
+        <h2>Modification du projet</h2>
+        <paper-input-container>
+            <label>Nom du projet</label>
+            <input is="iron-input" id="projet" type="text" bind-value="{{projet}}">
+        </paper-input-container>
+        <paper-dropdown-menu label="Profil de formulaire">
+          <paper-listbox attr-for-selected="value" selected="{{profil}}" class="dropdown-content">
+              <template is="dom-repeat" items="{{profils}}">
+                    <paper-item value="{{item.identifiant}}">{{item.nom}}</paper-item>
+              </template>
+          </paper-listbox>
+        </paper-dropdown-menu>
+        <vaadin-date-picker value="{{dateLimite}}" label="Date limite"></vaadin-date-picker>
+        <div class="buttons">
+            <paper-button dialog-dismiss>Annuler</paper-button>
+            <paper-button autofocus on-tap="_modifierProjet" disabled$="{{_validateForm(projet, profil, dateLimite)}}">Valider</paper-button>
+        </div>
+    </paper-dialog>
+      
+  </template>
+
+  <script>
+    Polymer({
+      is: 'modification-projet-modal',
+      properties: {
+        projet: {
+            type: String,
+            value: "",
+            notify: true
+        },
+        identifiantProjet: String,
+        profil: {
+            type: String,
+            value: "",
+            notify: true
+        },
+        dateLimite: {
+            type: String,
+            value: "",
+            notify: true
+        },
+        profils: Object,
+        serverUrl: String
+      },
+      ready: function () {
+        this.serverUrl = this.$.meta.byKey("server-url");
+      },
+      _computeHeaders: function(storedData) {
+        return {"Authorization": "JWT " + storedData.token };
+      },
+      _generateRequests: function() {
+        this.$.profilsRequest.generateRequest();
+      },
+      _handleOpenModificationProjetModalEvent: function(event) {
+        this._generateRequests();
+        this.projet = event.detail.projet.nom;
+        this.identifiantProjet = event.detail.projet.identifiant;
+        this.profil = event.detail.projet.profil;
+        this.dateLimite =  moment(event.detail.projet.dateLimite, 'DD/MM/YYYY').format('YYYY-MM-DD');
+        this.$.dialog.open();
+      },
+      _validateForm: function(projet, profil, dateLimite) {
+          if(projet == '' || profil == '' || dateLimite == '') {
+            return true;
+          }
+      },
+      _modifierProjet: function() {
+        this.$.modificationProjetRequest.body = { nom: this.projet, profil: this.profil, dateLimite: this.dateLimite };
+        this.$.modificationProjetRequest.generateRequest();
+        this.projet =  "";
+      },
+      _handleModificationProjetResponse: function(response) {
+        this.$.dialog.close();
+        this.fire('iron-signal', {name: 'modal-projet-success'});
+      },
+      _handleModificationProjetError: function(error) {
+        this.$.dialog.close();
+      }
+        
+    });
+  </script>
+</dom-module>

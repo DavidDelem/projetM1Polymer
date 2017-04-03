@@ -1,0 +1,73 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../shared-styles.html">
+<link rel="import" href="../../app-data.html">
+
+<dom-module id="recuperation-identifiants-modal">
+  <template>
+    <style>
+      :host {
+      }        
+    </style>
+    
+    <iron-meta id="meta"></iron-meta>
+    <iron-localstorage name="data-storage" value="{{storedData}}"></iron-localstorage>
+    <app-data key="storedData" data="{{storedData}}"></app-data>
+      
+    <iron-signals on-iron-signal-open-recuperation-identifiants-modal="_handleOpenRecuperationIdentifiantsModalEvent"></iron-signals>  
+      
+    <iron-ajax 
+    id="recuperationIdentifiantsRequest"
+    method="POST"
+    content-type="application/x-www-form-urlencoded"   
+    url="{{serverUrl}}/projets/{{projet.identifiant}}/invitations"
+    on-response="_handleAddInvitationResponse"
+    on-error="_handleAddInvitationError"></iron-ajax>    
+      
+    <paper-dialog id="dialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
+        <h2>Récupération des identifiants</h2>
+        <p>Saissisez votre adresse email afin de recevoir vos identifiants</p>
+        <paper-input-container>
+            <label>Email</label>
+            <input is="iron-input" id="email" type="email" bind-value="{{email}}">
+        </paper-input-container>
+        <div class="buttons">
+            <paper-button dialog-dismiss>Annuler</paper-button>
+            <paper-button autofocus on-tap="_recupererIdentifiants" disabled$="{{_validateForm(email)}}">Valider</paper-button>
+        </div>
+    </paper-dialog>
+      
+  </template>
+
+  <script>
+    Polymer({
+      is: 'recuperation-identifiants-modal',
+      properties: {
+        email: String,
+        serverUrl: String
+      },
+      ready: function () {
+        this.serverUrl = this.$.meta.byKey("server-url");
+      },
+      _handleOpenRecuperationIdentifiantsModalEvent: function(event) {
+        this.$.dialog.open();
+      },
+      _validateForm: function(email) {
+          var re = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+          return !re.test(email);
+      },
+      _recupererIdentifiants: function() {
+        this.$.recuperationIdentifiants.body = { email: this.email }
+        this.$.recuperationIdentifiants.generateRequest();
+      },
+      _handleRecuperationIdentifiantsResponse: function(response) {
+        this.$.dialog.close();
+        this.email = "";
+        this.fire('iron-signal', {name: 'modal-success'});
+      },
+      _handleRecuperationIdentifiantsError: function(error) {
+        this.$.dialog.close();
+      }
+        
+    });
+  </script>
+</dom-module>

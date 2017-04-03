@@ -1,0 +1,148 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../shared-styles.html">
+<link rel="import" href="../../app-data.html">
+
+<dom-module id="actions-invitation">
+  <template>
+    <style include="shared-styles">
+        .special-paper-menu paper-menu {
+            padding: 0;
+        }
+        
+        .special-paper-menu paper-menu paper-item {
+            background-color: #fafafa;
+            color: #646464;
+            cursor: pointer;
+        }
+        
+        .special-paper-menu paper-menu paper-item:hover {
+            background-color: #eeeeee;
+            color: #303030;
+        }
+        
+        .special-paper-menu span {
+            padding-left: 10px;
+        }
+    </style>
+      
+    <iron-meta id="meta"></iron-meta>
+    <iron-localstorage name="data-storage" value="{{storedData}}"></iron-localstorage>
+    <app-data key="storedData" data="{{storedData}}"></app-data> 
+    
+            
+
+    <iron-ajax 
+        id="validationBiodatasRequest" 
+        method="PUT"
+        headers="{{_computeHeaders(storedData.token)}}"
+        url="{{serverUrl}}/invitations/{{invitation.identifiant}}/validationbiodatas"
+        on-response="_handleActionsResponse"
+        on-error="_handleActionsError"></iron-ajax>
+      
+    <iron-ajax 
+        id="refusBiodatasRequest" 
+        method="PUT"
+        headers="{{_computeHeaders(storedData.token)}}"
+        url="{{serverUrl}}/invitations/{{invitation.identifiant}}/refusbiodatas"
+        on-response="_handleActionsResponse"
+        on-error="_handleActionsError"></iron-ajax>
+      
+    <iron-ajax 
+        id="transfertAutoritesRequest" 
+        method="PUT"
+        headers="{{_computeHeaders(storedData.token)}}"
+        url="{{serverUrl}}/invitations/{{invitation.identifiant}}/transfertautorites"
+        on-response="_handleActionsResponse"
+        on-error="_handleActionsError"></iron-ajax>
+            
+    <iron-ajax 
+        id="demandeAccessOkRequest" 
+        method="PUT"
+        headers="{{_computeHeaders(storedData.token)}}"
+        url="{{serverUrl}}/invitations/{{invitation.identifiant}}/demandeaccessok"
+        on-response="_handleActionsResponse"
+        on-error="_handleActionsError"></iron-ajax>
+      
+    <iron-ajax 
+        id="demandeAccessKoRequest" 
+        method="PUT"
+        headers="{{_computeHeaders(storedData.token)}}"
+        url="{{serverUrl}}/invitations/{{invitation.identifiant}}/demandeaccessko"
+        on-response="_handleActionsResponse"
+        on-error="_handleActionsError"></iron-ajax>
+      
+    <paper-menu-button class="special-paper-menu">
+        <paper-icon-button icon="icons:more-vert" class="dropdown-trigger"></paper-icon-button>
+        <paper-menu class="dropdown-content">
+            <template is="dom-if" if="{{_lastHistoriqueIs(invitation, 'ENVOI_BIODATAS')}}">
+                <paper-item on-tap="_refuserBiodatas"><iron-icon icon="icons:thumb-down"></iron-icon><span>Biodatas refusées</span></paper-item>
+                <paper-item on-tap="_validerBiodatas"><iron-icon icon="icons:thumb-up"></iron-icon><span>Biodatas validées</span></paper-item>
+<!--                <paper-item><iron-icon icon="icons:thumb-up"></iron-icon><span>Biodatas validées et transférées aux autorités</span></paper-item>-->
+            </template>
+            <template is="dom-if"  if="{{_lastHistoriqueIs(invitation, 'VALIDATION_BIODATAS')}}">
+                <paper-item on-tap="_transfererAuxAutorites"><iron-icon icon="communication:mail-outline"></iron-icon><span>Transfert aux autorités</span></paper-item>
+            </template>
+            <template is="dom-if"  if="{{_lastHistoriqueIs(invitation, 'TRANSFERT_AUTORITES')}}">
+                <paper-item on-tap="_accepterDemandeAccess"><iron-icon icon="icons:check"></iron-icon><span>Demande d'accès acceptée</span></paper-item>
+                <paper-item on-tap="_refuserDemandeAccess"><iron-icon icon="icons:clear"></iron-icon><span>Demande d'accès refusée</span></paper-item>
+            </template>
+            <paper-item><iron-icon icon="icons:cached"></iron-icon><span>Réinitialiser l'invitation</span></paper-item>
+            <paper-item on-tap="_openRemoveInvitationModal"><iron-icon icon="icons:delete-forever"></iron-icon><span>Supprimer l'invitation</span></paper-item>
+        </paper-menu>
+    </paper-menu-button>
+  </template>
+
+  <script>
+  Polymer({
+    is: 'actions-invitation',
+    properties: {
+      invitation: Object,
+      projet: Object,
+      serverUrl: String,
+      baseUrl: String
+    },
+    ready: function () {
+        this.serverUrl = this.$.meta.byKey("server-url");
+        this.baseUrl = this.$.meta.byKey("base-url");
+    },
+    _computeHeaders: function(token) {
+        return {"Authorization": "JWT " + token };
+    },
+    _lastHistoriqueIs: function(invitation, type) {
+        var lastHistorique = invitation.historique[invitation.historique.length-1];
+          
+        if(lastHistorique && lastHistorique.type && lastHistorique.type == type) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+    _accepterDemandeAccess: function() {
+        this.$.demandeAccessOkRequest.generateRequest();
+    },
+    _refuserDemandeAccess: function() {
+        this.$.demandeAccessKoRequest.generateRequest();
+    },
+    _validerBiodatas: function() {
+        this.$.validationBiodatasRequest.generateRequest();
+    },
+    _refuserBiodatas: function() {
+        this.$.refusBiodatasRequest.generateRequest();
+    },
+    _transfererAuxAutorites: function() {
+        this.$.transfertAutoritesRequest.generateRequest();
+    },
+    _handleActionsResponse: function(response) {
+        this.fire('iron-signal', {name: 'open-toast', data: {texte: 'L\'état de l\'invitation à été mis à jours'}});
+        this.fire('iron-signal', {name: 'action-success'});
+    },
+    _handleActionsError: function(error) {
+        this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Echec lors de la mise à jours de l\'état de l\'invitation'}});
+    },
+    _openRemoveInvitationModal: function(event) {
+        this.fire('iron-signal', {name: 'open-suppression-invitation-modal', data: {projet: this.projet, invitation: this.invitation}});
+    }
+  });
+  </script>
+
+</dom-module>

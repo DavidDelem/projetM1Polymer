@@ -1,0 +1,30 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+
+<dom-module id="toasts-administration">
+  <template>
+    <style>
+        
+    </style>
+      
+    <iron-signals on-iron-signal-open-toast="_handleOpenToast"></iron-signals>  
+    <paper-toast id="toast" text="{{texte}}"></paper-toast>
+      
+  </template>
+
+  <script>
+    Polymer({
+      is: 'toasts-administration',
+      properties: {
+          texte: {
+                type: String,
+                value: ""
+          }
+      },
+      _handleOpenToast: function(event) {
+        this.texte = event.detail.texte;
+        this.$.toast.open();
+      }
+        
+    });
+  </script>
+</dom-module>

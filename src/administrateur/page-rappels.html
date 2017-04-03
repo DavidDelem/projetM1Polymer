@@ -1,0 +1,160 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../shared-styles.html">
+<link rel="import" href="../app-data.html">
+
+<dom-module id="page-rappels">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }     
+        
+      paper-fab {
+        position: fixed;
+        right: 30px;
+        bottom: 30px;          
+      }
+        
+      paper-card {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        
+        .titre-rappel {
+            display: inline-block;
+            padding-top: 8px;
+        }
+
+        .rappel-btn {
+            float: right;
+            padding-bottom: 5px;
+        }
+        
+        .floating-text {
+            color: #555555;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .rappels-desactives {
+            opacity: 0.4;
+            transition: opacity 0.5s ease;
+        }
+        
+        .rappels-actives {
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+    </style>
+      
+    <iron-meta id="meta"></iron-meta>
+    <iron-localstorage name="data-storage" value="{{storedData}}" on-iron-localstorage-load="_generateRequests"></iron-localstorage>
+    <app-data key="storedData" data="{{storedData}}"></app-data>
+      
+    <iron-signals on-iron-signal-modal-success="_handleModalSuccessEvent"></iron-signals>  
+      
+    <iron-ajax 
+        id="rappelsRequest" 
+        method="GET"
+        headers="{{_computeHeaders(storedData.token)}}"
+        url="{{serverUrl}}/rappels"
+        handle-as="json"
+        last-response="{{rappels}}"
+        last-error="{{lastError}}"
+        on-error="_handleRappelsError"></iron-ajax>
+      
+    <iron-ajax 
+        id="configurationRappelsRequest" 
+        method="GET"
+        headers="{{_computeHeaders(storedData.token)}}"
+        url="{{serverUrl}}/rappels/configuration"
+        handle-as="json"
+        last-response="{{configurationRappels}}"
+        last-error="{{lastError}}"
+        on-error="_handleConfigurationRappelsError"></iron-ajax>
+      
+    <iron-ajax 
+        id="toggleActivationRappelsRequest" 
+        method="PUT" 
+        content-type="application/x-www-form-urlencoded"   
+        headers="{{_computeHeaders(storedData.token)}}"
+        url="{{serverUrl}}/rappels/configuration/activation"
+        on-success="_handleToggleActivationRappelsSuccess"
+        on-error="_handleToggleActivationRappelsError"></iron-ajax>
+      
+    <div class="col-md-12">
+        <p class="floating-text">Configuration des rappels</p>
+        <paper-toggle-button checked="{{configurationRappels.activation}}" on-tap="_toggleActivationRappels">Activer l'envoi automatique des rappels</paper-toggle-button>
+    </div>
+    <div class="col-md-12">
+        <p class="floating-text">Liste des rappels</p>
+    </div>
+    <template is="dom-repeat" items="{{rappels}}">
+        <div class="col-md-2">
+            <div class$="{{getClasses(configurationRappels.activation)}}">
+                <paper-card>
+                    <div class="card-actions">
+                        <span class="titre-rappel">J-{{item.nbJours}}</span>
+                        <div class="rappel-btn">
+                            <paper-icon-button class="delete-icon" icon="icons:clear" on-tap="_openRemoveRappelModal"></paper-icon-button>
+                        </div>
+                    </div>                                                                                       
+                </paper-card>
+            </div>
+        </div>
+    </template>
+      
+    <paper-fab icon="add" on-tap="_openAddRappelModal"></paper-fab>
+      
+  </template>
+
+  <script>
+    Polymer({
+      is: 'page-rappels',
+      properties: {
+            serverUrl: String,
+            configurationRappels: Object
+      },
+      ready: function () {
+        this.serverUrl = this.$.meta.byKey("server-url");
+      },
+      attributeChanged : function(name, type){
+          if(this.getAttribute('class').includes('iron-selected')){
+             this._generateRequests();
+          }
+      },
+      _computeHeaders: function(token) {
+        return {"Authorization": "JWT " + token };
+      },
+      _generateRequests: function () {
+        this.$.rappelsRequest.generateRequest();
+        this.$.configurationRappelsRequest.generateRequest();
+      },
+      _handleRappelsError: function(event) {
+        //console.log(event.detail.request.__data__.status);
+        this.fire('connexion-administrateur-denied-event', {});
+      },
+      _toggleActivationRappels: function() {
+        this.$.toggleActivationRappelsRequest.body = { activation: this.configurationRappels.activation };
+        this.$.toggleActivationRappelsRequest.generateRequest();
+      },
+      _openRemoveRappelModal: function(event) {
+        this.fire('iron-signal', {name: 'open-suppression-rappel-modal', data: {nbJours: event.model.get('item.nbJours')}});
+      },
+      _openAddRappelModal: function(event) {
+        this.fire('iron-signal', {name: 'open-ajout-rappel-modal', data: {}});
+      },
+      _handleModalSuccessEvent: function(event) {
+        this._generateRequests();
+      },
+      getClasses: function (active) {
+        if(active) {
+            return 'rappels-actives'
+        } else {
+            return 'rappels-desactives'
+        }
+      }
+    });
+  </script>
+</dom-module>

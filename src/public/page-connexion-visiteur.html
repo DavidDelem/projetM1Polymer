@@ -1,0 +1,134 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../shared-styles.html">
+<link rel="import" href="../app-data.html">
+
+<dom-module id="page-connexion-visiteur">
+  <template>
+    <style include="shared-styles">
+
+        .row {
+            margin-left: 0px;
+            margin-right: 0px;
+        }
+        
+        .card-connexion {
+            margin-top: 100px;
+        }
+        
+        .card-connexion-header  {
+            text-align: center;
+        }
+        
+        .btn-connexion {
+            width: 100%;
+            margin: 15px 0 0 0;
+        }
+        
+        .large-icon {
+            --iron-icon-height: 128px;
+            --iron-icon-width: 128px;
+        }
+        
+        .forgotten-password {
+            text-align: center;
+        }
+        
+    </style>
+      
+    <iron-meta id="meta"></iron-meta>
+    <iron-localstorage name="data-storage" value="{{storedData}}"></iron-localstorage>
+    <app-data key="storedData" data="{{storedData}}"></app-data>
+      
+    <iron-ajax 
+    id="tokenRequest" 
+    method="POST"
+    body={{formData}}
+    content-type="application/x-www-form-urlencoded"
+    url="{{serverUrl}}/token/visiteur"
+    on-response="_handleTokenResponse"
+    on-error="_handleTokenError"></iron-ajax>
+
+    <paper-toast id="toast" text="Identifiant ou mot de passe invalide"></paper-toast>
+      
+    <div class="row">
+        <div class="col-sm-4 col-sm-offset-4">
+            <div class="card card-connexion">
+                <div class="card-connexion-header">
+                    <h1>Connexion visiteur</h1>
+                    <iron-icon class="large-icon" icon="icons:fingerprint"></iron-icon>
+                </div>
+                <paper-input-container>
+                    <label>Identifiant</label>
+                    <input is="iron-input" id="username" type="text" bind-value="{{formData.identifiant}}">
+                </paper-input-container>
+
+                <paper-input-container>
+                    <label>Mot de passe</label>
+                    <input is="iron-input" id="password" type="password" bind-value="{{formData.password}}">
+                </paper-input-container>
+
+                <div class="wrapper-btns">
+                    <paper-button raised class="primary btn-connexion" on-tap="_postLogin" disabled$="{{_validateForm(formData.identifiant, formData.password)}}">Connexion</paper-button>
+                </div>
+            </div>
+            <div class="forgotten-password">
+                <paper-button noink class="primary btn-forgotten-password" on-tap="_openRecuperationIdentifiantsModal">Identifiant ou mot de passe oublié ?</paper-button>
+            </div>
+        </div>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'page-connexion-visiteur',
+      properties: {
+        storedData: Object,
+        formData: {
+            type: Object,
+            value: {
+                identifiant: '',
+                password: ''
+            },
+            notify: true
+        },
+        serverUrl: String,
+        baseUrl: String
+      },
+      ready: function () {
+        this.serverUrl = this.$.meta.byKey("server-url");
+        this.baseUrl = this.$.meta.byKey("base-url");
+      },
+      _postLogin: function() {
+        this.$.tokenRequest.generateRequest();
+      },
+      _validateForm: function(identifiant, password) {
+          if(identifiant == '' || password == '') {
+            return true;
+          }
+      },
+      _handleTokenResponse: function(event) {
+        var response = event.detail.response;
+        if (response.token) {
+            this.storedData = {
+				token: response.token,
+				loggedin: true
+            };
+            this.formData = {};
+            window.location.href = this.baseUrl + '/section-visiteur/page-dossier/';
+        } else {
+            _handleTokenError();
+        }
+      },
+      _handleTokenError: function(event) {
+        this.formData = {
+                identifiant: '',
+                password: ''
+        }
+        this.$.toast.open();
+      },
+      _openRecuperationIdentifiantsModal: function(event) {
+            this.fire('iron-signal', {name: 'open-recuperation-identifiants-modal', data: {}});
+      }
+    });
+  </script>
+</dom-module>

@@ -1,0 +1,112 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../shared-styles.html">
+<link rel="import" href="../../app-data.html">
+
+<dom-module id="modification-profil-modal">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        padding: 10px;
+      }    
+        
+      paper-toggle-button {
+         float: right;
+      }
+        
+      paper-dialog.size-position {
+         width: 90%;
+         min-height: 300px;
+      }
+        
+      .well {
+         padding: 10px;
+         margin-bottom: 20px;
+         background-color: #f5f5f5;
+         border: 1px solid transparent;
+         border-radius: 3px;
+      }
+    </style>
+    
+    <iron-meta id="meta"></iron-meta>
+    <iron-localstorage name="data-storage" value="{{storedData}}"></iron-localstorage>
+    <app-data key="storedData" data="{{storedData}}"></app-data>
+      
+    <iron-signals on-iron-signal-open-modification-profil-modal="_handleOpenModificationProfilModalEvent"></iron-signals>  
+      
+    <iron-ajax 
+    id="champsRequest"
+    method="GET"
+    headers="{{_computeHeaders(storedData)}}"
+    url="{{serverUrl}}/profils/champs"
+    handle-as="json"
+    last-response="{{champs}}"></iron-ajax>
+      
+    <iron-ajax 
+    id="updateChampsRequest"
+    method="POST"
+    content-type="application/json"   
+    headers="{{_computeHeaders(storedData)}}"
+    url="{{serverUrl}}/profils/champs"
+    on-response="_handleUpdateChampsResponse"
+    on-error="_handleUpdateChampsError"></iron-ajax>
+      
+    <paper-dialog class="size-position" id="dialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
+        <h2>Modification du profil [[selectedProfil.nom]]</h2>
+        <div clas="row">
+            <template is="dom-repeat" items="{{champs}}">
+                <div class="col-md-3">
+                    <div class="well">
+                        <paper-checkbox checked="{{item.coche}}">{{item.nom}}</paper-checkbox>
+                        <paper-toggle-button hidden$="{{!item.coche}}" checked="{{item.obligatoire}}">Obligatoire</paper-toggle-button>
+                    </div>   
+                </div>
+            </template>
+        </div>
+        <div class="row">
+            <div class="col-md-12 buttons">
+                <paper-button dialog-dismiss>Annuler</paper-button>
+                <paper-button autofocus on-tap="_updateProfil">Valider</paper-button>
+            </div>
+        </div>
+    </paper-dialog>
+      
+  </template>
+
+  <script>
+    Polymer({
+      is: 'modification-profil-modal',
+      properties: {
+        selectedProfil: String,
+        champs: Object,
+        serverUrl: String
+      },
+      ready: function () {
+        this.serverUrl = this.$.meta.byKey("server-url");
+      },
+      _computeHeaders: function(storedData) {
+        return {"Authorization": "JWT " + storedData.token };
+      },
+      _handleOpenModificationProfilModalEvent: function(event) {
+        this.selectedProfil = event.detail.profil;
+        this.$.dialog.open();
+        this._generateRequests();
+      },
+      _generateRequests: function() {
+        this.$.champsRequest.params = { profil: this.selectedProfil.identifiant };
+        this.$.champsRequest.generateRequest();
+      },
+      _updateProfil: function() {
+        this.$.updateChampsRequest.body = { profil: this.selectedProfil.identifiant, champs: this.champs };
+        this.$.updateChampsRequest.generateRequest();
+      },
+      _handleUpdateChampsResponse: function(response) {
+        this.$.dialog.close();
+      },
+      _handleUpdateChampsError: function(error) {
+        this.$.dialog.close();
+      },
+        
+    });
+  </script>
+</dom-module>

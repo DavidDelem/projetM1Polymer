@@ -1,0 +1,253 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../shared-styles.html">
+<link rel="import" href="../app-data.html">
+<dom-module id="page-dossier">
+  <template>
+    <style include="shared-styles">
+        google-map {
+            height: 200px;
+        }
+        
+       .timeline {
+            text-align: center;
+        }
+        
+        .timeline > div {
+            display:inline-block;
+            float:none;
+            text-align:left;
+            margin-right:-10px;
+        }
+        
+        .timeline > div.col-lg-10 {
+            display:block;
+            float:none;
+            text-align:left;
+            margin-right:0px;
+        }
+        
+        .timeline > div {
+            cursor: pointer;
+        }
+        
+        .timeline > div:not(:last-of-type) {
+            filter: blur(5px);
+            opacity: 0.7;
+            -webkit-transition: all 0.3s ease; /* Safari */
+            transition: all 0.3s ease;
+        }
+        
+
+        .timeline > div:not(:last-of-type):hover {
+            filter: none;
+            opacity: 0.7;
+        }
+
+        
+        .card-timeline {
+            position: relative;
+            text-align: center;
+            /*margin: 0;*/
+        }
+        
+        .col-lg-3 .card-timeline {
+            min-height: 250px;
+        }
+        
+        .col-lg-10 .timeline-element {
+            position: relative;
+            top: -230px;
+        }
+        
+        .card-timeline h3 {
+            margin-top: 40px;
+            min-height: 50px;
+        }
+        
+        .card-timeline paper-fab {
+            position: absolute;
+            top: -20px;
+            left: calc(50% - 28px);
+        }
+        
+        .timeline-element {
+           /* min-height: 200px;*/
+        }
+        
+        .timeline-date {
+            display: block;
+            margin-top: 20px;
+            margin-bottom: 35px;
+            text-align: center;
+            
+            color: #555555;
+            font-size: 14px;
+            font-weight: 500;
+        }
+    </style>
+      
+    <iron-meta id="meta"></iron-meta>
+    <iron-localstorage name="data-storage" value="{{storedData}}" on-iron-localstorage-load="_generateRequests"></iron-localstorage>
+    <app-data key="storedData" data="{{storedData}}"></app-data>
+      
+    <iron-ajax 
+        id="historiqueRequest" 
+        method="GET"
+        headers="{{_computeHeaders(storedData.token)}}"
+        url="{{serverUrl}}/invitations/a/historique"
+        handle-as="json"
+        last-response="{{historique}}"
+        on-error="_handleHistoriqueError"></iron-ajax>
+      
+    <div class="timeline">
+        <template is="dom-repeat" items="{{historique}}">
+            <template is="dom-if" if="{{_computeHidden(item, 'RECEPTION_INVITATION')}}">
+                <div class="col-lg-3 col-centered">
+                    <div class="timeline-element">
+                        <span class="timeline-date">[[item.date]]</span>
+                        <div class="card card-timeline">
+                            <paper-fab icon="icons:account-circle"></paper-fab>
+                            <h3>Invitation reçue</h3>
+                            <p>Vous pouvez envoyer vos biodatas jusqu'à la date limite de saisie</p>
+                        </div>     
+                    </div>
+                </div>
+            </template>
+            <template is="dom-if" if="{{_computeHidden(item, 'ENVOI_BIODATAS')}}">
+                <div class="col-lg-3 col-centered">
+                    <div class="timeline-element">
+                        <span class="timeline-date">[[item.date]]</span>
+                        <div class="card card-timeline">
+                            <paper-fab icon="icons:cloud-queue"></paper-fab>
+                            <h3>Biodatas envoyées</h3>
+                            <p>Vos biodatas vont être controlées par un administrateur</p>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <template is="dom-if" if="{{_computeHidden(item, 'VALIDATION_BIODATAS')}}">
+                <div class="col-lg-3">
+                    <div class="timeline-element">
+                        <span class="timeline-date">[[item.date]]</span>
+                        <div class="card card-timeline">
+                            <paper-fab icon="icons:assignment-turned-in"></paper-fab>
+                            <h3>Biodatas validées</h3>
+                            <p>Vos biodatas sont valides et vont prochainement être tansmises aux autorités</p>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <template is="dom-if" if="{{_computeHidden(item, 'REFUS_BIODATAS')}}">
+                <div class="col-lg-3">
+                    <div class="timeline-element">
+                        <span class="timeline-date">[[item.date]]</span>
+                        <div class="card card-timeline">
+                            <paper-fab icon="icons:assignment-late"></paper-fab>
+                            <h3>Biodatas refusées</h3>
+                            <p>Vos biodatas sont invalides, merci de les renvoyer avant la date limite</p>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <template is="dom-if" if="{{_computeHidden(item, 'TRANSFERT_AUTORITES')}}">
+                <div class="col-lg-3">
+                    <div class="timeline-element">
+                        <span class="timeline-date">[[item.date]]</span>
+                        <div class="card card-timeline">
+                            <paper-fab icon="communication:mail-outline"></paper-fab>
+                            <h3>Biodatas transférées aux autorités</h3>
+                            <p>Votre demande est en cours de traitement par les autorités</p>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <template is="dom-if" if="{{_computeHidden(item, 'DEMANDE_ACCESS_OK')}}">
+                 <div class="col-lg-10 col-lg-offset-1">
+                    <div class="timeline-element">
+                        <span class="timeline-date">[[item.date]]</span>
+                        <div class="card card-timeline">
+                            <paper-fab icon="icons:check"></paper-fab>
+                            <h3>Demande d'accès acceptée</h3>
+                            <p>Sur la base des renseignements fournis, les autorités ont accepté votre demande d'accès</p>
+                            <google-map fit-to-marker  latitude="48.282423" longitude="-4.441707" api-key="AIzaSyD3E1D9b-Z7ekrT3tbhl_dy8DCXuIuDDRc">
+                                <google-map-marker latitude="48.282423" longitude="-4.441707" title="Sea Test Base"></google-map-marker>
+                            </google-map>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <template is="dom-if" if="{{_computeHidden(item, 'DEMANDE_ACCESS_KO')}}">
+                <div class="col-lg-10 col-lg-offset-1">
+                    <div class="timeline-element">
+                        <span class="timeline-date">[[item.date]]</span>
+                        <div class="card card-timeline">
+                            <paper-fab icon="icons:clear"></paper-fab>
+                            <h3>Demande d'accès refusée</h3>
+                            <p>Sur la base des renseignements fournis, les autorités ont refusé votre demande d'accè
+                            <br/>Merci de contacter un administrateur afin d'obtenir des renseignements complémentaires</p>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <template is="dom-if" if="{{_computeHidden(item, 'REINITIALISATION')}}">
+                <div class="col-lg-3">
+                    <div class="timeline-element">
+                        <span class="timeline-date">[[item.date]]</span>
+                        <div class="card card-timeline">
+                            <paper-fab icon="icons:cached"></paper-fab>
+                            <h3>Invitation réinitialisée</h3>
+                            <p>Vous pouvez envoyer vos biodatas jusqu'à la date limite de saisie</p>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <template is="dom-if" if="{{_computeHidden(item, 'DATE_LIMITE_ATTEINTE')}}">
+                <div class="col-lg-3">
+                    <div class="timeline-element">
+                        <span class="timeline-date">[[item.date]]</span>
+                        <div class="card card-timeline">
+                            <paper-fab icon="icons:alarm"></paper-fab>
+                            <h3>Date limite atteinte</h3>
+                            <p>L'envoi des biodatas n'est plus possible mais les biodatas déjà envoyées seront traitées.</p>
+                        </div>
+                    </div>
+                </div>
+            </template>
+
+
+        </template>
+    </div>
+                              
+  </template>
+
+  <script>
+    Polymer({
+      is: 'page-dossier',
+      properties: {
+        historique: Object,
+        serverUrl: String
+      },
+      ready: function () {
+        this.serverUrl = this.$.meta.byKey("server-url");
+      },
+      attributeChanged : function(name, type){
+          if(this.getAttribute('class').includes('iron-selected')){
+             this._generateRequests();
+          }
+      },
+      _computeHeaders: function(token) {
+        return {"Authorization": "JWT " + token };
+      },
+      _generateRequests: function () {
+        this.$.historiqueRequest.generateRequest();
+      },
+      _computeHidden: function(item, type) {
+          if(item.type == type) {
+              return true;
+          } else {
+              return false;
+          }
+      },
+    });
+  </script>
+</dom-module>       

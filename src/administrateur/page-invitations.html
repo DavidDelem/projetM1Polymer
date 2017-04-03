@@ -1,0 +1,281 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../shared-styles.html">
+<link rel="import" href="../app-data.html">
+
+<script src="../../bower_components/moment/moment.js"></script>
+<script src="../../bower_components/moment/locale/fr.js"></script>
+
+<dom-module id="page-invitations">
+  <template>
+    <style include="shared-styles">
+        :host {
+            display: block;
+            padding: 10px;
+        }
+        
+        .card-projet {
+            width: 100%;
+            margin-bottom: 20px;
+            transition: all 0.2s ease;
+        }
+        .card-projet:hover {
+            transform: scale(1.02);
+        }
+        
+        .card-projet a {
+            text-decoration: none;
+            color: #444;
+        }
+        
+        .nom-projet {
+            display: inline-block;
+            padding-top: 8px;
+        }
+
+        .projet-btn {
+            /*float: right;*/
+           /* padding-bottom: 5px;*/
+        }
+        
+        .texte-light { color: var(--paper-grey-600); }
+        
+        .special-paper-menu paper-menu paper-item {
+            background-color: #fafafa;
+            color: #646464;
+            cursor: pointer;
+        }
+        .special-paper-menu paper-menu paper-item:hover {
+            background-color: #eeeeee;
+            color: #303030;
+        }
+        
+        .project-title {
+            @apply(--paper-font-title);
+        }
+        
+        .etat-dossier {
+            @apply(--paper-font-caption);
+            text-transform: uppercase;
+        }
+        
+        paper-fab.float-paper-fab {
+            position: fixed;
+            right: 30px;
+            bottom: 30px;          
+        }
+        
+        .floating-text {
+            color: #555555;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .floating-text > paper-icon-button, .floating-text > paper-menu-button {
+            float: right;
+        }
+        
+        .floating-text > paper-menu-button {
+            padding-right: 0px;
+        }
+        
+        .floating-text > paper-icon-button {
+            position: relative;
+            top: 7px;
+        }
+        
+        .floating-text > p {
+            display: inline-block;
+        }
+        
+        paper-menu-button .dropdown-trigger-texte {
+            position: relative;
+            left: 6px;
+        }
+        
+        .badge {
+            min-width: 3rem;
+            padding: 0 6px;
+            margin-left: 14px;
+            text-align: center;
+            font-size: 1rem;
+            line-height: 22px;
+            height: 22px;
+            float: right;
+            box-sizing: border-box;
+            font-weight: 300;
+            font-size: 0.8rem;
+            color: #fff;
+            background-color: #ff4081;
+            border-radius: 2px;
+            position: relative;
+            right: -4px;
+            top: -4px;
+        }
+        
+        .etat-dossier {
+            text-align: center;
+        }
+        
+        .etat-dossier span {
+            font-size: 2em;
+        }
+        
+        .projet-clos {
+            opacity: 0.4;
+        }
+    </style>
+    
+    <iron-meta id="meta"></iron-meta>
+    <iron-localstorage name="data-storage" value="{{storedData}}" on-iron-localstorage-load="_generateRequests"></iron-localstorage>
+    <app-data key="storedData" data="{{storedData}}"></app-data>
+      
+    <iron-signals on-iron-signal-modal-success="_handleModalSuccessEvent"></iron-signals>  
+      
+    <iron-ajax 
+        id="projetsRequest" 
+        method="GET"
+        headers="{{_computeHeaders(storedData.token)}}"
+        url="{{serverUrl}}/projets"
+        handle-as="json"
+        last-response="{{projets}}"
+        last-error="{{lastError}}"
+        on-error="_handleProjetsError"></iron-ajax>
+    
+    <div class="col-md-12">
+        <div class="floating-text">
+            <p>Projets récents</p>
+            <paper-icon-button icon="communication:import-export"></paper-icon-button>
+            <paper-menu-button dynamic-align="true" class="special-paper-menu">
+                <div class="dropdown-trigger">
+                    <span class="dropdown-trigger-texte">[[selectedPeriode.nom]]</span>
+                    <paper-icon-button icon="icons:arrow-drop-down"></paper-icon-button>
+                </div>
+                <div class="dropdown-content">
+                    <paper-menu>
+                        <template is="dom-repeat" items="{{periodes}}">
+                            <paper-item on-tap="_reloadListe">{{item.nom}}</paper-item>
+                        </template>
+                    </paper-menu>
+<!--                    <div><paper-input label="Date de début"></paper-input> au <paper-input label="Date de fin"></paper-input></div>-->
+                </div>
+            </paper-menu-button>
+        </div>
+    </div>
+    <template is="dom-repeat" items="{{projets}}">
+        <div class="col-md-4">
+            <paper-card class$="card-projet {{_getEtatProjet(item)}}">
+                <template is="dom-if" if="{{_showBadgeDateLimite(item.dateLimite)}}">
+                    <span class="badge">Date limite atteinte</span>
+                </template>
+                <a href="{{baseUrl}}/section-administrateur/page-invitations-detail/{{item.identifiant}}">                                                                              
+                <div class="card-content">
+                    <span class="project-title">{{item.nom}}</span>
+                    <div class="texte-light">
+                        <iron-icon icon="icons:event"></iron-icon>
+                        <span>{{item.dateLimite}}</span>
+                        <iron-icon icon="icons:description"></iron-icon>
+                        <span>Profil de formulaire</span>
+                    </div>
+                </div>
+                <div class="card-actions">
+                    <div class="projet-btn">
+                        <div class="etat-dossier">
+                            <div class="col-md-4">
+                                <p>En attente</p>
+                                <span>[[item.etatProjet.enAttente]]</span>
+                            </div>
+                            <div class="col-md-4">
+                                <p>En cours</p>
+                                <span>[[item.etatProjet.enCours]]</span>
+                            </div>
+                            <div class="col-md-4">
+                                <p>Terminé</p>
+                                <span>[[item.etatProjet.termine]]</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </a>
+            </paper-card>
+</paper-badge>
+        </div>
+    </template>
+      
+    <paper-fab class="float-paper-fab" icon="add" on-tap="_openAddProjetModal"></paper-fab>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'page-invitations',
+      properties: {
+        baseUrl: String,
+        serverUrl: String,
+        periodes: {
+            type: Object,
+            value: [
+                    {
+                        "nom" : "15 derniers jours",
+                        "dateDebut": moment().subtract(15, 'days').format('L'),
+                        "dateFin": moment().format('L')   
+                    },
+                    {
+                        "nom" : "3 derniers mois",
+                        "dateDebut": moment().subtract(3, 'months').format('L'),
+                        "dateFin": moment().format('L')   
+                    },
+                    {
+                        "nom" : "6 derniers mois",
+                        "dateDebut": moment().subtract(6, 'months').format('L'),
+                        "dateFin": moment().format('L') 
+                    }
+            ]
+        },
+        selectedPeriode: Object
+      },
+      ready: function () {
+          this.baseUrl = this.$.meta.byKey("base-url");
+          this.serverUrl = this.$.meta.byKey("server-url");
+          this.selectedPeriode = this.periodes[1];
+      },
+      attributeChanged : function(name, type){
+          if(this.getAttribute('class').includes('iron-selected')){
+            this._generateRequests();
+          }
+      },
+      _computeHeaders: function(token) {
+        return {"Authorization": "JWT " + token };
+      },
+      _generateRequests: function () {
+        this.$.projetsRequest.params = { dateDebut: this.selectedPeriode.dateDebut, dateFin: this.selectedPeriode.dateFin }
+        this.$.projetsRequest.generateRequest();
+      },
+      _handleProjetsError: function(event) {
+        this.fire('connexion-administrateur-denied-event', {});
+      },
+      _reloadListe: function(event) {
+          this.selectedPeriode = event.model.get('item');
+          this._generateRequests();
+      },
+      _openAddProjetModal: function(event) {
+        this.fire('iron-signal', {name: 'open-ajout-projet-modal', data: {}});
+      },
+      _handleModalSuccessEvent: function(event) {
+        this._generateRequests();
+      },
+      _showBadgeDateLimite: function(dateLimite) {
+         if(moment(moment().format('YYYY-MM-DD')).isAfter(moment(dateLimite, 'DD/MM/YYYY').format('YYYY-MM-DD'))) {
+             return true;
+         } else {
+             return false;
+         }
+      },
+      _getEtatProjet: function(projet) {
+          if(projet.etatProjet.enAttente == 0 && projet.etatProjet.enCours == 0 && projet.etatProjet.termine != 0) {
+              return "projet-clos";
+          } else {
+              return "projet-en-cours";
+          }
+     }
+    });
+  </script>
+</dom-module>
