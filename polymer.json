@@ -1,0 +1,34 @@
+{
+  "entrypoint": "index.html",
+  "shell": "src/my-app.html",
+  "fragments": [
+    "src/view404.html",
+    "src/administrateur/page-actualite.html",
+    "src/administrateur/page-invitations.html",
+    "src/administrateur/page-invitations-detail.html",
+    "src/administrateur/page-profils.html",
+    "src/administrateur/page-rappels.html",
+    "src/administrateur/modals/ajout-profil-modal.html",
+    "src/administrateur/modals/ajout-projet-modal.html",
+    "src/administrateur/modals/ajout-rappel-modal.html",
+    "src/administrateur/modals/modification-profil-modal.html",
+    "src/administrateur/modals/suppression-rappel-modal.html",
+    "src/administrateur/modals/suppression-profil-modal.html",
+    "src/administrateur/toasts/toasts-administration.html",
+    "src/visiteur/page-biodatas.html",
+    "src/visiteur/page-delegation.html",
+    "src/visiteur/page-dossier.html",
+    "src/public/page-connexion-administrateur.html",
+    "src/public/page-connexion-visiteur.html"
+  ],
+  "sourceGlobs": [
+    "src/**/*",
+    "src/**/**/*",
+    "images/**/*",
+    "bower.json"
+  ],
+  "includeDependencies": [
+    "manifest.json",
+    "bower_components/webcomponentsjs/webcomponents-lite.min.js"
+  ]
+}
