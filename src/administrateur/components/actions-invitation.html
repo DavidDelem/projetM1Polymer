@@ -70,6 +70,13 @@
         url="{{serverUrl}}/invitations/{{invitation.identifiant}}/demandeaccessko"
         on-response="_handleActionsResponse"
         on-error="_handleActionsError"></iron-ajax>
+    <iron-ajax 
+        id="retourRequest" 
+        method="PUT"
+        headers="{{_computeHeaders(storedData.token)}}"
+        url="{{serverUrl}}/invitations/{{invitation.identifiant}}/retour"
+        on-response="_handleActionsResponse"
+        on-error="_handleActionsError"></iron-ajax>
       
     <paper-menu-button class="special-paper-menu">
         <paper-icon-button icon="icons:more-vert" class="dropdown-trigger"></paper-icon-button>
@@ -88,6 +95,7 @@
             </template>
             <paper-item><iron-icon icon="icons:cached"></iron-icon><span>Réinitialiser l'invitation</span></paper-item>
             <paper-item on-tap="_openRemoveInvitationModal"><iron-icon icon="icons:delete-forever"></iron-icon><span>Supprimer l'invitation</span></paper-item>
+             <paper-item on-tap="_retour"><iron-icon icon="icons:undo"></iron-icon><span>retour</span></paper-item>
         </paper-menu>
     </paper-menu-button>
   </template>
@@ -131,6 +139,9 @@
     },
     _transfererAuxAutorites: function() {
         this.$.transfertAutoritesRequest.generateRequest();
+    },
+    _retour: function() {
+        this.$.retourRequest.generateRequest();
     },
     _handleActionsResponse: function(response) {
         this.fire('iron-signal', {name: 'open-toast', data: {texte: 'L\'état de l\'invitation à été mis à jours'}});

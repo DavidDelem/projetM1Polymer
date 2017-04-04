@@ -16,19 +16,6 @@
     <iron-localstorage name="data-storage" value="{{storedData}}" on-iron-localstorage-load="_generateRequests"></iron-localstorage>
     <app-data key="storedData" data="{{storedData}}"></app-data>
       
-<!--
-    <iron-ajax 
-    id="projetRequest"
-    method="GET"
-    content-type="application/x-www-form-urlencoded"   
-    headers="{{_computeHeaders(storedData)}}"
-    url="{{serverUrl}}/projet"
-    handle-as="json"
-    last-response="{{champs}}"
-    on-response="_handleChampsResponse"
-    on-error="_handleChampsError"></iron-ajax>
--->
-      
     <iron-ajax 
     id="champsRequest"
     method="GET"
@@ -39,134 +26,161 @@
     last-response="{{champs}}"
     on-response="_handleChampsResponse"
     on-error="_handleChampsError"></iron-ajax>
+    
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>Informations générales</p>
+                    </div>
+                    <div class="col-md-12">
+                        <template is="dom-repeat" items="{{champs}}">
 
-    <div class="card">
-      <div class="circle">2</div>
-      <h1>Envoi des biodatas</h1>
-        <div class="row">
-            <div class="col-md-6 col-md-offset-3">
-                <template is="dom-repeat" items="{{champs}}">
-
-                    <template is="dom-if" if="{{_computeHidden(item, 'texte_nomprenom')}}">
-                        <div class="row texte_nomprenom">
-                            <div class="col-md-6">
-                                <paper-input-container>
-                                    <label>Nom</label>
-                                    <input is="iron-input" id="username" type="text" bind-value="{{item.saisie.nom}}">
-                                </paper-input-container>
-                            </div>
-                            <div class="col-md-6">
-                                <paper-input-container>
-                                    <label>Prénom</label>
-                                    <input is="iron-input" id="prenom" type="text" bind-value="{{item.saisie.test}}">
-                                </paper-input-container>
-                            </div>
-                        </div>
-                    </template>
-                    <template is="dom-if" if="{{_computeHidden(item, 'date')}}">
-                        <div class="row date">
-                            <div class="col-md-12">
-                                <vaadin-date-picker value="{{item.saisie.aa}}" label="Date de naissance (MM/JJ/YYYY)"></vaadin-date-picker>
-                            </div>
-                        </div>
-                    </template>
-                    <template is="dom-if" if="{{_computeHidden(item, 'texte_adresse')}}">
-                        <div class="row adresse">
-                            <div class="col-md-12">
-                                <p>Adresse</p>
-                            </div>
-                            <div class="col-md-3"> 
-                                <paper-input-container>
-                                    <label>Numéro</label>
-                                    <input is="iron-input" id="username" type="number" bind-value="{{item.saisie.numero}}">
-                                </paper-input-container>
-                            </div>
-                            <div class="col-md-6">
-                                <paper-input-container>
-                                    <label>Rue</label>
-                                    <input is="iron-input" id="username" type="text" bind-value="{{item.saisie.rue}}">
-                                </paper-input-container>
-                            </div>
-                            <div class="col-md-3">
-                                <gold-zip-input label="Code postal" value="{{item.saisie.codepostal}}"></gold-zip-input>
-                            </div>
-                            <div class="col-md-5">
-                                <paper-input-container>
-                                    <label>Ville</label>
-                                    <input is="iron-input" id="username" type="text" bind-value="{{item.saisie.ville}}">
-                                </paper-input-container>
-                            </div>
-                            <div class="col-md-7">
-                                <paper-countries country="[[country]]" value="{{item.saisie.pays}}" max-suggestions="3" auto-validate="true" label="Pays" placeholder="Saisir le pays"></paper-countries>
-                            </div>
-                        </div>
-                    </template>
-                    <template is="dom-if" if="{{_computeHidden(item, 'texte_telephone')}}">
-                        <div class="row telephone">
-                            <div class="col-md-12">
-                                <gold-phone-input country-code="false" phone-number-pattern=".*"></gold-phone-input>
-                            </div>
-                        </div>
-                    </template>
-                    <template is="dom-if" if="{{_computeHidden(item, 'texte_nationalite')}}">
-                        <div class="row nationalite">
-                            <div class="col-md-12">
-                                <paper-countries country="[[country]]" value="{{item.saisie.pays}}" max-suggestions="3" auto-validate="true" label="Nationalité" placeholder="Saisir votre nationalité"></paper-countries>
-                            </div>
-                        </div>
-                    </template>
-                    <template is="dom-if" if="{{_computeHidden(item, 'texte')}}">
-                        <div class="row texte">
-                            <div class="col-md-12">
-                                <paper-input-container>
-                                <iron-autogrow-textarea></iron-autogrow-textarea>
-                                </paper-input-container>
-                            </div>
-                        </div>
-                    </template>
-                </template>
-                
-                <paper-toggle-button checked="{{vehicule}}">Je serais le conducteur d'un véhicule</paper-toggle-button>
-                <template is="dom-if" if="{{vehicule}}">
-                    <template is="dom-repeat" items="{{champs}}">
-                        <template is="dom-if" if="{{_computeHidden(item, 'vehicule_fichier')}}">
-                            <div class="row texte_nomprenom">
-                                <div class="col-md-6">
-                                    <paper-input-container>
-                                        <label>Nom</label>
-                                        <input is="iron-input" id="username" type="text" bind-value="{{item.saisie.nom}}">
-                                    </paper-input-container>
+                            <template is="dom-if" if="{{_computeHidden(item, 'texte_nomprenom')}}">
+                                <div class="row texte_nomprenom">
+                                    <div class="col-md-6">
+                                        <paper-input-container>
+                                            <label>Nom</label>
+                                            <input is="iron-input" id="nom" type="text" bind-value="{{item.saisie.nom}}">
+                                        </paper-input-container>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <paper-input-container>
+                                            <label>Prénom</label>
+                                            <input is="iron-input" id="prenom" type="text" bind-value="{{item.saisie.test}}">
+                                        </paper-input-container>
+                                    </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <paper-input-container>
-                                        <label>Prénom</label>
-                                        <input is="iron-input" id="prenom" type="text" bind-value="{{item.saisie.test}}">
-                                    </paper-input-container>
+                            </template>
+                            <template is="dom-if" if="{{_computeHidden(item, 'date')}}">
+                                <div class="row date">
+                                    <div class="col-md-12">
+                                        <vaadin-date-picker value="{{item.saisie.aa}}" label="Date de naissance (MM/JJ/YYYY)"></vaadin-date-picker>
+                                    </div>
                                 </div>
-                            </div>
+                            </template>
+                            <template is="dom-if" if="{{_computeHidden(item, 'texte_adresse')}}">
+                                <div class="row adresse">
+                                    <div class="col-md-12">
+                                        <p>Adresse</p>
+                                    </div>
+                                    <div class="col-md-3"> 
+                                        <paper-input-container>
+                                            <label>Numéro</label>
+                                            <input is="iron-input" id="username" type="number" bind-value="{{item.saisie.numero}}">
+                                        </paper-input-container>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <paper-input-container>
+                                            <label>Rue</label>
+                                            <input is="iron-input" id="username" type="text" bind-value="{{item.saisie.rue}}">
+                                        </paper-input-container>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <gold-zip-input label="Code postal" value="{{item.saisie.codepostal}} "></gold-zip-input>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <paper-input-container>
+                                            <label>Ville</label>
+                                            <input is="iron-input" id="username" type="text" bind-value="{{item.saisie.ville}}">
+                                        </paper-input-container>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <paper-countries country="[[country]]" value="{{item.saisie.pays}}" max-suggestions="3" auto-validate="true" label="Pays" placeholder="Saisir le pays"></paper-countries>
+                                    </div>
+                                </div>
+                            </template>
+                            <template is="dom-if" if="{{_computeHidden(item, 'texte_telephone')}}">
+                                <div class="row telephone">
+                                    <div class="col-md-12">
+                                        <paper-input-container>
+                                            <label>Numéro de téléphone</label>
+                                            <input is="iron-input" id="telephone" bind-value="{{item.saisie.telephone}}"></input>
+                                        </paper-input-container>
+                                    </div>
+                                </div>
+                            </template>
+                            <template is="dom-if" if="{{_computeHidden(item, 'texte_nationalite')}}">
+                                <div class="row nationalite">
+                                    <div class="col-md-12">
+                                        <paper-countries country="[[country]]"
+                                                         value="{{item.saisie.pays}}"
+                                                         max-suggestions="3"
+                                                         auto-validate="true"
+                                                         label="Nationalité" 
+                                                         placeholder="Saisir votre nationalité"></paper-countries>
+                                    </div>
+                                </div>
+                            </template>
+                            <template is="dom-if" if="{{_computeHidden(item, 'texte')}}">
+                                <div class="row texte">
+                                    <div class="col-md-12">
+                                        <paper-input-container>
+                                            <label>Remarques</label>
+                                            <iron-autogrow-textarea class="paper-input-input" bind-value="{{item.saisie.remarques}}"></iron-autogrow-textarea>
+                                        </paper-input-container>
+                                    </div>
+                                </div>
+                            </template>
                         </template>
-                        <template is="dom-if" if="{{_computeHidden(item, 'vehicule_texte')}}">
-                            <div class="row vehicule_texte">
-                                <div class="col-md-6">
-                                    <paper-input-container>
-                                        <label>{{item.nom}}</label>
-                                        <input is="iron-input" id="username" type="text" bind-value="{{item.saisie.immatriculation}}">
-                                    </paper-input-container>
-                                </div>
-                            </div>
-                        </template>
-                    </template>
-                </template>
-                
-<!--
-                <template is="dom-if" if="{{_actionIsLogin(action)}}">
-                
-                </template>
--->
+                    </div>
+                </div>
             </div>
         </div>
-        <paper-button on-tap="_sendBiodatas">Envoyer</paper-button>
-    </div>
+        <div class="col-lg-6">
+                <div class="card">
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>Documents d'identité à joindre à votre demande</p>
+                    </div>
+                    <div class="col-md-12">
+                        <paper-autocomplete label="Nationalité" source="{{nationalites}}" value="{{selectedNationalite}}"></paper-autocomplete>
+                    </div>
+                    <template is="dom-repeat" items="{{champs}}">
+                        <template is="dom-if" if="{{_computeHidden(item, 'fichier')}}">
+                            <div class="col-md-12">
+                                <label>{{item.nom}}</label>
+                                <input id="fichier[[item.identifiant]]" type="file" on-change="_previewFile">
+                            </div>
+                        </template>
+                    </template>   
+                </div>                
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>Véhicule</p>
+                        <paper-toggle-button checked="{{vehicule}}">Je serais le conducteur d'un véhicule</paper-toggle-button>
+                    </div>
+                    <template is="dom-if" if="{{vehicule}}">
+                            <template is="dom-repeat" items="{{champs}}">
+                                <template is="dom-if" if="{{_computeHidden(item, 'vehicule_fichier')}}">
+                                    <div class="col-md-6">
+                                        <paper-input-container>
+                                            <label>{{item.nom}}</label>
+                                            <input is="iron-input" id="username" type="text" bind-value="{{item.saisie.nom}}">
+                                        </paper-input-container>
+                                    </div>
+                                </template>
+                                <template is="dom-if" if="{{_computeHidden(item, 'vehicule_texte')}}">
+                                    <div class="col-md-6">
+                                        <paper-input-container>
+                                            <label>{{item.nom}}</label>
+                                            <input is="iron-input" id="username" type="text" bind-value="{{item.saisie.immatriculation}}">
+                                        </paper-input-container>
+                                    </div>
+                                </template>
+                            </template>                   
+                    </template>
+                </div>
+            </div>  
+        </div>
+      </div>
+    
+    <paper-button on-tap="_sendBiodatas">Envoyer</paper-button>
   </template>
 
   <script>
@@ -174,9 +188,212 @@
       is: 'page-biodatas',
       properties: {
         champs: Object,
-        serverUrl: String
+        serverUrl: String,
+        nationalites: Object,
+        selectedNationalite: String,
+        fichiers: {
+            type: Object,
+            value: []
+        }
       },
       ready: function () {
+          
+        this.nationalites = [
+   "Afghan",
+   "Albanian",
+   "Algerian",
+   "American",
+   "Andorran",
+   "Angolan",
+   "Antiguans",
+   "Argentinean",
+   "Armenian",
+   "Australian",
+   "Austrian",
+   "Azerbaijani",
+   "Bahamian",
+   "Bahraini",
+   "Bangladeshi",
+   "Barbadian",
+   "Barbudans",
+   "Batswana",
+   "Belarusian",
+   "Belge",
+   "Belizean",
+   "Beninese",
+   "Bhutanese",
+   "Bolivian",
+   "Bosnian",
+   "Brazilian",
+   "British",
+   "Bruneian",
+   "Bulgarian",
+   "Burkinabe",
+   "Burmese",
+   "Burundian",
+   "Cambodian",
+   "Cameroonian",
+   "Canadienne",
+   "Cape Verdean",
+   "Central African",
+   "Chadian",
+   "Chilean",
+   "Chinese",
+   "Colombian",
+   "Comoran",
+   "Congolese",
+   "Costa Rican",
+   "Croatian",
+   "Cuban",
+   "Cypriot",
+   "Czech",
+   "Danish",
+   "Djibouti",
+   "Dominican",
+   "Dutch",
+   "East Timorese",
+   "Ecuadorean",
+   "Egyptian",
+   "Emirian",
+   "Equatorial Guinean",
+   "Eritrean",
+   "Estonian",
+   "Ethiopian",
+   "Fijian",
+   "Filipino",
+   "Finnish",
+   "Française",
+   "Gabonese",
+   "Gambian",
+   "Georgian",
+   "German",
+   "Ghanaian",
+   "Greek",
+   "Grenadian",
+   "Guatemalan",
+   "Guinea-Bissauan",
+   "Guinean",
+   "Guyanese",
+   "Haitian",
+   "Herzegovinian",
+   "Honduran",
+   "Hungarian",
+   "I-Kiribati",
+   "Icelander",
+   "Indian",
+   "Indonesian",
+   "Iranian",
+   "Iraqi",
+   "Irish",
+   "Israeli",
+   "Italian",
+   "Ivorian",
+   "Jamaican",
+   "Japanese",
+   "Jordanian",
+   "Kazakhstani",
+   "Kenyan",
+   "Kittian and Nevisian",
+   "Kuwaiti",
+   "Kyrgyz",
+   "Laotian",
+   "Latvian",
+   "Lebanese",
+   "Liberian",
+   "Libyan",
+   "Liechtensteiner",
+   "Lithuanian",
+   "luxembourgeoise",
+   "Macedonian",
+   "Malagasy",
+   "Malawian",
+   "Malaysian",
+   "Maldivan",
+   "Malian",
+   "Maltese",
+   "Marshallese",
+   "Mauritanian",
+   "Mauritian",
+   "Mexican",
+   "Micronesian",
+   "Moldovan",
+   "Monégasque",
+   "Mongolian",
+   "Moroccan",
+   "Mosotho",
+   "Motswana",
+   "Mozambican",
+   "Namibian",
+   "Nauruan",
+   "Nepalese",
+   "New Zealander",
+   "Nicaraguan",
+   "Nigerian",
+   "Nigerien",
+   "North Korean",
+   "Northern Irish",
+   "Norwegian",
+   "Omani",
+   "Pakistani",
+   "Palauan",
+   "Panamanian",
+   "Papua New Guinean",
+   "Paraguayan",
+   "Peruvian",
+   "Polish",
+   "Portuguese",
+   "Qatari",
+   "Romanian",
+   "Russian",
+   "Rwandan",
+   "Saint Lucian",
+   "Salvadoran",
+   "Samoan",
+   "San Marinese",
+   "Sao Tomean",
+   "Saudi",
+   "Scottish",
+   "Senegalese",
+   "Serbian",
+   "Seychellois",
+   "Sierra Leonean",
+   "Singaporean",
+   "Slovakian",
+   "Slovenian",
+   "Solomon Islander",
+   "Somali",
+   "South African",
+   "South Korean",
+   "Spanish",
+   "Sri Lankan",
+   "Sudanese",
+   "Surinamer",
+   "Swazi",
+   "Swedish",
+   "Suisse",
+   "Syrian",
+   "Taiwanese",
+   "Tajik",
+   "Tanzanian",
+   "Thai",
+   "Togolese",
+   "Tongan",
+   "Trinidadian or Tobagonian",
+   "Tunisian",
+   "Turkish",
+   "Tuvaluan",
+   "Ugandan",
+   "Ukrainian",
+   "Uruguayan",
+   "Uzbekistani",
+   "Venezuelan",
+   "Vietnamese",
+   "Welsh",
+   "Yemenite",
+   "Zambian",
+   "Zimbabwean"
+];
+          
         this.serverUrl = this.$.meta.byKey("server-url");
       },
       attributeChanged : function(name, type){
@@ -204,9 +421,17 @@
               return false;
           }
       },
+      _previewFile: function(event) {
+          var item = event.model.get('item');
+          console.log(item.identifiant);
+          var fichier = Polymer.dom(this.root).querySelector('#fichier'+item.identifiant).files[0];
+          this.fichiers.push({ identifiantChamp: item.identifiant, fichier: fichier});
+          console.log(this.fichiers);
+      },
       _sendBiodatas: function() {
           console.log(this.champs);
-          this._validateForm();
+          console.log(this.selectedNationalite);
+         // this._validateForm();
       },
       _validateForm: function() {
       }

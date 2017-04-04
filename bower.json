@@ -47,7 +47,8 @@
     "paper-countries": "^2.0.0",
     "polymer": "Polymer/polymer#^1.6.0",
     "page": "visionmedia/page.js#^1.7.1",
-    "moment": "^2.18.1"
+    "moment": "^2.18.1",
+    "paper-autocomplete": "^2.5.1"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"
