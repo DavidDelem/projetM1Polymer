@@ -19,7 +19,7 @@
     id="recuperationIdentifiantsRequest"
     method="POST"
     content-type="application/x-www-form-urlencoded"   
-    url="{{serverUrl}}/projets/{{projet.identifiant}}/invitations"
+    url="{{serverUrl}}/token/visiteur/identifiant"
     on-response="_handleAddInvitationResponse"
     on-error="_handleAddInvitationError"></iron-ajax>    
       
@@ -56,8 +56,8 @@
           return !re.test(email);
       },
       _recupererIdentifiants: function() {
-        this.$.recuperationIdentifiants.body = { email: this.email }
-        this.$.recuperationIdentifiants.generateRequest();
+        this.$.recuperationIdentifiantsRequest.body = { email: this.email }
+        this.$.recuperationIdentifiantsRequest.generateRequest();
       },
       _handleRecuperationIdentifiantsResponse: function(response) {
         this.$.dialog.close();
