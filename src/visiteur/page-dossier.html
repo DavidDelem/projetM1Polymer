@@ -1,10 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../shared-styles.html">
 <link rel="import" href="../app-data.html">
-
-<script src="../../bower_components/moment/moment.js"></script>
-<script src="../../bower_components/moment/locale/fr.js"></script>
-
 <dom-module id="page-dossier">
   <template>
     <style include="shared-styles">
@@ -108,7 +104,7 @@
             <template is="dom-if" if="{{_computeHidden(item, 'RECEPTION_INVITATION')}}">
                 <div class="col-lg-3 col-centered">
                     <div class="timeline-element">
-                        <span class="timeline-date">[[_getDate(item.date)]]</span>
+                        <span class="timeline-date">[[item.date]]</span>
                         <div class="card card-timeline">
                             <paper-fab icon="icons:account-circle"></paper-fab>
                             <h3>Invitation reçue</h3>
@@ -120,7 +116,7 @@
             <template is="dom-if" if="{{_computeHidden(item, 'ENVOI_BIODATAS')}}">
                 <div class="col-lg-3 col-centered">
                     <div class="timeline-element">
-                        <span class="timeline-date">[[_getDate(item.date)]]</span>
+                        <span class="timeline-date">[[item.date]]</span>
                         <div class="card card-timeline">
                             <paper-fab icon="icons:cloud-queue"></paper-fab>
                             <h3>Biodatas envoyées</h3>
@@ -132,7 +128,7 @@
             <template is="dom-if" if="{{_computeHidden(item, 'VALIDATION_BIODATAS')}}">
                 <div class="col-lg-3">
                     <div class="timeline-element">
-                        <span class="timeline-date">[[_getDate(item.date)]]</span>
+                        <span class="timeline-date">[[item.date]]</span>
                         <div class="card card-timeline">
                             <paper-fab icon="icons:assignment-turned-in"></paper-fab>
                             <h3>Biodatas validées</h3>
@@ -144,7 +140,7 @@
             <template is="dom-if" if="{{_computeHidden(item, 'REFUS_BIODATAS')}}">
                 <div class="col-lg-3">
                     <div class="timeline-element">
-                        <span class="timeline-date">[[_getDate(item.date)]]</span>
+                        <span class="timeline-date">[[item.date]]</span>
                         <div class="card card-timeline">
                             <paper-fab icon="icons:assignment-late"></paper-fab>
                             <h3>Biodatas refusées</h3>
@@ -156,7 +152,7 @@
             <template is="dom-if" if="{{_computeHidden(item, 'TRANSFERT_AUTORITES')}}">
                 <div class="col-lg-3">
                     <div class="timeline-element">
-                        <span class="timeline-date">[[_getDate(item.date)]]</span>
+                        <span class="timeline-date">[[item.date]]</span>
                         <div class="card card-timeline">
                             <paper-fab icon="communication:mail-outline"></paper-fab>
                             <h3>Biodatas transférées aux autorités</h3>
@@ -168,7 +164,7 @@
             <template is="dom-if" if="{{_computeHidden(item, 'DEMANDE_ACCESS_OK')}}">
                  <div class="col-lg-10 col-lg-offset-1">
                     <div class="timeline-element">
-                        <span class="timeline-date">[[_getDate(item.date)]]</span>
+                        <span class="timeline-date">[[item.date]]</span>
                         <div class="card card-timeline">
                             <paper-fab icon="icons:check"></paper-fab>
                             <h3>Demande d'accès acceptée</h3>
@@ -183,7 +179,7 @@
             <template is="dom-if" if="{{_computeHidden(item, 'DEMANDE_ACCESS_KO')}}">
                 <div class="col-lg-10 col-lg-offset-1">
                     <div class="timeline-element">
-                        <span class="timeline-date">[[_getDate(item.date)]]</span>
+                        <span class="timeline-date">[[item.date]]</span>
                         <div class="card card-timeline">
                             <paper-fab icon="icons:clear"></paper-fab>
                             <h3>Demande d'accès refusée</h3>
@@ -196,7 +192,7 @@
             <template is="dom-if" if="{{_computeHidden(item, 'REINITIALISATION')}}">
                 <div class="col-lg-3">
                     <div class="timeline-element">
-                        <span class="timeline-date">[[_getDate(item.date)]]</span>
+                        <span class="timeline-date">[[item.date]]</span>
                         <div class="card card-timeline">
                             <paper-fab icon="icons:cached"></paper-fab>
                             <h3>Invitation réinitialisée</h3>
@@ -208,7 +204,7 @@
             <template is="dom-if" if="{{_computeHidden(item, 'DATE_LIMITE_ATTEINTE')}}">
                 <div class="col-lg-3">
                     <div class="timeline-element">
-                        <span class="timeline-date">[[_getDate(item.date)]]</span>
+                        <span class="timeline-date">[[item.date]]</span>
                         <div class="card card-timeline">
                             <paper-fab icon="icons:alarm"></paper-fab>
                             <h3>Date limite atteinte</h3>
@@ -252,8 +248,21 @@
               return false;
           }
       },
+<<<<<<< HEAD
       _getDate: function(timestamp) {
         return moment(timestamp, 'x').format('DD/MM/YYYY');
+=======
+
+      _getDate: function(timestamp) {
+        var a = new Date(timestamp);
+        var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        var year = a.getFullYear();
+        var month = months[a.getMonth()];
+        var date = a.getDate();
+        var time = date + ' ' + month + ' ' + year + ' ' ;
+
+        return time;
+>>>>>>> d4ba760f0d5a92b8105ee43300bd9a8e83f6f3c6
       }
     });
   </script>
