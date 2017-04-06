@@ -57,9 +57,11 @@
       _handleSuppressionProjetResponse: function(response) {
         this.$.dialog.close();
         this.fire('iron-signal', {name: 'modal-suppression-success'});
+        this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Le projet à été définitivement supprimé'}});
       },
       _handleSupppressionProjetError: function(error) {
         this.$.dialog.close();
+        this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Echec lors de la suppression du projet'}});
       }
         
     });

@@ -3,6 +3,9 @@
 <link rel="import" href="../app-data.html">
 <link rel="import" href="components/actions-invitation.html">
 
+<script src="../../bower_components/moment/moment.js"></script>
+<script src="../../bower_components/moment/locale/fr.js"></script>
+
 <dom-module id="page-invitations-detail">
   <template>
     <style include="shared-styles">
@@ -164,8 +167,8 @@
                 <div class="card">
                     <p>{{projetDetail.nom}}</p>  
                     <p><iron-icon icon="icons:description"></iron-icon> Profil de formulaire: [[projetDetail.nomProfil]]</p>
-                    <p><iron-icon icon="icons:event"></iron-icon> Date de création: [[projetDetail.dateCreation]]</p>
-                    <p><iron-icon icon="icons:date-range"></iron-icon> Date limite: [[projetDetail.dateLimite]]</p>
+                    <p><iron-icon icon="icons:event"></iron-icon> Date de création: [[_getDate(projetDetail.dateCreation)]]</p>
+                    <p><iron-icon icon="icons:date-range"></iron-icon> Date limite: [[_getDate(projetDetail.dateLimite)]]</p>
                     <div class="paper-fab-section">
                         <paper-fab class="paper-fab" icon="icons:create" on-tap="_openModificationProjetModal"></paper-fab>
                         <paper-fab class="paper-fab" icon="icons:delete" on-tap="_openSuppressionProjetModal"></paper-fab>
@@ -175,14 +178,13 @@
             <div class="col-md-12">
                 <div class="card">
                     <p>Rappels automatisés</p>
-                    <paper-toggle-button checked="true">Activer l'envoi automatique des rappels pour ce projet</paper-toggle-button>
+                    <paper-toggle-button checked="true">Activer les rappels automatisés</paper-toggle-button>
                 </div>
             </div>
             <div class="col-md-12">
                 <div class="card">
                     <p>Délégation d'invitation</p>
                     <paper-toggle-button checked="true">Autoriser la délégation d'invitation</paper-toggle-button>
-                    <p><iron-icon icon="av:recent-actors"></iron-icon>3 invitations déléguées</p>
                 </div>
             </div>
         </div>
@@ -252,6 +254,9 @@
           } else {
               return false;
           }
+      },
+      _getDate: function(timestamp) {
+        return moment(timestamp, 'x').format('DD/MM/YYYY');
       }
     });
   </script>
