@@ -10,11 +10,57 @@
         padding: 10px;
       }
     </style>
+      
+    <iron-meta id="meta"></iron-meta>
+    <iron-localstorage name="data-storage" value="{{storedData}}" on-iron-localstorage-load="_generateRequests"></iron-localstorage>
+    <app-data key="storedData" data="{{storedData}}"></app-data>
+      
+    <iron-ajax 
+        id="historiqueRequest" 
+        method="GET"
+        headers="{{_computeHeaders(storedData.token)}}"
+        url="{{serverUrl}}/historique"
+        handle-as="json"
+        last-response="{{historique}}"
+        on-error="_handleHistoriqueError"></iron-ajax>
+      <div class="col-md-6 col-md-offset-3">
+          
+        <template is="dom-repeat" items="{{historique}}">
+            <paper-card>
+                 <div class="card-content">
+                     <p>[[_getDate(item.date)]]</p>
+                </div>
+            </paper-card>
+        </template>
+      </div>
   </template>
 
   <script>
     Polymer({
       is: 'page-actualite',
+      properties: {
+        baseUrl: String,
+        serverUrl: String,
+        historique: Object
+      },
+      ready: function () {
+          this.baseUrl = this.$.meta.byKey("base-url");
+          this.serverUrl = this.$.meta.byKey("server-url");
+      },
+      attributeChanged : function(name, type) {
+          if(this.getAttribute('class').includes('iron-selected')){
+            this._generateRequests();
+          }
+      },
+      _computeHeaders: function(token) {
+        return {"Authorization": "JWT " + token };
+      },
+      _generateRequests: function () {
+        this.$.historiqueRequest.generateRequest();
+      },
+      _getDate: function(timestamp) {
+        return moment(timestamp, 'x').format('DD/MM/YYYY');
+      }
     });
   </script>
 </dom-module>

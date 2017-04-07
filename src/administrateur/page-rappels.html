@@ -80,7 +80,7 @@
         content-type="application/x-www-form-urlencoded"   
         headers="{{_computeHeaders(storedData.token)}}"
         url="{{serverUrl}}/rappels/configuration/activation"
-        on-success="_handleToggleActivationRappelsSuccess"
+        on-response="_handleToggleActivationRappelsResponse"
         on-error="_handleToggleActivationRappelsError"></iron-ajax>
       
     <div class="col-md-12">
@@ -138,6 +138,12 @@
       _toggleActivationRappels: function() {
         this.$.toggleActivationRappelsRequest.body = { activation: this.configurationRappels.activation };
         this.$.toggleActivationRappelsRequest.generateRequest();
+      },
+      _handleToggleActivationRappelsResponse: function() {
+        this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Modifications enregistrées'}});
+      },
+      _handleToggleActivationRappelsError: function() {
+        this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Echec lors de l\'enregistrement des modifications'}});
       },
       _openRemoveRappelModal: function(event) {
         this.fire('iron-signal', {name: 'open-suppression-rappel-modal', data: {nbJours: event.model.get('item.nbJours')}});

@@ -66,9 +66,11 @@
         this.$.dialog.close();
         this.email = "";
         this.fire('iron-signal', {name: 'modal-projet-success'});
+        this.fire('iron-signal', {name: 'open-toast', data: {texte: 'L\'invitation à été ajoutée'}});
       },
       _handleAddInvitationError: function(error) {
         this.$.dialog.close();
+        this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Echec lors de l\'ajout de l\'invitation'}});
       }
         
     });
