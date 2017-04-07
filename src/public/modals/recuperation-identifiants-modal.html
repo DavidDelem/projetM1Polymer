@@ -20,8 +20,8 @@
     method="POST"
     content-type="application/x-www-form-urlencoded"   
     url="{{serverUrl}}/token/visiteur/identifiant"
-    on-response="_handleAddInvitationResponse"
-    on-error="_handleAddInvitationError"></iron-ajax>    
+    on-response="_handleRecuperationIdentifiantsResponse"
+    on-error="_handleRecuperationIdentifiantsError"></iron-ajax>    
       
     <paper-dialog id="dialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
         <h2>Récupération des identifiants</h2>
@@ -30,6 +30,12 @@
             <label>Email</label>
             <input is="iron-input" id="email" type="email" bind-value="{{email}}">
         </paper-input-container>
+        <template is="dom-if" if="{{error}}"> <!--affichage d'erreur -->
+            <h3><iron-icon icon="icons:report-problem"></iron-icon>identifiant non valable</h3>
+        </template>
+        <template is="dom-if" if="{{success}}"> <!--affichage d'erreur -->
+            <h3>identifiant est envoyé par mail</h3>
+        </template>
         <div class="buttons">
             <paper-button dialog-dismiss>Annuler</paper-button>
             <paper-button autofocus on-tap="_recupererIdentifiants" disabled$="{{_validateForm(email)}}">Valider</paper-button>
@@ -43,7 +49,9 @@
       is: 'recuperation-identifiants-modal',
       properties: {
         email: String,
-        serverUrl: String
+        serverUrl: String,
+        error: Boolean,
+        success: Boolean
       },
       ready: function () {
         this.serverUrl = this.$.meta.byKey("server-url");
@@ -60,12 +68,17 @@
         this.$.recuperationIdentifiantsRequest.generateRequest();
       },
       _handleRecuperationIdentifiantsResponse: function(response) {
-        this.$.dialog.close();
+        //this.$.dialog.close();
+        this.success = true;
+        this.error = false;
         this.email = "";
         this.fire('iron-signal', {name: 'modal-success'});
+
       },
       _handleRecuperationIdentifiantsError: function(error) {
-        this.$.dialog.close();
+        this.error = true;
+        this.email = "";
+        //this.$.dialog.close();
       }
         
     });
