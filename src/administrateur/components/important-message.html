@@ -1,0 +1,33 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../shared-styles.html">
+<link rel="import" href="../../app-data.html">
+
+<dom-module id="important-message">
+  <template>
+    <style include="shared-styles">
+        .important-message {
+            display:block;
+            width: 100%;
+            padding: 6px;
+            margin: 20px 0px 10px 0px;
+            text-align: center;
+            font-size: 1rem;
+            line-height: 22px;
+            font-weight: 300;
+            font-size: 0.8rem;
+            color: #fff;
+            background-color: #ff4081;
+            border-radius: 2px;
+        }
+    </style>
+      
+    <span class="important-message">[[message]]</span>
+  </template>
+
+  <script>
+  Polymer({
+    is: 'important-message'
+  });
+  </script>
+
+</dom-module>

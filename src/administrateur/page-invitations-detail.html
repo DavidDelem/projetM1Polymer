@@ -2,6 +2,7 @@
 <link rel="import" href="../shared-styles.html">
 <link rel="import" href="../app-data.html">
 <link rel="import" href="components/actions-invitation.html">
+<link rel="import" href="components/important-message.html">
 
 <script src="../../bower_components/moment/moment.js"></script>
 <script src="../../bower_components/moment/locale/fr.js"></script>
@@ -113,7 +114,11 @@
         url="{{serverUrl}}/projets/{{projet}}/rappels"
         on-response="_handleToggleActivationRappelsResponse"
         on-error="_handleToggleActivationRappelsError"></iron-ajax>
-      
+        <template is="dom-if" if="{{_showBadgeDateLimite(projetDetail.dateLimite)}}">
+            <div class="col-md-12">
+                <important-message message="La date limite pour ce projet est atteinte, les visiteurs ne peuvent plus envoyer leurs biodatas"></important-message>
+            </div>
+        </template>
         <div class="col-md-8">
             <div class="card">
                 <brainy-table id="brainytable" class="expandable" page-size="5" items="{{invitations}}">
@@ -295,7 +300,14 @@
       },
       _getDate: function(timestamp) {
         return moment(timestamp, 'x').format('DD/MM/YYYY');
-      }
+      },
+      _showBadgeDateLimite: function(dateLimite) {
+         if(Date.now() > dateLimite) {
+             return true;
+         } else {
+             return false;
+         }
+      },
     });
   </script>
 </dom-module>
