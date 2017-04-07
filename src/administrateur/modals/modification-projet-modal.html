@@ -94,7 +94,7 @@
         this.projet = event.detail.projet.nom;
         this.identifiantProjet = event.detail.projet.identifiant;
         this.profil = event.detail.projet.profil;
-        this.dateLimite =  moment(event.detail.projet.dateLimite, 'DD/MM/YYYY').format('YYYY-MM-DD');
+        this.dateLimite =  moment(event.detail.projet.dateLimite, 'x').format('YYYY-MM-DD');
         this.$.dialog.open();
       },
       _validateForm: function(projet, profil, dateLimite) {
@@ -103,16 +103,21 @@
           }
       },
       _modifierProjet: function() {
-        this.$.modificationProjetRequest.body = { nom: this.projet, profil: this.profil, dateLimite: this.dateLimite };
+        this.$.modificationProjetRequest.body = { nom: this.projet, profil: this.profil, dateLimite: moment(this.dateLimite, 'YYYY-MM-DD').format('x') };
         this.$.modificationProjetRequest.generateRequest();
         this.projet =  "";
       },
       _handleModificationProjetResponse: function(response) {
         this.$.dialog.close();
         this.fire('iron-signal', {name: 'modal-projet-success'});
+        this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Les modifications du projet sont enregistrées'}});
       },
       _handleModificationProjetError: function(error) {
         this.$.dialog.close();
+        this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Echec lors de la modification du projet'}});
+      },
+      _getDate: function(timestamp) {
+        return moment(timestamp, 'x').format('YYYY-MM-DD');
       }
         
     });

@@ -52,7 +52,7 @@
     on-error="_handleUpdateChampsError"></iron-ajax>
       
     <paper-dialog class="size-position" id="dialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
-        <h2>Modification du profil [[selectedProfil.nom]]</h2>
+        <h2>Modification du profil de formulaire [[selectedProfil.nom]]</h2>
         <div clas="row">
             <template is="dom-repeat" items="{{champs}}">
                 <div class="col-md-3">
@@ -102,9 +102,11 @@
       },
       _handleUpdateChampsResponse: function(response) {
         this.$.dialog.close();
+        this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Les modifications du profil sont enregistrées'}});
       },
       _handleUpdateChampsError: function(error) {
         this.$.dialog.close();
+        this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Echec lors de l\'enregistrement des modifications du profil'}});
       },
         
     });

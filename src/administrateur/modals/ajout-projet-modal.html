@@ -93,16 +93,20 @@
           }
       },
       _addProjet: function() {
-        this.$.addProjetRequest.body = { projet: this.projet, profil: this.selectedProfil, dateLimite: this.selectedDateLimite };
+        this.$.addProjetRequest.body = { projet: this.projet, profil: this.selectedProfil, dateLimite: moment(this.selectedDateLimite, 'YYYY-MM-DD').format('x') };
         this.projet =  "";
+        this.selectedProfil = "";
+        this.selectedDateLimite = "";
         this.$.addProjetRequest.generateRequest();
       },
       _handleAddProjetResponse: function(response) {
         this.$.dialog.close();
         this.fire('iron-signal', {name: 'modal-success'});
+        this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Le projet à été ajouté'}});
       },
       _handleAddProjetError: function(error) {
         this.$.dialog.close();
+        this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Echec lors de l\'ajout du projet'}});
       }
         
     });

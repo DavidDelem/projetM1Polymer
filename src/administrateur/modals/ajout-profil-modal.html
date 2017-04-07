@@ -25,12 +25,12 @@
     <paper-dialog id="dialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
         <h2>Ajout d'un profil de formulaire</h2>
         <paper-input-container>
-            <label>Nom du profil de formulaire</label>
+            <label>Nom</label>
             <input is="iron-input" id="profil" type="text" bind-value="{{profil}}">
         </paper-input-container>
         <div class="buttons">
             <paper-button dialog-dismiss>Annuler</paper-button>
-            <paper-button autofocus on-tap="_addProfil">Valider</paper-button>
+            <paper-button autofocus on-tap="_addProfil" disabled$="{{!profil}}">Valider</paper-button>
         </div>
     </paper-dialog>
       
@@ -63,9 +63,11 @@
       _handleAddProfilResponse: function(response) {
         this.$.dialog.close();
         this.fire('iron-signal', {name: 'modal-success'});
+        this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Le profil de formulaire à été ajouté'}});
       },
       _handleAddProfilError: function(error) {
         this.$.dialog.close();
+        this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Echec lors de l\'ajout du profil de formulaire'}});
       }
         
     });

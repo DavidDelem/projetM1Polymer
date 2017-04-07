@@ -28,7 +28,7 @@
       
     <paper-dialog id="dialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
         <h2>Suppression du profil de formulaire [[selectedProfil.nom]]</h2>
-        <p>La suppression d'un profil de formulaire est définitive.</p>
+        <p>Attention, la suppression d'un profil de formulaire est définitive</p>
         <div class="buttons">
             <paper-button dialog-dismiss>Annuler</paper-button>
             <paper-button autofocus on-tap="_removeProfil">Valider</paper-button>
@@ -61,9 +61,11 @@
       _handleRemoveProfilResponse: function(response) {
         this.$.dialog.close();
         this.fire('iron-signal', {name: 'modal-success'});
+        this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Le profil de formulaire à été définitivement supprimé'}});
       },
       _handleRemoveProfilError: function(error) {
         this.$.dialog.close();
+        this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Echec lors de la suppression du profil de formulaire'}});
       }
         
     });
