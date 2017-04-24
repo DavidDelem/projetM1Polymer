@@ -2,6 +2,12 @@
 <link rel="import" href="../shared-styles.html">
 <link rel="import" href="../app-data.html">
 
+  <link rel="import" href="../../bower_components/neon-animation/neon-animation.html">
+
+  <link rel="import" href="../../bower_components/neon-animation/neon-animation-behavior.html">
+  <link rel="import" href="../../bower_components/neon-animation/animations/cascaded-animation.html">
+  <link rel="import" href="../../bower_components/neon-animation/animations/slide-up-animation.html">
+
 <dom-module id="page-actualite">
   <template>
     <style include="shared-styles">
@@ -14,6 +20,37 @@
         width: 100%;
         margin-bottom: 40px;
       }
+        
+        .fil-actualite-date {
+            text-align: left;
+            padding-top: 15px;
+        }
+        
+       .fil-actualite-date:after {
+          content: '';
+          width: 0;
+          height: 100%;
+          position: absolute;
+          border: 1px solid #555555;
+          top: 140%;
+          left: 50px;
+        }
+        
+        .paper-card-fil-actualite paper-fab {
+            position: absolute;
+            left: -28px;
+            top: 0px;
+        }
+        
+        .paper-card-fil-actualite span {
+            padding-left: 30px;
+        }
+        
+        .floating-text {
+            color: #555555;
+            font-size: 14px;
+            font-weight: 500;
+        }
     </style>
       
     <iron-meta id="meta"></iron-meta>
@@ -29,19 +66,59 @@
         last-response="{{historique}}"
         on-error="_handleHistoriqueError"></iron-ajax>
       <div class="col-md-8 col-md-offset-2">
-          
-        <template is="dom-repeat" items="{{historique}}">
-                <div class="col-md-2 fil-actualite-date">
-                    <span>[[_getDate(item.date)]]</span>
-                    <paper-fab icon="icons:date-range"></paper-fab>
-                </div>
-                <div class="col-md-10">
-                    <paper-card class="paper-card-fil-actualite">
-                         <div class="card-content">
-                             <p>La date limite pour le projet NOMPROJET à été atteinte</p>
+        <template is="dom-repeat" items="{{historique}}" on-dom-change="_renderList">
+                <template is="dom-if" if="{{_computeHidden(item, 'DATE_LIMITE_ATTEINTE')}}">
+                    <div class="col-md-2 fil-actualite-date">
+                        <span class="floating-text">[[_getDate(item.date)]]</span>
+                    </div>
+                        <div class="col-md-10">
+                            <paper-card class="paper-card-fil-actualite">
+                                 <div class="card-content">
+                                    <paper-fab icon="icons:date-range"></paper-fab>
+                                     <span>Date limite du projet NOMPROJET atteinte</span>
+                                </div>
+                            </paper-card>
                         </div>
-                    </paper-card>
-                </div>
+                </template>
+                <template is="dom-if" if="{{_computeHidden(item, 'TOUTES_BIODATAS_ENVOYEES')}}">
+                        <div class="col-md-2 fil-actualite-date">
+                            <span class="floating-text">[[_getDate(item.date)]]</span>
+                        </div>
+                            <div class="col-md-10">
+                                <paper-card class="paper-card-fil-actualite">
+                                     <div class="card-content">
+                                        <paper-fab icon="icons:date-range"></paper-fab>
+                                         <span>Date limite du projet NOMPROJET atteinte</span>
+                                    </div>
+                                </paper-card>
+                            </div>
+                </template>
+                <template is="dom-if" if="{{_computeHidden(item, 'TOUTES_BIODATAS_ENVOYEES')}}">
+                        <div class="col-md-2 fil-actualite-date">
+                            <span class="floating-text">[[_getDate(item.date)]]</span>
+                        </div>
+                            <div class="col-md-10">
+                                <paper-card class="paper-card-fil-actualite">
+                                     <div class="card-content">
+                                        <paper-fab icon="communication:mail-outline"></paper-fab>
+                                         <span>La totalité des visiteurs du projet NOMPROJET ont envoyé leurs biodatas</span>
+                                    </div>
+                                </paper-card>
+                            </div>
+                </template>
+                <template is="dom-if" if="{{_computeHidden(item, 'DELEGATION_INVITATION')}}">
+                        <div class="col-md-2 fil-actualite-date">
+                            <span class="floating-text">[[_getDate(item.date)]]</span>
+                        </div>
+                            <div class="col-md-10">
+                                <paper-card class="paper-card-fil-actualite">
+                                     <div class="card-content">
+                                        <paper-fab icon="av:recent-actors"></paper-fab>
+                                         <span>Le visiteur VISITEUR à délégué son invitation à X autre visiteurs</span>
+                                    </div>
+                                </paper-card>
+                            </div>
+                </template>
         </template>
       </div>
   </template>
@@ -49,10 +126,29 @@
   <script>
     Polymer({
       is: 'page-actualite',
+        behaviors: [
+          Polymer.NeonAnimationRunnerBehavior
+        ],
       properties: {
         baseUrl: String,
         serverUrl: String,
-        historique: Object
+        historique: Object,
+          animationConfig: {
+            value: function () {
+              return {
+                'entry': [{
+                    name: 'cascaded-animation',
+                    animation: 'slide-up-animation',
+                    node: this,
+                    nodeDelay: 50,
+                    timing: {
+                      duration: 200,
+                      delay: 0
+                    }
+                }],
+              };
+            }
+          }
       },
       ready: function () {
           this.baseUrl = this.$.meta.byKey("base-url");
@@ -71,6 +167,14 @@
       },
       _getDate: function(timestamp) {
         return moment(timestamp, 'x').format('DD/MM/YYYY');
+      },
+      _computeHidden: function(item, type) {
+          return item.type == type;
+      },
+      _renderList: function () {
+          var taskElements = this.root.querySelectorAll('paper-card');
+          this.animationConfig['entry'][0].nodes = Array.prototype.slice.call(taskElements);
+          this.playAnimation('entry');
       }
     });
   </script>

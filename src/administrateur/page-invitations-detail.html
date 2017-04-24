@@ -125,9 +125,6 @@
                     <brainy-table-column name="Email" sort-by="email">
                       <template>[[item.email]]</template>
                     </brainy-table-column>
-                    <brainy-table-column name="Identité" sort-by="prenom">
-                      <template>[[item.prenom]] [[item.nom]]</template>
-                    </brainy-table-column>
                     <brainy-table-column name="Etat du dossier">
                       <template>
                         <template is="dom-if" if="{{_lastHistoriqueIs(item, 'RECEPTION_INVITATION')}}">
@@ -302,11 +299,7 @@
         return moment(timestamp, 'x').format('DD/MM/YYYY');
       },
       _showBadgeDateLimite: function(dateLimite) {
-         if(Date.now() > dateLimite) {
-             return true;
-         } else {
-             return false;
-         }
+         return Date.now() > dateLimite;
       },
     });
   </script>

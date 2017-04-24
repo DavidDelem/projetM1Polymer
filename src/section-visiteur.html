@@ -1,6 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="visiteur/modals/ajout-delegation-modal.html">
+<link rel="import" href="visiteur/modals/annulation-delegation-modal.html">
 
 <dom-module id="section-visiteur">
   <template>
@@ -63,7 +64,7 @@
         <app-header condenses reveals effects="waterfall">
           <app-toolbar>
             <paper-icon-button icon="my-icons:menu" drawer-toggle></paper-icon-button>
-            <div main-title>Visiteurs</div>
+            <div main-title>Sea Test Base Biodatas</div>
             <paper-icon-button icon="icons:power-settings-new" on-tap="_disconnect" ></paper-icon-button>
           </app-toolbar>
         </app-header>
@@ -80,7 +81,9 @@
         </iron-pages>
       </app-header-layout>
     </app-drawer-layout>
+      
     <ajout-delegation-modal></ajout-delegation-modal>
+    <annulation-delegation-modal></annulation-delegation-modal>
   </template>
 
   <script>

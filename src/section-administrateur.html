@@ -11,6 +11,8 @@
 <link rel="import" href="administrateur/modals/suppression-profil-modal.html">
 <link rel="import" href="administrateur/modals/ajout-profil-modal.html">
 <link rel="import" href="administrateur/modals/modification-profil-modal.html">
+<link rel="import" href="administrateur/modals/suppression-administrateur-modal.html">
+<link rel="import" href="administrateur/modals/ajout-administrateur-modal.html">
 <link rel="import" href="app-data.html">
 
 <dom-module id="section-administrateur">
@@ -87,6 +89,7 @@
                     <a class="drawer-elem" name="page-invitations" href="{{baseUrl}}/section-administrateur/page-invitations/">Invitations</a>
                     <a class="drawer-elem" name="page-profils" href="{{baseUrl}}/section-administrateur/page-profils/">Profils de formulaires</a>
                     <a class="drawer-elem" name="page-rappels" href="{{baseUrl}}/section-administrateur/page-rappels/">Rappels</a>
+                    <a class="drawer-elem" name="page-administrateurs" href="{{baseUrl}}/section-administrateur/page-administrateurs/">Administrateurs</a>
                 </iron-selector>
               </app-drawer>
 
@@ -100,6 +103,7 @@
               <page-invitations-detail projet="{{routeData.p2}}" name="page-invitations-detail"></page-invitations-detail>
               <page-profils name="page-profils"></page-profils>
               <page-rappels name="page-rappels"></page-rappels>
+              <page-administrateurs name="page-administrateurs"></page-administrateurs>
               <view-404 name="view404"></view-404>
             </iron-pages>
                
@@ -120,6 +124,9 @@
     <suppression-profil-modal></suppression-profil-modal>
     <ajout-profil-modal></ajout-profil-modal>
     <modification-profil-modal></modification-profil-modal>
+      
+    <ajout-administrateur-modal></ajout-administrateur-modal>
+    <suppression-administrateur-modal></suppression-administrateur-modal>
       
     <toasts-administration></toasts-administration>
   </template>

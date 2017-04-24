@@ -1,0 +1,69 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../shared-styles.html">
+<link rel="import" href="../../app-data.html">
+
+<dom-module id="annulation-delegation-modal">
+  <template>
+    <style>
+      :host {
+      }        
+    </style>
+    
+    <iron-meta id="meta"></iron-meta>
+    <iron-localstorage name="data-storage" value="{{storedData}}"></iron-localstorage>
+    <app-data key="storedData" data="{{storedData}}"></app-data>
+      
+    <iron-signals on-iron-signal-open-annulation-delegation-modal="_handleOpenAnnulationDelegationModalEvent"></iron-signals>  
+      
+    <iron-ajax 
+    id="removeDelegationRequest"
+    method="DELETE"
+    content-type="application/x-www-form-urlencoded"   
+    headers="{{_computeHeaders(storedData)}}"
+    url="{{serverUrl}}/projets/all/invitations"
+    on-response="_handleRemoveDelegationResponse"
+    on-error="_handleRemoveDelegationError"></iron-ajax>
+      
+    <paper-dialog id="dialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
+        <h2>Annulation de la délégation</h2>
+        <p>Voulez-vous vraiment supprimer définitivement l'invitation déléguée à [[invitation.email]]</p>
+        <div class="buttons">
+            <paper-button dialog-dismiss>Annuler</paper-button>
+            <paper-button autofocus on-tap="_removeDelegation">Valider</paper-button>
+        </div>
+    </paper-dialog>
+      
+  </template>
+
+  <script>
+    Polymer({
+      is: 'annulation-delegation-modal',
+      properties: {
+        invitattion: Object,
+        serverUrl: String
+      },
+      ready: function () {
+        this.serverUrl = this.$.meta.byKey("server-url");
+      },
+      _computeHeaders: function(storedData) {
+        return {"Authorization": "JWT " + storedData.token };
+      },
+      _handleOpenAnnulationDelegationModalEvent: function(event) {
+        this.invitation = event.detail.invitation;
+        this.$.dialog.open();
+      },
+      _removeDelegation: function() {
+        this.$.removeDelegationRequest.body = { identifiant: this.invitation.identifiant }
+        this.$.removeDelegationRequest.generateRequest();
+      },
+      _handleRemoveDelegationResponse: function(response) {
+        this.$.dialog.close();
+        this.fire('iron-signal', {name: 'modal-success'});
+      },
+      _handleRemoveDelegationError: function(error) {
+        this.$.dialog.close();
+      }
+        
+    });
+  </script>
+</dom-module>

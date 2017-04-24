@@ -1,6 +1,10 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../shared-styles.html">
 <link rel="import" href="../app-data.html">
+
+<script src="../../bower_components/moment/moment.js"></script>
+<script src="../../bower_components/moment/locale/fr.js"></script>
+
 <dom-module id="page-dossier">
   <template>
     <style include="shared-styles">
@@ -242,21 +246,10 @@
         this.$.historiqueRequest.generateRequest();
       },
       _computeHidden: function(item, type) {
-          if(item.type == type) {
-              return true;
-          } else {
-              return false;
-          }
+          return item.type == type;
       },
       _getDate: function(timestamp) {
-        var a = new Date(timestamp);
-        var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-        var year = a.getFullYear();
-        var month = months[a.getMonth()];
-        var date = a.getDate();
-        var time = date + ' ' + month + ' ' + year + ' ' ;
-
-        return time;
+        return moment(timestamp, 'x').format('DD/MM/YYYY');
       }
     });
   </script>

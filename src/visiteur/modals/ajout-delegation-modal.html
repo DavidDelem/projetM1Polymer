@@ -4,35 +4,59 @@
 
 <dom-module id="ajout-delegation-modal">
   <template>
-    <style>
+    <style include="shared-styles">
+        paper-input-container {
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .email-element {
+            position: relative;
+            margin-top: -5px !important;
+            
+        }        
+        .paper-input-delete-button {
+            position: absolute;
+            right: 15px;
+            top: 20px;
+        }
+        
+        
     </style>
     
     <iron-meta id="meta"></iron-meta>
     <iron-localstorage name="data-storage" value="{{storedData}}"></iron-localstorage>
     <app-data key="storedData" data="{{storedData}}"></app-data>
       
-    <iron-signals on-iron-signal-test="_test"></iron-signals>  
+    <iron-signals on-iron-signal-open-ajout-delegation-modal="_handleOpenAjoutDelegationModalEvent"></iron-signals>  
       
      <iron-ajax 
-        id="addInvitationRequest" 
+        id="addDelegationRequest" 
         method="POST"
-        content-type="application/x-www-form-urlencoded" 
+        content-type="application/json"
         headers="{{_computeHeaders(storedData)}}"
-        url="http://localhost:8088/invitation/delegation"
-        handle-as="json"
-        on-reponse="_handleAddInvitationResponse"
-        on-error="_handleAddInvitationError">
+        url="{{serverUrl}}/invitation/delegation"
+        on-response="_handleAddDelegationResponse"
+        on-error="_handleAddDelegationError">
     </iron-ajax> 
       
     <paper-dialog id="dialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
-        <h2>Ajout d'une invitation</h2>
-        <paper-input-container>
-            <label>Email</label>
-            <input is="iron-input" id="email" type="email" bind-value="{{email}}">
-        </paper-input-container>
+        <h2>Délégation de l'invitation</h2>
+        <p>Indiquez les adresses email des visiteurs à ajouter.</p>
+        <template id="emails" is="dom-repeat" items="{{emailsList}}">
+            <div class="email-element">
+                <paper-input-container>
+                    <label>Email</label>
+                    <input is="iron-input" type="email" on-input="_onEmailChanged" bind-value="{{item.value}}">
+                </paper-input-container>
+                <span class="paper-input-delete-button">
+                 <paper-icon-button icon="icons:clear" on-tap="_deleteEmail"></paper-icon-button>
+                </span>
+            </div>
+        </template>
         <div class="buttons">
             <paper-button dialog-dismiss>Annuler</paper-button>
-            <paper-button autofocus on-tap="_addInvitation" disabled$="{{_validateForm(email)}}">Valider</paper-button>
+            <paper-button autofocus on-tap="_addInvitation">Valider</paper-button>
         </div>
     </paper-dialog>
       
@@ -42,7 +66,11 @@
     Polymer({
       is: 'ajout-delegation-modal',
       properties: {
-        email: String,
+        emailsList: {
+            type: Object,
+            value: [{value: ''}],
+            notify: true
+        },
         serverUrl: String
       },
       ready: function () {
@@ -51,25 +79,35 @@
       _computeHeaders: function(storedData) {
         return {"Authorization": "JWT " + storedData.token };
       },
-      _test: function(event) {
-        console.log("hhh");
+      _handleOpenAjoutDelegationModalEvent: function(event) {
         this.$.dialog.open();
       },
-      _validateForm: function(email) {
+      _onEmailChanged: function(event) {
           var re = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-          return !re.test(email);
+          if(re.test(this.emailsList[this.emailsList.length-1].value)) {
+            this.push('emailsList', {value: ''});
+            this.$.emails.render();
+          }
+      },
+      _deleteEmail: function(event) {
+          if(this.emailsList.length > 1) {
+              var index = this.emailsList.indexOf(event.model.get('item'));
+              this.splice('emailsList', index, 1);
+          } else {
+              this.emailsList = [{value: ''}];
+          }
+          this.$.emails.render();
       },
       _addInvitation: function() {
-        this.$.addInvitationRequest.body = { email: this.email }
-        this.$.addInvitationRequest.generateRequest();
+        this.$.addDelegationRequest.body = { emails: this.emailsList }
+        this.$.addDelegationRequest.generateRequest();
       },
-      _handleAddInvitationResponse: function(response) {
+      _handleAddDelegationResponse: function(response) {
         this.$.dialog.close();
-        console.log("aaa");
-        this.email = "";
-        this.fire('iron-signal', {name: 'modal-projet-success'});
+        this.emailsList = [{value: ''}];
+        this.fire('iron-signal', {name: 'modal-success'});
       },
-      _handleAddInvitationError: function(error) {
+      _handleAddDelegationError: function(error) {
         this.$.dialog.close();
       }
         

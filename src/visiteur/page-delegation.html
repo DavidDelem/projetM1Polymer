@@ -9,25 +9,90 @@
         display: block;
         padding: 10px;
       }
+        
+        paper-fab.float-paper-fab {
+            position: fixed;
+            right: 30px;
+            bottom: 30px;          
+        }
+        .floating-text {
+            color: #555555;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .card-invitation {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        
+        .invitation-email {
+            display: inline-block;
+            padding-top: 8px;
+            padding-bottom: 6px;
+        }
+        
+        .invitation-btn {
+            float: right;
+            padding-bottom: 5px;
+        }
     </style>
 
     <iron-meta id="meta"></iron-meta>
-    <iron-localstorage name="data-storage" value="{{storedData}}"></iron-localstorage>
+    <iron-localstorage name="data-storage" value="{{storedData}}" on-iron-localstorage-load="_generateRequests"></iron-localstorage>
     <app-data key="storedData" data="{{storedData}}"></app-data>
       
-  <iron-signals></iron-signals>  
+    <iron-signals on-iron-signal-modal-success="_handleModalSuccessEvent"></iron-signals>
+      
+    <iron-ajax 
+        id="invitationsRequest"
+        method="GET"
+        headers="{{_computeHeaders(storedData)}}"
+        url="{{serverUrl}}/projets/1/invitations"
+        handle-as="json"
+        last-response="{{invitations}}"
+        on-error="_handleInvitationsError"></iron-ajax>  
       
 
     <div class="col-md-12">
-       <p class="floating-text">Configuration des invitations</p>
+       <p class="floating-text">Informations</p>
+       <p>Vous avez la possibilité d'inviter des personnes venant dans le cadre du même projet.
+        Elles recevront une invitation. En cas d'erreur ou de changement, vous pouvez également annuler une délégation.</p>
     </div>
     <div class="col-md-12">
-        <p class="floating-text">Liste des invitations</p>
+        <p class="floating-text">Invitations envoyées par l'administrateur</p>
     </div>
-   
+    <template is="dom-repeat" items="{{invitations}}">
+        <template is="dom-if" if="{{!_haveParent(item.identifiantParent)}}">
+            <div class="col-md-3">
+                <paper-card class="card-invitation">
+                    <div class="card-actions">
+                        <span class="invitation-email">[[item.email]]</span>
+                    </div>
+                </paper-card>
+            </div>
+        </template>
+    </template>
 
+    <div class="col-md-12">
+        <p class="floating-text">Invitations déléguées par vous ou un autre visiteur</p>
+    </div> 
       
-    <paper-fab icon="add" on-tap="_openAddDelegationModal"></paper-fab>
+    <template is="dom-repeat" items="{{invitations}}">
+        <template is="dom-if" if="{{_haveParent(item.identifiantParent)}}">
+            <div class="col-md-3">
+                <paper-card class="card-invitation">
+                    <div class="card-actions">
+                        <span class="invitation-email">[[item.email]]</span>
+                        <div class="invitation-btn">
+                            <paper-icon-button icon="icons:clear" on-tap="_openAnnulationDelegationModal"></paper-icon-button>
+                        </div>
+                    </div>
+                </paper-card>
+            </div>
+        </template>
+    </template>
+    <paper-fab class="float-paper-fab" icon="add" on-tap="_openAddDelegationModal"></paper-fab>
       
   </template>
 
@@ -36,12 +101,33 @@
       is: 'page-delegation',
       properties: {
         projet: Object,
-        email: String,
         serverUrl: String
       },
+      ready: function () {
+        this.serverUrl = this.$.meta.byKey("server-url");
+      },
+      attributeChanged : function(name, type){
+          if(this.getAttribute('class').includes('iron-selected')){
+             this._generateRequests();
+          }
+      },
+      _computeHeaders: function(storedData) {
+        return {"Authorization": "JWT " + storedData.token };
+      },
+      _generateRequests: function() {
+          this.$.invitationsRequest.generateRequest();
+      },
       _openAddDelegationModal: function(event) {
-        console.log("sgd");
-        this.fire('iron-signal', {name: 'test', data: {}});
+        this.fire('iron-signal', {name: 'open-ajout-delegation-modal', data: {}});
+      },
+      _openAnnulationDelegationModal: function(event) {
+        this.fire('iron-signal', {name: 'open-annulation-delegation-modal', data: { invitation: event.model.get('item')}});    
+      },
+      _haveParent: function(identifiantParent) {
+        return (identifiantParent && identifiantParent != '');  
+      },
+      _handleModalSuccessEvent: function() {
+        this._generateRequests();   
       }
     });
   </script>

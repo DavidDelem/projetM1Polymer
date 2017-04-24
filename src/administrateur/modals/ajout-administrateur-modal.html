@@ -2,21 +2,20 @@
 <link rel="import" href="../../shared-styles.html">
 <link rel="import" href="../../app-data.html">
 
-<dom-module id="ajout-invitation-modal">
+<dom-module id="ajout-administrateur-modal">
   <template>
-    <style>
+    <style include="shared-styles">
         paper-input-container {
             display: inline-block;
             width: 100%;
         }
         
-        .email-element {
-            position: relative;
+        .administrateur-element {
             margin-top: -5px !important;
-            
-        }        
+        }
+       
         .paper-input-delete-button {
-            position: absolute;
+            position: relative;
             right: 15px;
             top: 20px;
         }
@@ -26,30 +25,43 @@
     <iron-localstorage name="data-storage" value="{{storedData}}"></iron-localstorage>
     <app-data key="storedData" data="{{storedData}}"></app-data>
       
-    <iron-signals on-iron-signal-open-ajout-invitation-modal="_handleOpenAjoutInvitationModalEvent"></iron-signals>  
+    <iron-signals on-iron-signal-open-ajout-administrateur-modal="_handleOpenAjoutAdministrateurModalEvent"></iron-signals>  
       
     <iron-ajax 
-    id="addInvitationRequest"
+    id="addAdministrateurRequest"
     method="POST"
     content-type="application/json"   
     headers="{{_computeHeaders(storedData)}}"
-    url="{{serverUrl}}/projets/{{projet.identifiant}}/invitations"
-    on-response="_handleAddInvitationResponse"
-    on-error="_handleAddInvitationError"></iron-ajax>    
+    url="{{serverUrl}}/administrateurs"
+    on-response="_handleAddAdministrateurResponse"
+    on-error="_handleAddAdministrateurError"></iron-ajax>    
       
     <paper-dialog id="dialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
-        <h2>Ajout d'invitations</h2>
-        <p>Les visiteurs reçevront une invitation par mail</p>
+        <h2>Ajout d'administrateurs</h2>
+        <p>Le mot de passe pourra être modifié après la première connexion</p>
+
+        
         <template id="emails" is="dom-repeat" items="{{emailsList}}">
-            <div class="email-element">
+                    <div class="administrateur-element row">
+            <div class="col-md-6">
                 <paper-input-container>
                     <label>Email</label>
-                    <input is="iron-input" type="email" on-input="_onEmailChanged" bind-value="{{item.value}}">
+                    <input is="iron-input" type="email" on-input="_onEmailChanged" bind-value="{{item.email}}">
                 </paper-input-container>
+            </div>
+            <div class="col-md-5">
+                <paper-input-container>
+                    <label>Mot de passe initial</label>
+                    <input is="iron-input" type="text" on-input="_onEmailChanged" bind-value="{{item.password}}">
+                </paper-input-container>
+            </div>
+            <div class="col-md-1">
                 <span class="paper-input-delete-button">
-                 <paper-icon-button icon="icons:clear" on-tap="_deleteEmail"></paper-icon-button>
+                    <paper-icon-button icon="icons:clear" on-tap="_deleteEmail"></paper-icon-button>
                 </span>
             </div>
+            
+        </div>
         </template>
         <div class="buttons">
             <paper-button dialog-dismiss>Annuler</paper-button>
@@ -61,12 +73,11 @@
 
   <script>
     Polymer({
-      is: 'ajout-invitation-modal',
+      is: 'ajout-administrateur-modal',
       properties: {
-        projet: Object,
         emailsList: {
             type: Object,
-            value: [{value: ''}],
+            value: [{email: '', password: ''}],
             notify: true
         },
         serverUrl: String
@@ -77,14 +88,13 @@
       _computeHeaders: function(storedData) {
         return {"Authorization": "JWT " + storedData.token };
       },
-      _handleOpenAjoutInvitationModalEvent: function(event) {
-        this.projet = event.detail.projet;
+      _handleOpenAjoutAdministrateurModalEvent: function(event) {
         this.$.dialog.open();
       },
       _onEmailChanged: function(event) {
           var re = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-          if(re.test(this.emailsList[this.emailsList.length-1].value)) {
-            this.push('emailsList', {value: ''});
+          if(re.test(this.emailsList[this.emailsList.length-1].email) && this.emailsList[this.emailsList.length-1].password != '') {
+            this.push('emailsList', {email: '', password: ''});
             this.$.emails.render();
           }
       },
@@ -93,23 +103,23 @@
               var index = this.emailsList.indexOf(event.model.get('item'));
               this.splice('emailsList', index, 1);
           } else {
-              this.emailsList = [{value: ''}];
+              this.emailsList = [{email: '', password: ''}];
           }
           this.$.emails.render();
       },
       _addInvitation: function() {
-        this.$.addInvitationRequest.body = { emails: this.emailsList }
-        this.$.addInvitationRequest.generateRequest();
+        this.$.addAdministrateurRequest.body = { administrateurs: this.emailsList }
+        this.$.addAdministrateurRequest.generateRequest();
       },
-      _handleAddInvitationResponse: function(response) {
+      _handleAddAdministrateurResponse: function(response) {
         this.$.dialog.close();
-        this.emailsList = [{value: ''}];
-        this.fire('iron-signal', {name: 'modal-projet-success'});
-        this.fire('iron-signal', {name: 'open-toast', data: {texte: 'L\'invitation à été ajoutée'}});
+        this.emailsList = [{email: '', password: ''}],
+        this.fire('iron-signal', {name: 'modal-success'});
+        this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Les administrateurs ont été ajoutés'}});
       },
-      _handleAddInvitationError: function(error) {
+      _handleAddAdministrateurError: function(error) {
         this.$.dialog.close();
-        this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Echec lors de l\'ajout de l\'invitation'}});
+        this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Echec lors de l\'ajout des administrateurs'}});
       }
         
     });

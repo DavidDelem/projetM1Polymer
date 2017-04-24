@@ -1,7 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../shared-styles.html">
 <link rel="import" href="../app-data.html">
-<link rel="import" href="components/important-message.html">
 
 <script src="../../bower_components/moment/moment.js"></script>
 <script src="../../bower_components/moment/locale/fr.js"></script>
@@ -317,11 +316,7 @@
         this._generateRequests();
       },
       _showBadgeDateLimite: function(dateLimite) {
-         if(Date.now() > dateLimite) {
-             return true;
-         } else {
-             return false;
-         }
+         return Date.now() > dateLimite;
       },
       _getEtatProjet: function(projet) {
           if(projet.etatProjet.enAttente == 0 && projet.etatProjet.enCours == 0 && projet.etatProjet.termine != 0) {

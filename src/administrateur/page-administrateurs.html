@@ -1,0 +1,124 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../shared-styles.html">
+<link rel="import" href="../app-data.html">
+
+<dom-module id="page-administrateurs">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }     
+        
+      paper-fab {
+        position: fixed;
+        right: 30px;
+        bottom: 30px;          
+      }
+        
+      paper-card {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        
+        .titre-rappel {
+            display: inline-block;
+            padding-top: 8px;
+        }
+
+        .rappel-btn {
+            float: right;
+            padding-bottom: 5px;
+        }
+        
+        .floating-text {
+            color: #555555;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .rappels-desactives {
+            opacity: 0.4;
+            transition: opacity 0.5s ease;
+        }
+        
+        .rappels-actives {
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+    </style>
+      
+    <iron-meta id="meta"></iron-meta>
+    <iron-localstorage name="data-storage" value="{{storedData}}" on-iron-localstorage-load="_generateRequests"></iron-localstorage>
+    <app-data key="storedData" data="{{storedData}}"></app-data>
+      
+    <iron-signals on-iron-signal-modal-success="_handleModalSuccessEvent"></iron-signals>  
+      
+    <iron-ajax 
+        id="administrateursRequest" 
+        method="GET"
+        headers="{{_computeHeaders(storedData.token)}}"
+        url="{{serverUrl}}/administrateurs"
+        handle-as="json"
+        last-response="{{administrateurs}}"
+        on-error="_handleAdministrateursError"></iron-ajax>
+      
+    <div class="col-md-12">
+        <p class="floating-text">Mon compte</p>
+    </div>
+    <div class="col-md-12">
+        <p class="floating-text">Liste des comptes administrateurs</p>
+    </div>
+    <template is="dom-repeat" items="{{administrateurs}}">
+        <div class="col-md-3">
+            <paper-card>
+                <div class="card-actions">
+                    <span class="titre-rappel">[[item.identifiant]]</span>
+                    <div class="rappel-btn">
+                        <paper-icon-button class="delete-icon" icon="icons:clear" on-tap="_openRemoveAdministrateurModal"></paper-icon-button>
+                    </div>
+                </div>                                                                                       
+            </paper-card>
+        </div>
+    </template>
+      
+    <paper-fab icon="add" on-tap="_openAddAdministrateurModal"></paper-fab>
+      
+  </template>
+
+  <script>
+    Polymer({
+      is: 'page-administrateurs',
+      properties: {
+            serverUrl: String,
+            configurationRappels: Object
+      },
+      ready: function () {
+        this.serverUrl = this.$.meta.byKey("server-url");
+      },
+      attributeChanged : function(name, type){
+          if(this.getAttribute('class').includes('iron-selected')){
+             this._generateRequests();
+          }
+      },
+      _computeHeaders: function(token) {
+        return {"Authorization": "JWT " + token };
+      },
+      _generateRequests: function () {
+        this.$.administrateursRequest.generateRequest();
+      },
+      _handleAdministrateursError: function(event) {
+        this.fire('connexion-administrateur-denied-event', {});
+      },
+      _openRemoveAdministrateurModal: function(event) {
+        this.fire('iron-signal', {name: 'open-suppression-administrateur-modal', data: {identifiant: event.model.get('item').identifiant}});
+      },
+      _openAddAdministrateurModal: function(event) {
+        this.fire('iron-signal', {name: 'open-ajout-administrateur-modal', data: {}});
+      },
+      _handleModalSuccessEvent: function(event) {
+        this._generateRequests();
+      }
+    });
+  </script>
+</dom-module>
