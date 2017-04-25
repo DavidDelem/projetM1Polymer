@@ -92,21 +92,25 @@
            opacity: inherit;
       }
         
-        .informations {
-            text-align: center;
-        }
-        
-        .informations iron-icon {
-            --iron-icon-height: 128px;
-            --iron-icon-width: 128px;
-        }
-        
         .text-center {
             text-align: center;
         }
         
+        .margin-top-bottom {
+            margin: 30px 0 30px 0;
+        }
+        
         .toggle-button-vehicule {
             margin: 35px 0 35px 0;
+        }
+        
+        .adresse {
+            margin-top: 25px;
+            margin-bottom: 25px;
+        }
+        
+        .titre-adresse {
+            margin-bottom: -25px;
         }
         
     </style>
@@ -127,228 +131,245 @@
       
     <iron-ajax 
     id="biodatasRequest"
-    method="POST"  
+    method="POST"
     headers="{{_computeHeaders(storedData)}}"
     url="{{serverUrl}}/biodatas"
     on-response="_handleBiodatasResponse"
     on-error="_handleBiodatasError"></iron-ajax>
     
-    <div class="row">
-        <div class="col-md-8">
-            <div class="col-md-12">
-                <div class="steps" >
-                    <div class$="step {{_getClassesStep(currentStep, steps, 'accueil')}}" on-tap="_showStep" data-args="accueil">
-                        <span on-tap="_showStep" data-args="accueil" class="step-element">Accueil</span>
-                    </div>
-                    <div class$="step {{_getClassesStep(currentStep, steps, 'identite')}}" on-tap="_showStep" data-args="identite">
-                        <span on-tap="_showStep" data-args="identite" class="step-element">Identité</span>
-                    </div>
-                    <div class$="step {{_getClassesStep(currentStep, steps, 'fichiers')}}" on-tap="_showStep" data-args="fichiers">
-                        <span on-tap="_showStep" data-args="fichiers" class="step-element">Documents</span>
-                    </div>
-                    <div class$="step {{_getClassesStep(currentStep, steps, 'vehicule')}}" on-tap="_showStep" data-args="vehicule">
-                        <span on-tap="_showStep" data-args="vehicule" class="step-element">Véhicule</span>
-                    </div>
-                    <div class$="step {{_getClassesStep(currentStep, steps, 'envoi')}}" on-tap="_showStep" data-args="envoi">
-                        <span on-tap="_showStep" data-args="envoi" class="step-element">Envoi</span>
+    <template is="dom-if" if="{{!biodatasOk}}">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="col-md-12">
+                    <div class="steps" >
+                        <div class$="step {{_getClassesStep(currentStep, steps, 'accueil')}}" on-tap="_showStep" data-args="accueil">
+                            <span on-tap="_showStep" data-args="accueil" class="step-element">Accueil</span>
+                        </div>
+                        <div class$="step {{_getClassesStep(currentStep, steps, 'identite')}}" on-tap="_showStep" data-args="identite">
+                            <span on-tap="_showStep" data-args="identite" class="step-element">Identité</span>
+                        </div>
+                        <div class$="step {{_getClassesStep(currentStep, steps, 'fichiers')}}" on-tap="_showStep" data-args="fichiers">
+                            <span on-tap="_showStep" data-args="fichiers" class="step-element">Documents</span>
+                        </div>
+                        <div class$="step {{_getClassesStep(currentStep, steps, 'vehicule')}}" on-tap="_showStep" data-args="vehicule">
+                            <span on-tap="_showStep" data-args="vehicule" class="step-element">Véhicule</span>
+                        </div>
+                        <div class$="step {{_getClassesStep(currentStep, steps, 'envoi')}}" on-tap="_showStep" data-args="envoi">
+                            <span on-tap="_showStep" data-args="envoi" class="step-element">Envoi</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-12" hidden$="{{_hideStep('accueil', currentStep)}}">
-                <div class="card">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <p>Informations</p>
-                            <div class="informations">
-                                <p>SeaTestBase est situé dans une zone à accés réglementé. Obtenir des autorisations est nécessaire pour y accéder.</p>
-                                <iron-icon large-icon icon="image:portrait"></iron-icon>
-                                <div>
-                                    <paper-button on-tap="_showStep" data-args="identite">Commencer</paper-button>
+                <div class="col-lg-12" hidden$="{{_hideStep('accueil', currentStep)}}">
+                    <div class="card">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="margin-top-bottom text-center">
+                                    <p>SeaTestBase est situé dans une zone à accés réglementé. Obtenir des autorisations est nécessaire pour y accéder.
+                                        Complétez chacune des étapes avec les informations demandées, vous pourrez ensuite les envoyer.</p>
+                                    <div>
+                                        <paper-button on-tap="_showStep" data-args="identite">Commencer</paper-button>
+                                    </div>
                                 </div>
                             </div>
-                            <p></p>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-12" hidden$="{{_hideStep('identite', currentStep)}}">
-                <div class="card">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <p>Identité</p>
-                        </div>
-                        <div class="col-md-8 col-md-offset-2">
-                            <template is="dom-repeat" items="{{champs}}">
-                                <template is="dom-if" if="{{_computeHidden(item, 'texte_nomprenom')}}">
-                                    <div class="row nomprenom">
-                                        <div class="col-md-6">
-                                            <paper-input-container>
-                                                <label>Nom</label>
-                                                <input is="iron-input" id="nom" type="text" bind-value="{{item.saisie.nom}}">
-                                            </paper-input-container>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <paper-input-container>
-                                                <label>Prénom</label>
-                                                <input is="iron-input" id="prenom" type="text" bind-value="{{item.saisie.test}}">
-                                            </paper-input-container>
-                                        </div>
-                                    </div>
-                                </template>
-                                <template is="dom-if" if="{{_computeHidden(item, 'texte_date')}}">
-                                    <div class="row datenaissance">
-                                        <div class="col-md-12">
-                                            <vaadin-date-picker value="{{item.saisie.aa}}" label="Date de naissance"></vaadin-date-picker>
-                                        </div>
-                                    </div>
-                                </template>
-
-                                <!-- ADRESSE -->
-
-                                <template is="dom-if" if="{{_computeHidden(item, 'texte_adresse')}}">
-                                    <div class="row adresse">
-                                        <div class="col-md-12">
-                                            <p>[[item.nom]]</p>
-                                        </div>
-                                        <div class="col-md-3"> 
-                                            <paper-input-container>
-                                                <label>Numéro</label>
-                                                <input is="iron-input" id="username" type="number" bind-value="{{item.saisie.numero}}">
-                                            </paper-input-container>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <paper-input-container>
-                                                <label>Rue</label>
-                                                <input is="iron-input" id="username" type="text" bind-value="{{item.saisie.rue}}">
-                                            </paper-input-container>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <gold-zip-input label="Code postal" value="{{item.saisie.codepostal}} "></gold-zip-input>
-                                        </div>
-                                        <div class="col-md-5">
-                                            <paper-input-container>
-                                                <label>Ville</label>
-                                                <input is="iron-input" id="username" type="text" bind-value="{{item.saisie.ville}}">
-                                            </paper-input-container>
-                                        </div>
-                                        <div class="col-md-7">
-                                            <paper-countries country="[[country]]" value="{{item.saisie.pays}}" max-suggestions="3" auto-validate="true" label="Pays" placeholder="Saisir le pays"></paper-countries>
-                                        </div>
-                                    </div>
-                                </template>
-
-                                <!-- NUMERO DE TELEPHONE -->
-
-                                <template is="dom-if" if="{{_computeHidden(item, 'texte_telephone')}}">
-                                    <div class="row telephone">
-                                        <div class="col-md-12">
-                                            <paper-input-container>
-                                                <label>[[item.nom]]</label>
-                                                <input is="iron-input" id="telephone" bind-value="{{item.saisie.telephone}}"></input>
-                                            </paper-input-container>
-                                        </div>
-                                    </div>
-                                </template>
-
-                                <!-- TEXTE LIBRE TEXTAREAS -->
-                                <template is="dom-if" if="{{_computeHidden(item, 'texte_textarea')}}">
-                                    <div class="row texte">
-                                        <div class="col-md-12">
-                                            <paper-input-container>
-                                                <label>[[item.nom]]</label>
-                                                <iron-autogrow-textarea class="paper-input-input" bind-value="{{item.saisie.remarques}}"></iron-autogrow-textarea>
-                                            </paper-input-container>
-                                        </div>
-                                    </div>
-                                </template>
-                            </template>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-12" hidden$="{{_hideStep('fichiers', currentStep)}}">
+                <div class="col-lg-12" hidden$="{{_hideStep('identite', currentStep)}}">
                     <div class="card">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <p>Documents d'identité à joindre à votre demande</p>
-                        </div>
-                        <div class="col-md-8 col-md-offset-2">
-                            <p>Merci d'indiquer votre nationalité. Les documents d'identité demandés depéndent de votre nationalité.</p>
-                            <paper-autocomplete label="Nationalité" source="{{nationalites}}" value="{{selectedNationalite}}"></paper-autocomplete>
-                        </div>
-                        <template is="dom-repeat" items="{{champs}}">
-                            <template is="dom-if" if="{{_computeHidden(item, 'identite_fichier')}}">
-                                <template is="dom-if" if="{{_isNationality(item, selectedNationalite)}}">
-                                    <div class="col-md-8 col-md-offset-2">
-                                        <label>{{item.nom}}</label>
-                                        <input id="fichier[[item.identifiant]]" type="file" on-change="_previewFile">
-                                    </div>
-                                </template>
-                            </template>
-                        </template>   
-                    </div>                
-                </div>
-            </div>
-            <div class="col-lg-12" hidden$="{{_hideStep('vehicule', currentStep)}}">
-                <div class="card">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <p>Véhicule</p>
-                        </div>
-                        <div class="col-md-8 col-md-offset-2 text-center">
-                                <p>Afin d'accéder au site avec votre véhicule, des informations complémentaires sont nécessaires.
-                                Passez cette étape si vous n'êtes pas le conducteur d'un véhicule.</p>
-                                <paper-toggle-button class="toggle-button-vehicule" checked="{{vehicule}}">Je serais le conducteur d'un véhicule</paper-toggle-button>
-                        </div> 
-                        <div class="col-md-8 col-md-offset-2">
-                            <template is="dom-if" if="{{vehicule}}">
+                        <div class="row">
+                            <div class="col-md-8 col-md-offset-2">
+                                <div class="margin-top-bottom">
                                     <template is="dom-repeat" items="{{champs}}">
-                                        <template is="dom-if" if="{{_computeHidden(item, 'vehicule_fichier')}}">
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <label>{{item.nom}}</label>
-                                                    <input id="fichier[[item.identifiant]]" type="file" on-change="_previewFile">
-                                                </div>
-                                            </div>
-                                        </template>
-                                        <template is="dom-if" if="{{_computeHidden(item, 'vehicule_texte')}}">
-                                            <div class="row">
-                                                <div class="col-md-12">
+                                        <template is="dom-if" if="{{_computeHidden(item, 'texte_nomprenom')}}">
+                                            <div class="row nomprenom">
+                                                <div class="col-md-6">
                                                     <paper-input-container>
-                                                        <label>{{item.nom}}</label>
-                                                        <input is="iron-input" id="username" type="text" bind-value="{{item.saisie.immatriculation}}">
+                                                        <label>Nom <template is="dom-if" if="[[item.obligatoire]]">*</template></label>
+                                                        <input is="iron-input" id="nom" type="text" bind-value="{{item.saisie.nom}}">
+                                                    </paper-input-container>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <paper-input-container>
+                                                        <label>Prénom <template is="dom-if" if="[[item.obligatoire]]">*</template></label>
+                                                        <input is="iron-input" id="prenom" type="text" bind-value="{{item.saisie.prenom}}">
                                                     </paper-input-container>
                                                 </div>
                                             </div>
                                         </template>
-                                    </template>                   
-                            </template>
+                                        <template is="dom-if" if="{{_computeHidden(item, 'texte_date')}}">
+                                            <div class="row datenaissance">
+                                                <div class="col-md-12">
+                                                    <vaadin-date-picker value="{{item.saisie.date}}" label="Date de naissance"></vaadin-date-picker>
+                                                </div>
+                                            </div>
+                                        </template>
+
+                                        <!-- ADRESSE -->
+
+                                        <template is="dom-if" if="{{_computeHidden(item, 'texte_adresse')}}">
+                                            <div class="row adresse">
+                                                <div class="col-md-12 titre-adresse">
+                                                    <p>[[item.nom]] <template is="dom-if" if="[[item.obligatoire]]">*</template></p>
+                                                </div>
+                                                <div class="col-md-3"> 
+                                                    <paper-input-container>
+                                                        <label>Numéro</label>
+                                                        <input is="iron-input" id="username" type="number" bind-value="{{item.saisie.numero}}">
+                                                    </paper-input-container>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <paper-input-container>
+                                                        <label>Rue</label>
+                                                        <input is="iron-input" id="username" type="text" bind-value="{{item.saisie.rue}}">
+                                                    </paper-input-container>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <paper-input-container>
+                                                        <label>Code postal</label>
+                                                        <input is="iron-input" id="codepostal" type="number" bind-value="{{item.saisie.codePostal}}">
+                                                    </paper-input-container>
+<!--                                                    <gold-zip-input label="Code postal" value="{{item.saisie.codepostal}}"></gold-zip-input>-->
+                                                </div>
+                                                <div class="col-md-5">
+                                                    <paper-input-container>
+                                                        <label>Ville</label>
+                                                        <input is="iron-input" id="username" type="text" bind-value="{{item.saisie.ville}}">
+                                                    </paper-input-container>
+                                                </div>
+                                                <div class="col-md-7">
+                                                    <paper-countries country="[[country]]" value="{{item.saisie.pays}}" max-suggestions="3" auto-validate="true" label="Pays" placeholder="Saisir le pays"></paper-countries>
+                                                </div>
+                                            </div>
+                                        </template>
+
+                                        <!-- NUMERO DE TELEPHONE -->
+
+                                        <template is="dom-if" if="{{_computeHidden(item, 'texte_telephone')}}">
+                                            <div class="row telephone">
+                                                <div class="col-md-12">
+                                                    <paper-input-container>
+                                                        <label>[[item.nom]] <template is="dom-if" if="[[item.obligatoire]]">*</template></label>
+                                                        <input is="iron-input" id="telephone" bind-value="{{item.saisie.telephone}}"></input>
+                                                    </paper-input-container>
+                                                </div>
+                                            </div>
+                                        </template>
+
+                                        <!-- TEXTE LIBRE TEXTAREAS -->
+                                        <template is="dom-if" if="{{_computeHidden(item, 'texte_textarea')}}">
+                                            <div class="row texte">
+                                                <div class="col-md-12">
+                                                    <paper-input-container>
+                                                        <label>[[item.nom]] <template is="dom-if" if="[[item.obligatoire]]">*</template></label>
+                                                        <iron-autogrow-textarea class="paper-input-input" bind-value="{{item.saisie.remarques}}"></iron-autogrow-textarea>
+                                                    </paper-input-container>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </template>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>  
+                </div>
+                <div class="col-lg-12" hidden$="{{_hideStep('fichiers', currentStep)}}">
+                        <div class="card">
+                        <div class="row">
+                            <div class="col-md-8 col-md-offset-2">
+                                <div class="text-center">
+                                    <p>Merci d'indiquer votre nationalité. Les documents d'identité demandés depéndent de votre nationalité.</p>
+                                </div>
+                                <paper-autocomplete label="Nationalité" source="{{nationalites}}" value="{{selectedNationalite}}"></paper-autocomplete>
+                            </div>
+                            <template is="dom-repeat" items="{{champs}}">
+                                <template is="dom-if" if="{{_computeHidden(item, 'identite_fichier')}}">
+                                    <template is="dom-if" if="{{_isNationality(item, selectedNationalite)}}">
+                                        <div class="col-md-8 col-md-offset-2">
+                                            <label>{{item.nom}}</label>
+                                            <input id="fichier[[item.identifiant]]" type="file" on-change="_previewFile">
+                                        </div>
+                                    </template>
+                                </template>
+                            </template>   
+                        </div>                
+                    </div>
+                </div>
+                <div class="col-lg-12" hidden$="{{_hideStep('vehicule', currentStep)}}">
+                    <div class="card">
+                        <div class="row">
+                            <div class="col-md-8 col-md-offset-2 text-center">
+                                    <p>Afin d'accéder au site avec votre véhicule, des informations complémentaires sont nécessaires.
+                                    Passez cette étape si vous n'êtes pas le conducteur d'un véhicule.</p>
+                                    <paper-toggle-button class="toggle-button-vehicule" checked="{{vehicule}}">Je serais le conducteur d'un véhicule</paper-toggle-button>
+                            </div> 
+                            <div class="col-md-8 col-md-offset-2">
+                                <template is="dom-if" if="{{vehicule}}">
+                                        <template is="dom-repeat" items="{{champs}}">
+                                            <template is="dom-if" if="{{_computeHidden(item, 'vehicule_fichier')}}">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <label>{{item.nom}} <template is="dom-if" if="[[item.obligatoire]]">*</template></label>
+                                                        <input id="fichier[[item.identifiant]]" type="file" on-change="_previewFile">
+                                                    </div>
+                                                </div>
+                                            </template>
+                                            <template is="dom-if" if="{{_computeHidden(item, 'vehicule_texte')}}">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <paper-input-container>
+                                                            <label>{{item.nom}} <template is="dom-if" if="[[item.obligatoire]]">*</template></label>
+                                                            <input is="iron-input" id="username" type="text" bind-value="{{item.saisie.immatriculation}}">
+                                                        </paper-input-container>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                        </template>                   
+                                </template>
+                            </div>
+                        </div>
+                    </div>  
+                </div>
+                <div class="col-lg-12" hidden$="{{_hideStep('envoi', currentStep)}}">
+                    <div class="card">
+                        <div class="row">
+                            <div class="col-md-8 col-md-offset-2">
+                                <div class="margin-top-bottom">
+                                    <paper-checkbox checked="{{confirmationValidite}}">Je confirme la validité des données saisies</paper-checkbox>
+                                    <paper-checkbox checked="{{confirmationAutorite}}">J'accepte la transmission des données aux autorités françaises</paper-checkbox>
+                                </div>
+                                <div class="text-center margin-top-bottom">
+                                    <paper-button on-tap="_sendBiodatas" disabled$="{{_validateBiodatas(champs, confirmationValidite, confirmationAutorite)}}">Envoyer mes données</paper-button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>  
+                </div>
+                <paper-fab hidden$="[[!_hideStep('accueil', currentStep)]]" class="see-previous" icon=":icons:chevron-left" on-tap="_showPrevious"></paper-fab>
+                <paper-fab hidden$="[[!_hideStep('envoi', currentStep)]]" class="see-next" icon=":icons:chevron-right" on-tap="_showNext"></paper-fab>
             </div>
-            <div class="col-lg-12" hidden$="{{_hideStep('envoi', currentStep)}}">
+            <div class="col-md-4">
+                 <div class="col-md-12">
+                    <p class="floating-text">Informations</p>
+                    <p>Pour un traitement rapide de votre dossier, penser à contrôler l'exactitude des informations saisies.</p>
+                </div>
+            </div>
+          </div>
+      </template>
+      <template is="dom-if" if="{{biodatasOk}}">
+          <div class="row">
+              <div class="col-md-8 col-md-offset-2">
                 <div class="card">
-                    <div class="row">
-                        <div class="col-md-8 col-md-offset-2">
-                            <p>Envoi</p>
-                            <paper-checkbox>Je confirme la validité des données saisies</paper-checkbox>
-                            <paper-checkbox>J'accepte la transmission des données aux autorités françaises</paper-checkbox>
-                            <paper-button on-tap="_sendBiodatas">Envoyer</paper-button>
-                        </div>
+                    <div class="text-center">
+                        <iron-icon class="large-icon" icon="icons:check"></iron-icon>
+                        <p>Vos biodatas ont bien été envoyées</p>
+                        <p>Vous recevrez un mal de confirmation dans les prochaines minutes</p>
+
+                        <p>Après controle par un administrateur, elles seront transférées aux autorités.</p>
                     </div>
-                </div>  
-            </div>
-            <paper-fab class="see-next" icon=":icons:chevron-right" on-tap="_showNext"></paper-fab>
-            <paper-fab class="see-previous" icon=":icons:chevron-left" on-tap="_showPrevious"></paper-fab>
-        </div>
-        <div class="col-md-4">
-             <div class="col-md-12">
-                <p class="floating-text">Informations</p>
-                <p>Pour un traitement rapide de votre dossier, penser à contrôler l'exactitude des informations saisies.</p>
-            </div>
-        </div>
-      </div>
+                </div>
+              </div>
+          </div>
+      </template>
   </template>
 
   <script>
@@ -376,6 +397,12 @@
                "vehicule",
                "envoi"
                 ]
+        },
+        confirmationValidite: Boolean,
+        confirmationAutorite: Boolean,
+        biodatasOk: {
+            type: Boolean,
+            value: false
         }
       },
       ready: function () {
@@ -587,7 +614,7 @@
         return {"Authorization": "JWT " + storedData.token };
       },
       _generateRequests: function() {
-          this.$.champsRequest.params = { profil: '1' };
+          this.$.champsRequest.params = { profil: 'e86e3ad8-7ddb-4d1c-a0bd-0b20efcf328d' }; // A RENDRE VARIABLE
           this.$.champsRequest.generateRequest();
       },
       _handleChampsResponse: function(res) {
@@ -628,6 +655,9 @@
       _computeHidden: function(item, type) {
           return (item.type == type && item.coche == true);
       },
+      _isObligatoire: function(item) {
+          return item.obligatoire
+      },
       _isNationality: function(item, selectedNationalite) {
             if(selectedNationalite.toLowerCase() == 'française' || selectedNationalite.toLowerCase() == 'francaise'
                || selectedNationalite.toLowerCase() == 'français' || selectedNationalite.toLowerCase() == 'francais') {
@@ -661,16 +691,33 @@
           this.fichiers.push({ identifiantChamp: item.identifiant, fichier: fichier});
           console.log(this.fichiers);
       },
+      _validateBiodatas: function(champs, confirmationValidite, confirmationAutorite) {
+          if(confirmationValidite == true && confirmationAutorite == true) {
+              for(var i=0 ; i < champs.length; i++) {
+                    if(champs[i].obligatoire == true) {
+                        if(Object.keys(champs[i].saisie).length == 0) {
+                            return true;
+                        }
+                    }
+              }
+              return false;
+          } else {
+              return true;
+          }
+      },
       _sendBiodatas: function() {
           var formData = new FormData();
-          formData.append("image", this.fichiers[0].fichier);
+         // formData.append("image", this.fichiers[0].fichier);
           formData.append("test", "ok");
-          formData.append("champs", this.champs);
+          formData.append("champs", JSON.stringify(this.champs));
           this.$.biodatasRequest.body = formData;
           this.$.biodatasRequest.generateRequest();
       },
       _handleBiodatasResponse: function(response) {
-          console.log('ok');
+          if(response.detail.response == true) {
+             this.biodatasOk = true;
+          } else {
+          }
       }
     });
   </script>

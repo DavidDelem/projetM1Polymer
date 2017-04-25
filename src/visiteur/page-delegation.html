@@ -44,6 +44,16 @@
       
     <iron-signals on-iron-signal-modal-success="_handleModalSuccessEvent"></iron-signals>
       
+            
+    <iron-ajax 
+        id="delegationRequest"
+        method="GET"
+        headers="{{_computeHeaders(storedData)}}"
+        url="{{serverUrl}}/invitation/delegation"
+        handle-as="json"
+        last-response="{{delegation}}"
+        on-error="_handleDelegationError"></iron-ajax> 
+      
     <iron-ajax 
         id="invitationsRequest"
         method="GET"
@@ -56,43 +66,48 @@
 
     <div class="col-md-12">
        <p class="floating-text">Informations</p>
-       <p>Vous avez la possibilité d'inviter des personnes venant dans le cadre du même projet.
-        Elles recevront une invitation. En cas d'erreur ou de changement, vous pouvez également annuler une délégation.</p>
+       <p>Déléguer votre invitation vous permet d'envoyer une invitation aux personnes venant dans le cadre du même projet.
+          Vous pouvez également annuler une délégation.</p>
     </div>
-    <div class="col-md-12">
-        <p class="floating-text">Invitations envoyées par l'administrateur</p>
-    </div>
-    <template is="dom-repeat" items="{{invitations}}">
-        <template is="dom-if" if="{{!_haveParent(item.identifiantParent)}}">
-            <div class="col-md-3">
-                <paper-card class="card-invitation">
-                    <div class="card-actions">
-                        <span class="invitation-email">[[item.email]]</span>
-                    </div>
-                </paper-card>
-            </div>
-        </template>
+    <template is="dom-if" if="[[!delegation]]">
+        <p>La délégation d'invitation est désactivée par les administrateurs pour ce projet</p>
     </template>
-
-    <div class="col-md-12">
-        <p class="floating-text">Invitations déléguées par vous ou un autre visiteur</p>
-    </div> 
-      
-    <template is="dom-repeat" items="{{invitations}}">
-        <template is="dom-if" if="{{_haveParent(item.identifiantParent)}}">
-            <div class="col-md-3">
-                <paper-card class="card-invitation">
-                    <div class="card-actions">
-                        <span class="invitation-email">[[item.email]]</span>
-                        <div class="invitation-btn">
-                            <paper-icon-button icon="icons:clear" on-tap="_openAnnulationDelegationModal"></paper-icon-button>
+    <template is="dom-if" if="[[delegation]]">
+        <div class="col-md-12">
+            <p class="floating-text">Invitations envoyées par l'administrateur</p>
+        </div>
+        <template is="dom-repeat" items="{{invitations}}">
+            <template is="dom-if" if="{{!_haveParent(item.identifiantParent)}}">
+                <div class="col-md-3">
+                    <paper-card class="card-invitation">
+                        <div class="card-actions">
+                            <span class="invitation-email">[[item.email]]</span>
                         </div>
-                    </div>
-                </paper-card>
-            </div>
+                    </paper-card>
+                </div>
+            </template>
         </template>
+
+        <div class="col-md-12">
+            <p class="floating-text">Invitations déléguées par vous ou un autre visiteur</p>
+        </div> 
+
+        <template is="dom-repeat" items="{{invitations}}">
+            <template is="dom-if" if="{{_haveParent(item.identifiantParent)}}">
+                <div class="col-md-3">
+                    <paper-card class="card-invitation">
+                        <div class="card-actions">
+                            <span class="invitation-email">[[item.email]]</span>
+                            <div class="invitation-btn">
+                                <paper-icon-button icon="icons:clear" on-tap="_openAnnulationDelegationModal"></paper-icon-button>
+                            </div>
+                        </div>
+                    </paper-card>
+                </div>
+            </template>
+        </template>
+        <paper-fab class="float-paper-fab" icon="add" on-tap="_openAddDelegationModal"></paper-fab>
     </template>
-    <paper-fab class="float-paper-fab" icon="add" on-tap="_openAddDelegationModal"></paper-fab>
       
   </template>
 
@@ -116,6 +131,7 @@
       },
       _generateRequests: function() {
           this.$.invitationsRequest.generateRequest();
+          this.$.delegationRequest.generateRequest();
       },
       _openAddDelegationModal: function(event) {
         this.fire('iron-signal', {name: 'open-ajout-delegation-modal', data: {}});

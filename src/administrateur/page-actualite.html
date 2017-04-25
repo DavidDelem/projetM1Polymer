@@ -15,26 +15,33 @@
         display: block;
         padding: 10px;
       }
+        .fil-actualite {
+            margin-top: 60px;
+        }
         
       .paper-card-fil-actualite {
-        width: 100%;
-        margin-bottom: 40px;
+            width: 100%;
+            margin-bottom: 40px;
       }
         
         .fil-actualite-date {
             text-align: left;
             padding-top: 15px;
+            opacity: 0.3;
         }
         
+/*
        .fil-actualite-date:after {
           content: '';
           width: 0;
           height: 100%;
           position: absolute;
           border: 1px solid #555555;
+          opacity: 0.3;
           top: 140%;
           left: 50px;
         }
+*/
         
         .paper-card-fil-actualite paper-fab {
             position: absolute;
@@ -51,6 +58,28 @@
             font-size: 14px;
             font-weight: 500;
         }
+        
+        .historique-non-lu .paper-card-lu-btn {
+            width: 100%;
+            text-align: center;
+            opacity: 1;
+            cursor: pointer;
+        }
+        
+        .historique-lu .paper-card-lu-btn {
+            width: 100%;
+            text-align: center;
+            opacity: 0.3;
+        }
+        
+        .historique-lu .paper-card-fil-actualite {
+            opacity: 0.3;
+        }
+        
+        .historique-lu .paper-card-lu-btn iron-icon {
+            margin-top: 16px;
+            margin-bottom: 16px;
+        }
     </style>
       
     <iron-meta id="meta"></iron-meta>
@@ -65,90 +94,79 @@
         handle-as="json"
         last-response="{{historique}}"
         on-error="_handleHistoriqueError"></iron-ajax>
+      
+    <iron-ajax 
+        id="luRequest" 
+        method="PUT"
+        content-type="application/json"
+        headers="{{_computeHeaders(storedData.token)}}"
+        url="{{serverUrl}}/historique/{{selectedHistorique.identifiant}}"
+        handle-as="json"
+        on-response="_handleLuResponse"
+        on-error="_handleLuError"></iron-ajax>
+      
       <div class="col-md-8 col-md-offset-2">
-        <template is="dom-repeat" items="{{historique}}" on-dom-change="_renderList">
-                <template is="dom-if" if="{{_computeHidden(item, 'DATE_LIMITE_ATTEINTE')}}">
-                    <div class="col-md-2 fil-actualite-date">
-                        <span class="floating-text">[[_getDate(item.date)]]</span>
-                    </div>
-                        <div class="col-md-10">
-                            <paper-card class="paper-card-fil-actualite">
-                                 <div class="card-content">
-                                    <paper-fab icon="icons:date-range"></paper-fab>
-                                     <span>Date limite du projet NOMPROJET atteinte</span>
-                                </div>
-                            </paper-card>
-                        </div>
-                </template>
-                <template is="dom-if" if="{{_computeHidden(item, 'TOUTES_BIODATAS_ENVOYEES')}}">
+        <div class="fil-actualite">
+            <template is="dom-repeat" items="[[historique]]">
+                    <div class$="row [[_hasClassLu(item.lu)]]">
                         <div class="col-md-2 fil-actualite-date">
                             <span class="floating-text">[[_getDate(item.date)]]</span>
                         </div>
-                            <div class="col-md-10">
+                        <template is="dom-if" if="[[_computeHidden(item, 'DATE_LIMITE_ATTEINTE')]]">
+                            <div class="col-md-9">
                                 <paper-card class="paper-card-fil-actualite">
-                                     <div class="card-content">
+                                    <div class="card-content">
                                         <paper-fab icon="icons:date-range"></paper-fab>
-                                         <span>Date limite du projet NOMPROJET atteinte</span>
+                                        <span>Date limite du projet NOMPROJET atteinte</span>
                                     </div>
                                 </paper-card>
                             </div>
-                </template>
-                <template is="dom-if" if="{{_computeHidden(item, 'TOUTES_BIODATAS_ENVOYEES')}}">
-                        <div class="col-md-2 fil-actualite-date">
-                            <span class="floating-text">[[_getDate(item.date)]]</span>
-                        </div>
-                            <div class="col-md-10">
+                        </template>
+                        <template is="dom-if" if="[[_computeHidden(item, 'TOUTES_BIODATAS_ENVOYEES')]]">
+                            <div class="col-md-9">
                                 <paper-card class="paper-card-fil-actualite">
-                                     <div class="card-content">
+                                    <div class="card-content">
                                         <paper-fab icon="communication:mail-outline"></paper-fab>
-                                         <span>La totalité des visiteurs du projet NOMPROJET ont envoyé leurs biodatas</span>
+                                        <span>Tous les visiteurs du projet NOMPROJET ont envoyé leurs biodatas</span>
                                     </div>
                                 </paper-card>
                             </div>
-                </template>
-                <template is="dom-if" if="{{_computeHidden(item, 'DELEGATION_INVITATION')}}">
-                        <div class="col-md-2 fil-actualite-date">
-                            <span class="floating-text">[[_getDate(item.date)]]</span>
-                        </div>
-                            <div class="col-md-10">
+                        </template>
+                        <template is="dom-if" if="[[_computeHidden(item, 'DELEGATION_INVITATION')]]">
+                            <div class="col-md-9">
                                 <paper-card class="paper-card-fil-actualite">
-                                     <div class="card-content">
+                                    <div class="card-content">
                                         <paper-fab icon="av:recent-actors"></paper-fab>
-                                         <span>Le visiteur VISITEUR à délégué son invitation à X autre visiteurs</span>
+                                        <span>Le visiteur VISITEUR à délégué son invitation à X autre visiteurs</span>
                                     </div>
                                 </paper-card>
                             </div>
-                </template>
-        </template>
+                        </template>
+                        
+                    <div class="col-md-1">
+                        <paper-card on-tap="_elementLu" class="paper-card-lu-btn">
+                            <template is="dom-if" if="[[!item.lu]]">
+                                <p>VU</p>
+                            </template>
+                            <template is="dom-if" if="[[item.lu]]">
+                                <iron-icon icon="icons:check"></iron-icon>
+                            </template>
+                        </paper-card>
+                    </div>
+                </div>
+            </template>
+          </div>
       </div>
   </template>
 
   <script>
     Polymer({
       is: 'page-actualite',
-        behaviors: [
-          Polymer.NeonAnimationRunnerBehavior
-        ],
       properties: {
         baseUrl: String,
         serverUrl: String,
         historique: Object,
-          animationConfig: {
-            value: function () {
-              return {
-                'entry': [{
-                    name: 'cascaded-animation',
-                    animation: 'slide-up-animation',
-                    node: this,
-                    nodeDelay: 50,
-                    timing: {
-                      duration: 200,
-                      delay: 0
-                    }
-                }],
-              };
-            }
-          }
+        selectedHistorique: Object
       },
       ready: function () {
           this.baseUrl = this.$.meta.byKey("base-url");
@@ -171,10 +189,23 @@
       _computeHidden: function(item, type) {
           return item.type == type;
       },
-      _renderList: function () {
-          var taskElements = this.root.querySelectorAll('paper-card');
-          this.animationConfig['entry'][0].nodes = Array.prototype.slice.call(taskElements);
-          this.playAnimation('entry');
+      _hasClassLu: function(lu) {
+        if(lu) {
+            return 'historique-lu'
+        } else {
+            return 'historique-non-lu'  
+        }
+      },
+      _elementLu: function(event) {
+          if(!event.model.get('item').lu) {
+              this.selectedHistorique = event.model.get('item');
+              this.$.luRequest.body = { lu: !this.selectedHistorique.lu };
+              this.$.luRequest.generateRequest();
+          }
+      },
+      _handleLuResponse: function(response) {
+          this.fire('iron-signal', {name: 'open-toast', data: {texte: 'L\'élément à été marqué comme lu'}});
+          this._generateRequests();
       }
     });
   </script>
