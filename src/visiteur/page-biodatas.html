@@ -286,7 +286,7 @@
                                     <template is="dom-if" if="{{_isNationality(item, selectedNationalite)}}">
                                         <div class="col-md-8 col-md-offset-2">
                                             <label>{{item.nom}}</label>
-                                            <input id="fichier[[item.identifiant]]" type="file" on-change="_previewFile">
+                                            <input id="fichier[[item.identifiant]]" type="file" on-change="_addFile">
                                         </div>
                                     </template>
                                 </template>
@@ -309,7 +309,7 @@
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <label>{{item.nom}} <template is="dom-if" if="[[item.obligatoire]]">*</template></label>
-                                                        <input id="fichier[[item.identifiant]]" type="file" on-change="_previewFile">
+                                                        <input id="fichier[[item.identifiant]]" type="file" on-change="_addFile">
                                                     </div>
                                                 </div>
                                             </template>
@@ -674,7 +674,7 @@
                 }   
             }
       },
-      _previewFile: function(event) {
+      _addFile: function(event) {
           var item = event.model.get('item');
           var fichier = Polymer.dom(this.root).querySelector('#fichier'+item.identifiant).files[0];
           
@@ -688,8 +688,14 @@
               }
           }
           
+          
+          for(var i=0 ; i < this.champs.length; i++) {
+              if(this.champs[i].identifiant == item.identifiant) {
+                  this.champs[i].saisie.fichier = fichier.name;
+              }
+          }
+          
           this.fichiers.push({ identifiantChamp: item.identifiant, fichier: fichier});
-          console.log(this.fichiers);
       },
       _validateBiodatas: function(champs, confirmationValidite, confirmationAutorite) {
           if(confirmationValidite == true && confirmationAutorite == true) {
@@ -707,15 +713,21 @@
       },
       _sendBiodatas: function() {
           var formData = new FormData();
-         // formData.append("image", this.fichiers[0].fichier);
-          formData.append("test", "ok");
+          
+          /* Ajout des fichiers à la requette */
+          
+          for(var i=0 ; i < this.fichiers.length; i++) {
+            formData.append("fichiers", this.fichiers[i].fichier);
+          }
+          /* Ajout des champs à la requette */
+        
           formData.append("champs", JSON.stringify(this.champs));
           this.$.biodatasRequest.body = formData;
           this.$.biodatasRequest.generateRequest();
       },
       _handleBiodatasResponse: function(response) {
           if(response.detail.response == true) {
-             this.biodatasOk = true;
+             //this.biodatasOk = true;
           } else {
           }
       }
