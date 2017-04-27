@@ -4,7 +4,8 @@
 
 <dom-module id="ajout-rappel-modal">
   <template>
-    <style> 
+    <style include="shared-styles"> 
+        
     </style>
     
     <iron-meta id="meta"></iron-meta>
@@ -27,8 +28,11 @@
         <div>Nombre de jours</div>
         <paper-slider value="{{nbJours}}" max="99" editable></paper-slider>
         <div class="buttons">
-            <paper-button dialog-dismiss>Annuler</paper-button>
-            <paper-button autofocus on-tap="_addRappel" disabled$="{{_toggleValidation(nbJours)}}">Valider</paper-button>
+            <paper-button disabled$="{{chargement}}" dialog-dismiss>Annuler</paper-button>
+            <paper-button autofocus on-tap="_addRappel" disabled$="{{_toggleValidation(nbJours, chargement)}}">
+                <span hidden$="{{chargement}}">Valider</span>
+                <paper-spinner hidden$="{{!chargement}}" class="paper-spinner-validation" active={{chargement}}></paper-spinner>
+            </paper-button>
         </div>
     </paper-dialog>
       
@@ -42,6 +46,10 @@
             type: Number,
             value: 0
         },
+        chargement: {
+            type: Boolean,
+            value: false
+        },
         serverUrl: String
       },
       ready: function () {
@@ -50,12 +58,17 @@
       _computeHeaders: function(storedData) {
         return {"Authorization": "JWT " + storedData.token };
       },
-      _toggleValidation: function(nbJours) {
-        if(nbJours > 0) {
-            return false;
-        } else {
+      _toggleValidation: function(nbJours, chargement) {
+          if(chargement == false) {
+            if(nbJours > 0) {
+                return false;
+            } else {
+                return true;
+            } 
+          } else {
             return true;
-        }
+          }
+        
       },
       _handleOpenAjoutRappelModalEvent: function(event) {
         this.$.dialog.open();
@@ -63,14 +76,18 @@
       _addRappel: function() {
         this.$.addRappelRequest.body = { nbJours: this.nbJours };
         this.$.addRappelRequest.generateRequest();
+        this.chargement = true;
       },
       _handleAddRappelResponse: function(response) {
         this.$.dialog.close();
+        this.chargement = false;
+          
         this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Le rappel a été ajouté'}});
         this.fire('iron-signal', {name: 'modal-success'});
       },
       _handleAddRappelError: function(error) {
         this.$.dialog.close();
+        this.chargement = false;
       }
         
     });

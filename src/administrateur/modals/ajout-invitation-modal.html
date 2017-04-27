@@ -4,7 +4,7 @@
 
 <dom-module id="ajout-invitation-modal">
   <template>
-    <style>
+    <style include="shared-styles">
         paper-input-container {
             display: inline-block;
             width: 100%;
@@ -52,8 +52,11 @@
             </div>
         </template>
         <div class="buttons">
-            <paper-button dialog-dismiss>Annuler</paper-button>
-            <paper-button autofocus on-tap="_addInvitation">Valider</paper-button>
+            <paper-button disabled$="{{chargement}}" dialog-dismiss>Annuler</paper-button>
+            <paper-button disabled$="{{chargement}}" autofocus on-tap="_addInvitation">
+                <span hidden$="{{chargement}}">Valider</span>
+                <paper-spinner hidden$="{{!chargement}}" class="paper-spinner-validation" active={{chargement}}></paper-spinner>
+            </paper-button>
         </div>
     </paper-dialog>
       
@@ -100,15 +103,20 @@
       _addInvitation: function() {
         this.$.addInvitationRequest.body = { emails: this.emailsList }
         this.$.addInvitationRequest.generateRequest();
+        this.chargement = true;
       },
       _handleAddInvitationResponse: function(response) {
         this.$.dialog.close();
         this.emailsList = [{value: ''}];
+        this.chargement = false;
+          
         this.fire('iron-signal', {name: 'modal-projet-success'});
         this.fire('iron-signal', {name: 'open-toast', data: {texte: 'L\'invitation à été ajoutée'}});
       },
       _handleAddInvitationError: function(error) {
         this.$.dialog.close();
+        this.chargement = false;
+          
         this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Echec lors de l\'ajout de l\'invitation'}});
       }
         

@@ -27,9 +27,7 @@
       
     <iron-meta id="meta"></iron-meta>
     <iron-localstorage name="data-storage" value="{{storedData}}"></iron-localstorage>
-    <app-data key="storedData" data="{{storedData}}"></app-data> 
-    
-            
+    <app-data key="storedData" data="{{storedData}}"></app-data>   
 
     <iron-ajax 
         id="validationBiodatasRequest" 
@@ -40,36 +38,13 @@
         on-error="_handleActionsError"></iron-ajax>
       
     <iron-ajax 
-        id="refusBiodatasRequest" 
-        method="PUT"
-        headers="{{_computeHeaders(storedData.token)}}"
-        url="{{serverUrl}}/invitations/{{invitation.identifiant}}/refusbiodatas"
-        on-response="_handleActionsResponse"
-        on-error="_handleActionsError"></iron-ajax>
-      
-    <iron-ajax 
         id="transfertAutoritesRequest" 
         method="PUT"
         headers="{{_computeHeaders(storedData.token)}}"
         url="{{serverUrl}}/invitations/{{invitation.identifiant}}/transfertautorites"
         on-response="_handleActionsResponse"
         on-error="_handleActionsError"></iron-ajax>
-            
-    <iron-ajax 
-        id="demandeAccessOkRequest" 
-        method="PUT"
-        headers="{{_computeHeaders(storedData.token)}}"
-        url="{{serverUrl}}/invitations/{{invitation.identifiant}}/demandeaccessok"
-        on-response="_handleActionsResponse"
-        on-error="_handleActionsError"></iron-ajax>
       
-    <iron-ajax 
-        id="demandeAccessKoRequest" 
-        method="PUT"
-        headers="{{_computeHeaders(storedData.token)}}"
-        url="{{serverUrl}}/invitations/{{invitation.identifiant}}/demandeaccessko"
-        on-response="_handleActionsResponse"
-        on-error="_handleActionsError"></iron-ajax>
     <iron-ajax 
         id="retourRequest" 
         method="PUT"
@@ -82,7 +57,7 @@
         <paper-icon-button icon="icons:more-vert" class="dropdown-trigger"></paper-icon-button>
         <paper-menu class="dropdown-content">
             <template is="dom-if" if="{{_lastHistoriqueIs(invitation, 'ENVOI_BIODATAS')}}">
-                <paper-item on-tap="_refuserBiodatas"><iron-icon icon="icons:thumb-down"></iron-icon><span>Biodatas refusées</span></paper-item>
+                <paper-item on-tap="_openRefusBiodatasModal"><iron-icon icon="icons:thumb-down"></iron-icon><span>Biodatas refusées</span></paper-item>
                 <paper-item on-tap="_validerBiodatas"><iron-icon icon="icons:thumb-up"></iron-icon><span>Biodatas validées</span></paper-item>
 <!--                <paper-item><iron-icon icon="icons:thumb-up"></iron-icon><span>Biodatas validées et transférées aux autorités</span></paper-item>-->
             </template>
@@ -126,16 +101,16 @@
         }
     },
     _accepterDemandeAccess: function() {
-        this.$.demandeAccessOkRequest.generateRequest();
+        this.fire('iron-signal', {name: 'open-action-demande-access-ok-modal', data: { invitation: this.invitation }});
     },
     _refuserDemandeAccess: function() {
-        this.$.demandeAccessKoRequest.generateRequest();
+        this.fire('iron-signal', {name: 'open-action-demande-access-ko-modal', data: { invitation: this.invitation }});
     },
     _validerBiodatas: function() {
         this.$.validationBiodatasRequest.generateRequest();
     },
-    _refuserBiodatas: function() {
-        this.$.refusBiodatasRequest.generateRequest();
+    _openRefusBiodatasModal: function() {
+        this.fire('iron-signal', {name: 'open-action-refus-biodatas-modal', data: { invitation: this.invitation }});
     },
     _transfererAuxAutorites: function() {
         this.$.transfertAutoritesRequest.generateRequest();

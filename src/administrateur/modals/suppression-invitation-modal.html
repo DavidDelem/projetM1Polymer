@@ -4,9 +4,7 @@
 
 <dom-module id="suppression-invitation-modal">
   <template>
-    <style>
-      :host {
-      }        
+    <style include="shared-styles">   
     </style>
     
     <iron-meta id="meta"></iron-meta>
@@ -25,12 +23,14 @@
     on-error="_handleRemoveInvitationError"></iron-ajax>    
       
     <paper-dialog id="dialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
-        <h2>Suppression d'une invitation</h2>
-        <p>Voulez-vous vraiment supprimer définitivement l'invitation de [[email]]</p>
-        <paper-checkbox>Avertir le visiteur de la suppression de son invitation</paper-checkbox>
+        <h2>Suppression de l'invitation</h2>
+        <p>La suppression de l'invitation de [[email]] est définitive</p>
         <div class="buttons">
-            <paper-button dialog-dismiss>Annuler</paper-button>
-            <paper-button autofocus on-tap="_removeInvitation" disabled$="{{_validateForm(email)}}">Valider</paper-button>
+            <paper-button disabled$="{{chargement}}" dialog-dismiss>Annuler</paper-button>
+            <paper-button disabled$="{{chargement}}" autofocus on-tap="_removeInvitation">
+                <span hidden$="{{chargement}}">Valider</span>
+                <paper-spinner hidden$="{{!chargement}}" class="paper-spinner-validation" active={{chargement}}></paper-spinner>
+            </paper-button>
         </div>
     </paper-dialog>
       
@@ -60,13 +60,17 @@
       _removeInvitation: function() {
         this.$.removeInvitationRequest.body = { identifiant: this.identifiant }
         this.$.removeInvitationRequest.generateRequest();
+        this.chargement = true;
       },
       _handleRemoveInvitationResponse: function(response) {
         this.$.dialog.close();
+        this.chargement = false;
+          
         this.fire('iron-signal', {name: 'action-success'});
       },
       _handleRemoveInvitationError: function(error) {
         this.$.dialog.close();
+        this.chargement = false;
       }
         
     });

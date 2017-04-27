@@ -13,6 +13,9 @@
 <link rel="import" href="administrateur/modals/modification-profil-modal.html">
 <link rel="import" href="administrateur/modals/suppression-administrateur-modal.html">
 <link rel="import" href="administrateur/modals/ajout-administrateur-modal.html">
+<link rel="import" href="administrateur/modals/action-refus-biodatas-modal.html">
+<link rel="import" href="administrateur/modals/action-demande-access-ok-modal.html">
+<link rel="import" href="administrateur/modals/action-demande-access-ko-modal.html">
 <link rel="import" href="app-data.html">
 
 <dom-module id="section-administrateur">
@@ -86,7 +89,7 @@
                 <app-toolbar>Menu</app-toolbar>
                 <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
                     <a class="drawer-elem" name="page-actualite" href="{{baseUrl}}/section-administrateur/page-actualite/">Fil d'actualité</a>
-                    <a class="drawer-elem" name="page-invitations" href="{{baseUrl}}/section-administrateur/page-invitations/">Invitations</a>
+                    <a class$="drawer-elem {{_isSelected(routeData)}}" name="page-invitations" href="{{baseUrl}}/section-administrateur/page-invitations/">Invitations</a>
                     <a class="drawer-elem" name="page-profils" href="{{baseUrl}}/section-administrateur/page-profils/">Profils de formulaires</a>
                     <a class="drawer-elem" name="page-rappels" href="{{baseUrl}}/section-administrateur/page-rappels/">Rappels</a>
                     <a class="drawer-elem" name="page-administrateurs" href="{{baseUrl}}/section-administrateur/page-administrateurs/">Administrateurs</a>
@@ -127,6 +130,10 @@
       
     <ajout-administrateur-modal></ajout-administrateur-modal>
     <suppression-administrateur-modal></suppression-administrateur-modal>
+      
+    <action-refus-biodatas-modal></action-refus-biodatas-modal>
+    <action-demande-access-ok-modal></action-demande-access-ok-modal>
+    <action-demande-access-ko-modal></action-demande-access-ko-modal>
       
     <toasts-administration></toasts-administration>
   </template>
@@ -177,6 +184,13 @@
       },
       _showPage404: function() {
         this.page = 'page-actualite';
+      },
+      _isSelected: function(routeData) {
+          if(routeData.sub_page == 'page-invitations-detail' || routeData.sub_page == 'page-invitations') {
+              return 'iron-selected';
+          } else {
+              return '';
+          }
       }
     });
   </script>

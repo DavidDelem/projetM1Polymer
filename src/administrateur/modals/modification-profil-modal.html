@@ -65,8 +65,11 @@
         </div>
         <div class="row">
             <div class="col-md-12 buttons">
-                <paper-button dialog-dismiss>Annuler</paper-button>
-                <paper-button autofocus on-tap="_updateProfil">Valider</paper-button>
+                <paper-button disabled$="{{chargement}}" dialog-dismiss>Annuler</paper-button>
+                <paper-button disabled$="{{chargement}}" autofocus on-tap="_updateProfil">
+                    <span hidden$="{{chargement}}">Valider</span>
+                    <paper-spinner hidden$="{{!chargement}}" class="paper-spinner-validation" active={{chargement}}></paper-spinner>
+                </paper-button>
             </div>
         </div>
     </paper-dialog>
@@ -99,13 +102,18 @@
       _updateProfil: function() {
         this.$.updateChampsRequest.body = { profil: this.selectedProfil.identifiant, champs: this.champs };
         this.$.updateChampsRequest.generateRequest();
+        this.chargement = true;
       },
       _handleUpdateChampsResponse: function(response) {
         this.$.dialog.close();
+        this.chargement = false;
+          
         this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Les modifications du profil sont enregistrées'}});
       },
       _handleUpdateChampsError: function(error) {
         this.$.dialog.close();
+        this.chargement = false;
+          
         this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Echec lors de l\'enregistrement des modifications du profil'}});
       },
         

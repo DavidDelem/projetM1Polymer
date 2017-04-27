@@ -4,9 +4,7 @@
 
 <dom-module id="suppression-administrateur-modal">
   <template>
-    <style>
-      :host {
-      }        
+    <style include="shared-styles">     
     </style>
     
     <iron-meta id="meta"></iron-meta>
@@ -28,8 +26,11 @@
         <h2>Suppression d'un compte administrateur</h2>
         <p>Voulez-vous vraiment supprimer le compte de [[identifiant]]</p>
         <div class="buttons">
-            <paper-button dialog-dismiss>Annuler</paper-button>
-            <paper-button autofocus on-tap="_removeAdministrateur">Valider</paper-button>
+            <paper-button disabled$="{{chargement}}" dialog-dismiss>Annuler</paper-button>
+            <paper-button disabled$="{{chargement}}" autofocus on-tap="_removeAdministrateur">
+                <span hidden$="{{chargement}}">Valider</span>
+                <paper-spinner hidden$="{{!chargement}}" class="paper-spinner-validation" active={{chargement}}></paper-spinner>
+            </paper-button>
         </div>
     </paper-dialog>
       
@@ -55,13 +56,17 @@
       _removeAdministrateur: function() {
         this.$.removeAdministrateurRequest.body = { identifiant: this.identifiant }
         this.$.removeAdministrateurRequest.generateRequest();
+        this.chargement = true;
       },
       _handleRemoveAdministrateurResponse: function(response) {
         this.$.dialog.close();
+        this.chargement = false;
+          
         this.fire('iron-signal', {name: 'modal-success'});
       },
       _handleRemoveAdministrateurError: function(error) {
         this.$.dialog.close();
+        this.chargement = false;
       }
         
     });
