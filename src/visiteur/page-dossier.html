@@ -88,6 +88,9 @@
             font-size: 14px;
             font-weight: 500;
         }
+        .size{
+           font-size: 12px;
+        }
     </style>
       
     <iron-meta id="meta"></iron-meta>
@@ -102,6 +105,16 @@
         handle-as="json"
         last-response="{{historique}}"
         on-error="_handleHistoriqueError"></iron-ajax>
+
+    <iron-ajax 
+        id="suppRequest" 
+        method="DELETE"
+        content-type="application/x-www-form-urlencoded"
+        headers="{{_computeHeaders(storedData.token)}}"
+        url="{{serverUrl}}/invitation"
+        handle-as="json"
+        last-response="{{historique}}"
+        on-error="_handleHistoriqueError"></iron-ajax>
       
     <div class="timeline">
         <template is="dom-repeat" items="{{historique}}">
@@ -113,6 +126,10 @@
                             <paper-fab icon="icons:account-circle"></paper-fab>
                             <h3>Invitation reçue</h3>
                             <p>Vous pouvez envoyer vos biodatas jusqu'à la date limite de saisie</p>
+
+                            <paper-button raised class="size" on-tap="_suppinvitation">Supprimer mon dossier<iron-icon icon="icons:delete"></iron-icon></paper-button>
+
+
                         </div>     
                     </div>
                 </div>
@@ -250,6 +267,10 @@
       },
       _getDate: function(timestamp) {
         return moment(timestamp, 'x').format('DD/MM/YYYY');
+      },
+      _suppinvitation: function(){
+        this.$.suppRequest.generateRequest();
+        console.log("hhhh");
       }
     });
   </script>
