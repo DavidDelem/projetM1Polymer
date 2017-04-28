@@ -69,6 +69,19 @@
             display: inline-block;
             margin-right: 15px;
         }
+        
+        .label {
+            background-color: #bfbfbf;
+            padding: 6px 15px 6px 15px;
+            color: #fff;
+            font-weight: 500;
+            text-transform: uppercase;
+            text-align: center;
+            white-space: nowrap;
+            font-size: 0.8em;
+            border-radius: 3px;
+            margin-right: 10px;
+        }
     </style>
       
     <iron-meta id="meta"></iron-meta>
@@ -174,7 +187,48 @@
                     </brainy-table-column>
                     <template is="row-detail">
                         <template is="dom-repeat" items="{{item.historique}}">
-                            [[item.type]]
+                            <template is="dom-if" if="{{_historiqueIs(item.type, 'RECEPTION_INVITATION')}}">
+                                <div tabindex="0">
+                                    <span class="label">Invitation envoyée</span>
+                                    <paper-tooltip>[[_getDate(item.date)]]</paper-tooltip>
+                                </div>
+                            </template>
+                            <template is="dom-if" if="{{_historiqueIs(item.type, 'ENVOI_BIODATAS')}}">
+                                <div tabindex="0">
+                                    <span class="label">Biodatas reçues</span>
+                                    <paper-tooltip>[[_getDate(item.date)]]</paper-tooltip>
+                                </div>
+                            </template>
+                            <template is="dom-if" if="{{_historiqueIs(item.type, 'VALIDATION_BIODATAS')}}">
+                                <div tabindex="0">
+                                    <span class="label">Biodatas validées</span>
+                                    <paper-tooltip>[[_getDate(item.date)]]</paper-tooltip>
+                                </div>
+                            </template>
+                            <template is="dom-if" if="{{_historiqueIs(item.type, 'REFUS_BIODATAS')}}">
+                                <div tabindex="0">
+                                    <span class="label">Biodatas refusées</span>
+                                    <paper-tooltip>[[_getDate(item.date)]]</paper-tooltip>
+                                </div>
+                            </template>
+                            <template is="dom-if" if="{{_historiqueIs(item.type, 'TRANSFERT_AUTORITES')}}">
+                                <div tabindex="0">
+                                    <span class="label">Transféré aux autorités</span>
+                                    <paper-tooltip>[[_getDate(item.date)]]</paper-tooltip>
+                                </div>
+                            </template>
+                            <template is="dom-if" if="{{_historiqueIs(item.type, 'DEMANDE_ACCESS_OK')}}">
+                                <div tabindex="0">
+                                    <span class="label">Clos</span>
+                                    <paper-tooltip>[[_getDate(item.date)]]</paper-tooltip>
+                                </div>
+                            </template>
+                            <template is="dom-if" if="{{_historiqueIs(item.type, 'DEMANDE_ACCESS_KO')}}">
+                                <div tabindex="0">
+                                    <span class="label">Clos</span>
+                                    <paper-tooltip>[[_getDate(item.date)]]</paper-tooltip>
+                                </div>
+                            </template>
                         </template>
                     </template>
                 </brainy-table>
@@ -295,12 +349,15 @@
               return false;
           }
       },
+      _historiqueIs: function(typeHistorique, type) {
+          return typeHistorique === type;
+      },
       _getDate: function(timestamp) {
         return moment(timestamp, 'x').format('DD/MM/YYYY');
       },
       _showBadgeDateLimite: function(dateLimite) {
          return Date.now() > dateLimite;
-      },
+      }
     });
   </script>
 </dom-module>

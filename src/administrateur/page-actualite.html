@@ -30,19 +30,6 @@
             opacity: 0.3;
         }
         
-/*
-       .fil-actualite-date:after {
-          content: '';
-          width: 0;
-          height: 100%;
-          position: absolute;
-          border: 1px solid #555555;
-          opacity: 0.3;
-          top: 140%;
-          left: 50px;
-        }
-*/
-        
         .paper-card-fil-actualite paper-fab {
             position: absolute;
             left: -28px;
@@ -76,9 +63,21 @@
             opacity: 0.3;
         }
         
-        .historique-lu .paper-card-lu-btn iron-icon {
+        .paper-card-lu-btn {
+            cursor: pointer;
+        }
+        
+        .historique-lu .paper-card-lu-btn iron-icon, .icon-annuler-vu {
             margin-top: 16px;
             margin-bottom: 16px;
+        }
+        
+        .paper-card-lu-btn .icon-annuler-vu, .paper-card-lu-btn:hover .icon-vu {
+            display: none;
+        }
+        
+        .paper-card-lu-btn:hover .icon-annuler-vu {
+            display: inline-block;
         }
     </style>
       
@@ -144,14 +143,14 @@
                         </template>
                         
                     <div class="col-md-1">
-                        <paper-card on-tap="_elementLu" class="paper-card-lu-btn">
-                            <template is="dom-if" if="[[!item.lu]]">
-                                <p>VU</p>
-                            </template>
-                            <template is="dom-if" if="[[item.lu]]">
-                                <iron-icon icon="icons:check"></iron-icon>
-                            </template>
-                        </paper-card>
+                            <paper-card hidden$="{{item.lu}}" on-tap="_elementLu" class="paper-card-lu-btn">
+                                <p class="icon-vu">VU</p>
+                                <iron-icon class="icon-annuler-vu" icon="icons:check"></iron-icon>
+                            </paper-card>
+                            <paper-card hidden$="{{!item.lu}}" on-tap="_elementNonLu" class="paper-card-lu-btn">
+                                <iron-icon class="icon-vu" icon="icons:check"></iron-icon>
+                                <iron-icon class="icon-annuler-vu" icon="icons:undo"></iron-icon>
+                            </paper-card>
                     </div>
                 </div>
             </template>
@@ -198,6 +197,13 @@
       },
       _elementLu: function(event) {
           if(!event.model.get('item').lu) {
+              this.selectedHistorique = event.model.get('item');
+              this.$.luRequest.body = { lu: !this.selectedHistorique.lu };
+              this.$.luRequest.generateRequest();
+          }
+      },
+      _elementNonLu: function(event) {
+          if(event.model.get('item').lu) {
               this.selectedHistorique = event.model.get('item');
               this.$.luRequest.body = { lu: !this.selectedHistorique.lu };
               this.$.luRequest.generateRequest();
