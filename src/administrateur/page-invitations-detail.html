@@ -10,6 +10,17 @@
 <dom-module id="page-invitations-detail">
   <template>
     <style include="shared-styles">
+        
+        :host {
+            display: block;
+            padding: 10px;
+        }
+        
+        .card {
+            margin: 7px 0 24px 0;
+            width: calc(100% + 1px);
+        }
+        
       .expandable brainy-tr[expanded] {
         margin: 10px 0;
 
@@ -32,25 +43,6 @@
         
         .fixposition {
             position: relative;
-        }
-        
-        .special-paper-menu paper-menu {
-            padding: 0;
-        }
-        
-        .special-paper-menu paper-menu paper-item {
-            background-color: #fafafa;
-            color: #646464;
-            cursor: pointer;
-        }
-        
-        .special-paper-menu paper-menu paper-item:hover {
-            background-color: #eeeeee;
-            color: #303030;
-        }
-        
-        .special-paper-menu span {
-            padding-left: 10px;
         }
         
         .paper-fab-flotant {
@@ -81,6 +73,25 @@
             font-size: 0.8em;
             border-radius: 3px;
             margin-right: 10px;
+        }
+        
+        .floating-text {
+            color: #555555;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .floating-text > p {
+            display: inline-block;
+        }
+        
+        .floating-text > .nom-projet {
+            padding-left: 20px;
+        }
+        
+        important-message {
+            float: right;
+            margin-top: 8px;
         }
     </style>
       
@@ -127,16 +138,22 @@
         url="{{serverUrl}}/projets/{{projet}}/rappels"
         on-response="_handleToggleActivationRappelsResponse"
         on-error="_handleToggleActivationRappelsError"></iron-ajax>
-        <template is="dom-if" if="{{_showBadgeDateLimite(projetDetail.dateLimite)}}">
-            <div class="col-md-12">
-                <important-message message="La date limite pour ce projet est atteinte, les visiteurs ne peuvent plus envoyer leurs biodatas"></important-message>
+      
+        <div class="col-md-12">
+            <div class="floating-text">
+                <a href="{{baseUrl}}/section-administrateur/page-invitations/"><paper-icon-button icon="icons:arrow-back"></paper-icon-button>Retour</a>
+                <p class="nom-projet">[[projetDetail.nom]]</p>
+                <template is="dom-if" if="{{_showBadgeDateLimite(projetDetail.dateLimite)}}">
+                    <important-message message="La date limite pour ce projet est atteinte, les visiteurs ne peuvent plus envoyer leurs biodatas"></important-message>
+                </template>
             </div>
-        </template>
+        </div>
         <div class="col-md-8">
             <div class="card">
                 <brainy-table id="brainytable" class="expandable" page-size="5" items="{{invitations}}">
+
                     <brainy-table-column name="Email" sort-by="email">
-                      <template>[[item.email]]</template>
+                        <template>[[item.email]]</template>
                     </brainy-table-column>
                     <brainy-table-column name="Etat du dossier">
                       <template>
@@ -230,6 +247,7 @@
                                 </div>
                             </template>
                         </template>
+
                     </template>
                 </brainy-table>
                 <paper-fab class="paper-fab-flotant" icon="add" on-tap="_openAddInvitationModal"></paper-fab>
@@ -238,9 +256,8 @@
       <div class="col-md-4">
         <div class="row">
             <div class="col-md-12">
-                <div class="card">
-                    <p>{{projetDetail.nom}}</p>  
-                    <p><iron-icon icon="icons:description"></iron-icon> Profil de formulaire: [[projetDetail.nomProfil]]</p>
+                <div class="card"> 
+                    <p><iron-icon icon="icons:description"></iron-icon> Profil: [[projetDetail.nomProfil]]</p>
                     <p><iron-icon icon="icons:event"></iron-icon> Date de création: [[_getDate(projetDetail.dateCreation)]]</p>
                     <p><iron-icon icon="icons:date-range"></iron-icon> Date limite: [[_getDate(projetDetail.dateLimite)]]</p>
                     <div class="paper-fab-section">
@@ -251,7 +268,7 @@
             </div>
             <div class="col-md-12">
                 <div class="card">
-                    <p>Rappels automatisés</p>
+                    <p>Configuration</p>
                     <paper-toggle-button checked="{{projetDetail.rappels}}" on-tap="_toggleActivationRappels">Activer les rappels automatisés</paper-toggle-button>
                 </div>
             </div>

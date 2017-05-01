@@ -101,10 +101,10 @@
         id="historiqueRequest" 
         method="GET"
         headers="{{_computeHeaders(storedData.token)}}"
-        url="{{serverUrl}}/invitations/a/historique"
+        url="{{serverUrl}}/visiteur/invitation/historique"
         handle-as="json"
         last-response="{{historique}}"
-        on-error="_handleHistoriqueError"></iron-ajax>
+        on-error="_handleHttpError"></iron-ajax>
 
     <iron-ajax 
         id="suppRequest" 
@@ -114,7 +114,7 @@
         url="{{serverUrl}}/invitation"
         handle-as="json"
         last-response="{{historique}}"
-        on-error="_handleHistoriqueError"></iron-ajax>
+        on-error="_handleHttpError"></iron-ajax>
       
     <div class="timeline">
         <template is="dom-repeat" items="{{historique}}">
@@ -270,7 +270,11 @@
       },
       _suppinvitation: function(){
         this.$.suppRequest.generateRequest();
-        console.log("hhhh");
+      },
+      _handleHttpError: function(event) {
+          if(event.detail.request.xhr.status == 401) {
+                this.fire('iron-signal', {name: 'connexion-visiteur-denied', data: {}});
+          }
       }
     });
   </script>

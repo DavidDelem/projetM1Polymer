@@ -132,8 +132,9 @@
         this.$.configurationRappelsRequest.generateRequest();
       },
       _handleRappelsError: function(event) {
-        //console.log(event.detail.request.__data__.status);
-        this.fire('connexion-administrateur-denied-event', {});
+        if(event.detail.request.__data__.status == 401) {
+            this.fire('connexion-administrateur-denied-event', {});
+        }
       },
       _toggleActivationRappels: function() {
         this.$.toggleActivationRappelsRequest.body = { activation: this.configurationRappels.activation };

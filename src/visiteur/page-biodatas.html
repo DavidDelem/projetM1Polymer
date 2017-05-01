@@ -2,6 +2,7 @@
 <link rel="import" href="../shared-styles.html">
 <link rel="import" href="../app-data.html">
 <link rel="import" href="../../bower_components/paper-countries/paper-countries.html">
+<link rel="import" href="./components/conseils-biodatas.html">
 
 <dom-module id="page-biodatas">
   <template>
@@ -113,6 +114,10 @@
             margin-bottom: -25px;
         }
         
+        .passeport img, .carte-identite img, .permis img, .immatriculation img {
+            width: 80%;
+        }
+        
     </style>
     
     <iron-meta id="meta"></iron-meta>
@@ -127,7 +132,7 @@
     handle-as="json"
     last-response="{{champs}}"
     on-response="_handleChampsResponse"
-    on-error="_handleChampsError"></iron-ajax>
+    on-error="_handleHttpError"></iron-ajax>
       
     <iron-ajax 
     id="biodatasRequest"
@@ -138,7 +143,6 @@
     on-error="_handleBiodatasError"></iron-ajax>
     
     <template is="dom-if" if="{{!biodatasOk}}">
-        <div class="row">
             <div class="col-md-8">
                 <div class="col-md-12">
                     <div class="steps" >
@@ -207,7 +211,7 @@
                                         <!-- ADRESSE -->
 
                                         <template is="dom-if" if="{{_computeHidden(item, 'texte_adresse')}}">
-                                            <div class="row adresse">
+                                            <div class="row adresse" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
                                                 <div class="col-md-12 titre-adresse">
                                                     <p>[[item.nom]] <template is="dom-if" if="[[item.obligatoire]]">*</template></p>
                                                 </div>
@@ -245,7 +249,7 @@
                                         <!-- NUMERO DE TELEPHONE -->
 
                                         <template is="dom-if" if="{{_computeHidden(item, 'texte_telephone')}}">
-                                            <div class="row telephone">
+                                            <div class="row telephone" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
                                                 <div class="col-md-12">
                                                     <paper-input-container>
                                                         <label>[[item.nom]] <template is="dom-if" if="[[item.obligatoire]]">*</template></label>
@@ -257,7 +261,7 @@
 
                                         <!-- TEXTE LIBRE TEXTAREAS -->
                                         <template is="dom-if" if="{{_computeHidden(item, 'texte_textarea')}}">
-                                            <div class="row texte">
+                                            <div class="row texte" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
                                                 <div class="col-md-12">
                                                     <paper-input-container>
                                                         <label>[[item.nom]] <template is="dom-if" if="[[item.obligatoire]]">*</template></label>
@@ -284,7 +288,7 @@
                             <template is="dom-repeat" items="{{champs}}">
                                 <template is="dom-if" if="{{_computeHidden(item, 'identite_fichier')}}">
                                     <template is="dom-if" if="{{_isNationality(item, selectedNationalite)}}">
-                                        <div class="col-md-8 col-md-offset-2">
+                                        <div class="col-md-8 col-md-offset-2" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
                                             <label>{{item.nom}}</label>
                                             <input id="fichier[[item.identifiant]]" type="file" on-change="_addFile">
                                         </div>
@@ -307,7 +311,7 @@
                                         <template is="dom-repeat" items="{{champs}}">
                                             <template is="dom-if" if="{{_computeHidden(item, 'vehicule_fichier')}}">
                                                 <div class="row">
-                                                    <div class="col-md-12">
+                                                    <div class="col-md-12" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
                                                         <label>{{item.nom}} <template is="dom-if" if="[[item.obligatoire]]">*</template></label>
                                                         <input id="fichier[[item.identifiant]]" type="file" on-change="_addFile">
                                                     </div>
@@ -315,7 +319,7 @@
                                             </template>
                                             <template is="dom-if" if="{{_computeHidden(item, 'vehicule_texte')}}">
                                                 <div class="row">
-                                                    <div class="col-md-12">
+                                                    <div class="col-md-12" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
                                                         <paper-input-container>
                                                             <label>{{item.nom}} <template is="dom-if" if="[[item.obligatoire]]">*</template></label>
                                                             <input is="iron-input" id="username" type="text" bind-value="{{item.saisie.immatriculation}}">
@@ -348,12 +352,8 @@
                 <paper-fab hidden$="[[!_hideStep('envoi', currentStep)]]" class="see-next" icon=":icons:chevron-right" on-tap="_showNext"></paper-fab>
             </div>
             <div class="col-md-4">
-                 <div class="col-md-12">
-                    <p class="floating-text">Informations</p>
-                    <p>Pour un traitement rapide de votre dossier, penser à contrôler l'exactitude des informations saisies.</p>
-                </div>
+                 <conseils-biodatas current-step="{{currentStep}}" steps="{{steps}}" hovered-item-identifiant={{hoveredItemIdentifiant}}></conseils-biodatas>
             </div>
-          </div>
       </template>
       <template is="dom-if" if="{{biodatasOk}}">
           <div class="row">
@@ -639,11 +639,7 @@
           }
       },
       _hideStep: function(step, currentStep) {
-        if(step == currentStep) {
-            return false;
-        } else {
-            return true;
-        }
+        return !(step == currentStep);
       },
       _getClassesStep: function(currentStep, steps, step) {
         if(steps.indexOf(currentStep) >= steps.indexOf(step)) {
@@ -730,6 +726,20 @@
              this.biodatasOk = true;
           } else {
           }
+      },
+      _handleHttpError: function(event) {
+          if(event.detail.request.xhr.status == 401) {
+            this.fire('iron-signal', {name: 'connexion-visiteur-denied', data: {}});
+          }
+      },
+      _itemHovered: function(event) {
+        this.hoveredItemIdentifiant = event.model.get('item').identifiant;   
+      },
+      _itemHovered: function(event) {
+        this.hoveredItemIdentifiant = event.model.get('item').identifiant;   
+      },
+      _aucunItem: function(event) {
+          this.hoveredItemIdentifiant = -1;
       }
     });
   </script>

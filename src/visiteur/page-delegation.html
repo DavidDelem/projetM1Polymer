@@ -61,7 +61,7 @@
         url="{{serverUrl}}/projets/1/invitations"
         handle-as="json"
         last-response="{{invitations}}"
-        on-error="_handleInvitationsError"></iron-ajax>  
+        on-error="_handleHttpError"></iron-ajax>  
       
 
     <div class="col-md-12">
@@ -144,6 +144,11 @@
       },
       _handleModalSuccessEvent: function() {
         this._generateRequests();   
+      },
+      _handleHttpError: function(event) {
+          if(event.detail.request.xhr.status == 401) {
+                this.fire('iron-signal', {name: 'connexion-visiteur-denied', data: {}});
+          }
       }
     });
   </script>

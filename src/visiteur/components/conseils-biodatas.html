@@ -1,0 +1,159 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../shared-styles.html">
+<link rel="import" href="../../app-data.html">
+
+<dom-module id="conseils-biodatas">
+  <template>
+    <style include="shared-styles">
+        
+      .floating-text {
+        color: #555555;
+        font-size: 14px;
+        font-weight: 500;
+      }
+    
+      .question-text {
+            background: #e0e0e0;
+            padding: 7px;
+            border-radius: 3px;
+            cursor: pointer;
+      }
+        
+      .question-text iron-icon { 
+          margin-right: 5px;
+      }
+        
+      .margin-top-bottom {
+        margin: 30px 0 30px 0;
+      }
+        
+      .details {
+        text-align: center;
+      }
+        
+      .details img {
+        width: 60%;
+          
+      }
+        
+    </style>
+
+    <div class="col-md-12">
+        <template is="dom-if" if="{{_currentStepIs('accueil', currentStep)}}">
+            <p class="floating-text question-text">Informations</p>
+            <p>Pour un traitement rapide de votre dossier, penser à contrôler l'exactitude des informations saisies.</p>
+        </template>
+        <template is="dom-if" if="{{_currentStepIs('identite', currentStep)}}">
+            <div class="numero">
+                <p class="floating-text question-text"  on-tap="_setHoveredItemIdentifiant" data-identifiant="4"><iron-icon icon="icons:help"></iron-icon> Comment saisir le numéro de téléphone ?</p>
+                <div class="details" hidden$="{{_hideDetails(4, hoveredItemIdentifiant)}}">
+                    <p>Indiquez un numéro avec lequel vous ête facilement joignable, de préférence un numéro de téléphone portable.<br/><br/>
+                       Si le numéro n'est pas français, le saisir au format internationnal (ex: +447911123456)</p>
+                </div>
+            </div>
+            <div class="adresse">
+                <p class="floating-text question-text"  on-tap="_setHoveredItemIdentifiant" data-identifiant="3"><iron-icon icon="icons:help"></iron-icon> Quelle adresse indiquer ?</p>
+                <div class="details" hidden$="{{_hideDetails(3, hoveredItemIdentifiant)}}">
+                    <p>Indiquez l'adresse de votre résidence principale</p>
+                </div>
+            </div>
+            <div class="remarques">
+                <p class="floating-text question-text" on-tap="_setHoveredItemIdentifiant" data-identifiant="14"><iron-icon icon="icons:help"></iron-icon> A quoi sert la section remarques ?</p>
+                <div class="details" hidden$="{{_hideDetails(14, hoveredItemIdentifiant)}}">
+                    <p>Elles vous permet d'indiquer toute information que vous jugez utile au traitement de votre dossier</p>
+                </div>
+            </div>
+        </template>
+        <template is="dom-if" if="{{_currentStepIs('fichiers', currentStep)}}">
+            <div class="carte-identite">
+                <p class="floating-text question-text" on-tap="_setHoveredItemIdentifiant" data-identifiant="6"><iron-icon icon="icons:help"></iron-icon> Quel doit être le format de la carte d'identité ?</p>
+                <div class="details" hidden$="{{_hideDetails(6, hoveredItemIdentifiant)}}">
+                    <p>Scannez le recto et le verso de votre carte d'identité.
+                       Toutes les informations doivent être clairement lisibles. Format pdf ou image.</p>
+                    <img alt="carte identite" src="/images/carte-identite.png">
+                </div>
+            </div>
+            <div class="passeport">
+                <p class="floating-text question-text" on-tap="_setHoveredItemIdentifiant" data-identifiant="7"><iron-icon icon="icons:help"></iron-icon> Quel doit être le format du passeport ?</p>
+                <div class="details" hidden$="{{_hideDetails(7, hoveredItemIdentifiant)}}">
+                    <p>Scannez les pages comportant votre photo et votre signature.
+                       Toutes les informations doivent être clairement lisibles. Format pdf ou image.</p>
+                    <img alt="passeport" src="/images/passeport.png">
+                </div>
+            </div>
+            <div class="carte-sejour">
+                <p class="floating-text question-text" on-tap="_setHoveredItemIdentifiant" data-identifiant="8"><iron-icon icon="icons:help"></iron-icon> Quel doit être le format de la carte de séjour ?</p>
+                <div class="details" hidden$="{{_hideDetails(8, hoveredItemIdentifiant)}}">
+                    <p>Scannez les pages comportant votre photo et votre signature.
+                       Toutes les informations doivent être clairement lisibles. Format pdf ou image.</p>
+                </div>
+            </div>
+        </template>
+        <template is="dom-if" if="{{_currentStepIs('vehicule', currentStep)}}">
+            <div class="permis">
+                <p class="floating-text question-text"  on-tap="_setHoveredItemIdentifiant" data-identifiant="9"><iron-icon icon="icons:help"></iron-icon> Quel doit être le format du permis ?</p>
+                <div class="details" hidden$="{{_hideDetails(9, hoveredItemIdentifiant)}}">
+                    <p>Votre permis doit être un scan recto-verso d'un nouveau permis ou un scan des 3 pages intérieures d'un ancien permis.
+                    Les textes ainsi que votre photo doivent être clairement lisibles.</p>
+                    <img alt="passeport" src="/images/nouveau-permis.png">
+                    <img alt="passeport" src="/images/ancien-permis.png">
+                </div>
+            </div>
+            <div class="immatriculation">
+                <p class="floating-text question-text"  on-tap="_setHoveredItemIdentifiant" data-identifiant="12"><iron-icon icon="icons:help"></iron-icon> Comment saisir l'immatriculation ?</p>
+                <div class="details" hidden$="{{_hideDetails(12, hoveredItemIdentifiant)}}">
+                    <p>Indiquez les chiffres et les tirets se situant dans la partie blanche, sans espace.</p>
+                    <img alt="passeport" src="/images/immatriculation.png">
+                    <p>Pour cette plaque, la saisie est AB-344-CA</p>
+                </div>
+            </div>
+        </template>
+        <template is="dom-if" if="{{_currentStepIs('envoi', currentStep)}}">
+            <div>
+                <p class="floating-text question-text"  on-tap="_setHoveredItemIdentifiant" data-identifiant="100">
+                    <iron-icon icon="icons:help"></iron-icon> Que se passe t-il si les données sont invalides ?
+                </p>
+                <div class="details" hidden$="{{_hideDetails(100, hoveredItemIdentifiant)}}">
+                    <p>Vous devrez renvoyer à nouveau vos biodatas. Faites particulièrement attention a transmettre des scan de bonne qualité.</p>
+                </div>
+            </div>
+            <div>
+                <p class="floating-text question-text"  on-tap="_setHoveredItemIdentifiant" data-identifiant="101">
+                    <iron-icon icon="icons:help"></iron-icon> Que vont faire les autoritées avec mes données ?
+                </p>
+                <div class="details" hidden$="{{_hideDetails(101, hoveredItemIdentifiant)}}">
+                    <p>Ce sont les autoritées qui, après contrôle de vos données, vous accorderons ou non le droit d'accéder à Sea Test Base.</p>
+                </div>
+            </div>
+        </template>
+    </div>
+      
+  </template>
+
+  <script>
+    Polymer({
+      is: 'conseils-biodatas',
+      properties: {
+        champs: Object,
+        currentStep: String,
+        steps: Object
+      },
+      ready: function() {
+          this.hoveredItemIdentifiant = -1;
+      },
+      _currentStepIs: function(step, currentStep) {
+        return step == currentStep;
+      },
+      _hideDetails: function(identifiant, hoveredItemIdentifiant) {
+          return !(identifiant == hoveredItemIdentifiant);
+      },
+      _setHoveredItemIdentifiant: function(event) {
+         if(this.hoveredItemIdentifiant == event.target.getAttribute('data-identifiant')) {
+             this.hoveredItemIdentifiant = -1;
+         } else {
+            this.hoveredItemIdentifiant = event.target.getAttribute('data-identifiant'); 
+         }
+      }
+    });
+  </script>
+</dom-module>
