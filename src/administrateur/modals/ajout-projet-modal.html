@@ -18,7 +18,7 @@
     method="POST"
     content-type="application/x-www-form-urlencoded"   
     headers="{{_computeHeaders(storedData)}}"
-    url="{{serverUrl}}/projets"
+    url="{{serverUrl}}/administration/projets"
     on-response="_handleAddProjetResponse"
     on-error="_handleAddProjetError"></iron-ajax>
       
@@ -97,15 +97,15 @@
       },
       _addProjet: function() {
         this.$.addProjetRequest.body = { projet: this.projet, profil: this.selectedProfil, dateLimite: moment(this.selectedDateLimite, 'YYYY-MM-DD').format('x') };
-        this.projet =  "";
-        this.selectedProfil = "";
-        this.selectedDateLimite = "";
         this.chargement = true;
           
         this.$.addProjetRequest.generateRequest();
       },
       _handleAddProjetResponse: function(response) {
         this.$.dialog.close();
+        this.projet =  "";
+        this.selectedProfil = "";
+        this.selectedDateLimite = "";
         this.chargement = false;
           
         this.fire('iron-signal', {name: 'modal-success'});

@@ -4,6 +4,9 @@
 <link rel="import" href="../../bower_components/paper-countries/paper-countries.html">
 <link rel="import" href="./components/conseils-biodatas.html">
 
+<script src="../../bower_components/moment/moment.js"></script>
+<script src="../../bower_components/moment/locale/fr.js"></script>
+
 <dom-module id="page-biodatas">
   <template>
     <style include="shared-styles">
@@ -128,10 +131,28 @@
     id="champsRequest"
     method="GET"
     headers="{{_computeHeaders(storedData)}}"
-    url="{{serverUrl}}/profils/champs"
+    url="{{serverUrl}}/visiteur/profils/champs"
     handle-as="json"
     last-response="{{champs}}"
     on-response="_handleChampsResponse"
+    on-error="_handleHttpError"></iron-ajax>
+      
+    <iron-ajax 
+        id="historiqueEnvoyeRequest" 
+        method="GET"
+        headers="{{_computeHeaders(storedData)}}"
+        url="{{serverUrl}}/biodatas"
+        handle-as="json"
+        last-response="{{biodatasEnvoyees}}"
+        on-error="_handleHttpError"></iron-ajax>
+      
+    <iron-ajax 
+    id="dateLimiteRequest"
+    method="GET"
+    headers="{{_computeHeaders(storedData)}}"
+    url="{{serverUrl}}/visiteurs/projets/datelimite"
+    handle-as="json"
+    last-response="{{dateLimite}}"
     on-error="_handleHttpError"></iron-ajax>
       
     <iron-ajax 
@@ -142,7 +163,7 @@
     on-response="_handleBiodatasResponse"
     on-error="_handleBiodatasError"></iron-ajax>
     
-    <template is="dom-if" if="{{!biodatasOk}}">
+    <template is="dom-if" if="{{_afficherFormulaire(biodatasOk, biodatasEnvoyees)}}">
             <div class="col-md-8">
                 <div class="col-md-12">
                     <div class="steps" >
@@ -170,6 +191,7 @@
                                 <div class="margin-top-bottom text-center">
                                     <p>SeaTestBase est situé dans une zone à accés réglementé. Obtenir des autorisations est nécessaire pour y accéder.
                                         Complétez chacune des étapes avec les informations demandées, vous pourrez ensuite les envoyer.</p>
+                                    <p>[[_getDate(dateLimite)]]</p>
                                     <div>
                                         <paper-button on-tap="_showStep" data-args="identite">Commencer</paper-button>
                                     </div>
@@ -342,7 +364,8 @@
                                     <paper-checkbox checked="{{confirmationAutorite}}">J'accepte la transmission des données aux autorités françaises</paper-checkbox>
                                 </div>
                                 <div class="text-center margin-top-bottom">
-                                    <paper-button on-tap="_sendBiodatas" disabled$="{{_validateBiodatas(champs, confirmationValidite, confirmationAutorite)}}">Envoyer mes données</paper-button>
+                                    <paper-button on-tap="_sendBiodatas" hidden$="{{chargement}}" disabled$="{{_validateBiodatas(champs, confirmationValidite, confirmationAutorite)}}">Envoyer mes données</paper-button>
+                                    <paper-spinner hidden$="{{!chargement}}" active={{chargement}}></paper-spinner>
                                 </div>
                             </div>
                         </div>
@@ -363,8 +386,19 @@
                         <iron-icon class="large-icon" icon="icons:check"></iron-icon>
                         <p>Vos biodatas ont bien été envoyées</p>
                         <p>Vous recevrez un mal de confirmation dans les prochaines minutes</p>
-
                         <p>Après controle par un administrateur, elles seront transférées aux autorités.</p>
+                    </div>
+                </div>
+              </div>
+          </div>
+      </template>
+      <template is="dom-if" if="{{biodatasEnvoyees}}">
+          <div class="row">
+              <div class="col-md-8 col-md-offset-2">
+                <div class="card">
+                    <div class="text-center">
+                        <iron-icon class="large-icon" icon="icons:check"></iron-icon>
+                        <p>Merci, vous avez déjà envoyé vos biodatas</p>
                     </div>
                 </div>
               </div>
@@ -614,8 +648,10 @@
         return {"Authorization": "JWT " + storedData.token };
       },
       _generateRequests: function() {
-          this.$.champsRequest.params = { profil: 'e86e3ad8-7ddb-4d1c-a0bd-0b20efcf328d' }; // A RENDRE VARIABLE
+          //this.$.champsRequest.params = { profil: 'e86e3ad8-7ddb-4d1c-a0bd-0b20efcf328d' }; // A RENDRE VARIABLE
           this.$.champsRequest.generateRequest();
+          this.$.historiqueEnvoyeRequest.generateRequest();
+          this.$.dateLimiteRequest.generateRequest();
       },
       _handleChampsResponse: function(res) {
           console.log(this.champs);
@@ -708,6 +744,7 @@
           }
       },
       _sendBiodatas: function() {
+          this.chargement = true;
           var formData = new FormData();
           
           /* Ajout des fichiers à la requette */
@@ -721,10 +758,13 @@
           this.$.biodatasRequest.body = formData;
           this.$.biodatasRequest.generateRequest();
       },
-      _handleBiodatasResponse: function(response) {
-          if(response.detail.response == true) {
+      _handleBiodatasResponse: function(event) {
+          if(event.detail.response == true) {
              this.biodatasOk = true;
+             this.chargement = false;
           } else {
+             this.fire('iron-signal', {name: 'open-erreur-biodatas-modal', data: { erreurs: event.detail.response }});
+             this.chargement = false;
           }
       },
       _handleHttpError: function(event) {
@@ -740,6 +780,16 @@
       },
       _aucunItem: function(event) {
           this.hoveredItemIdentifiant = -1;
+      },
+      _afficherFormulaire: function(biodatasOk, biodatasEnvoyees) {
+          if(biodatasEnvoyees == false) {
+            return biodatasOk == false;
+          } else {
+            return false;
+          }
+      },
+      _getDate: function(timestamp) {
+        return moment(timestamp, 'x').format('DD/MM/YYYY');
       }
     });
   </script>

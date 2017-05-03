@@ -2,6 +2,7 @@
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="visiteur/modals/ajout-delegation-modal.html">
 <link rel="import" href="visiteur/modals/annulation-delegation-modal.html">
+<link rel="import" href="visiteur/modals/erreur-biodatas-modal.html">
 
 <dom-module id="section-visiteur">
   <template>
@@ -38,6 +39,10 @@
         color: black;
         font-weight: bold;
       }
+        
+        app-toolbar a {
+            color: #fff;
+        }
     </style>
       
       <iron-meta id="meta"></iron-meta>
@@ -54,7 +59,9 @@
           <app-toolbar>
             <paper-icon-button icon="my-icons:menu" on-tap="_toggleMenu" drawer-toggle></paper-icon-button>
             <div main-title>Sea Test Base Biodatas</div>
-            <paper-icon-button icon="icons:power-settings-new" on-tap="_disconnect" ></paper-icon-button>
+            <a href="{{baseUrl}}/section-public/page-connexion-visiteur/">
+                <paper-icon-button icon="icons:power-settings-new"></paper-icon-button>
+            </a>
           </app-toolbar>
         </app-header>
           
@@ -83,6 +90,7 @@
     </app-header-layout>
     <ajout-delegation-modal></ajout-delegation-modal>
     <annulation-delegation-modal></annulation-delegation-modal>
+    <erreur-biodatas-modal></erreur-biodatas-modal>
   </template>
 
   <script>
@@ -105,10 +113,10 @@
       _handleConnexionVisiteurDeniedEvent: function(event) {
         this._disconnect();
       },
-      _disconnect: function() {
-          this.storedData = null;
-          page.redirect('/#/section-public/page-connexion-visiteur'); 
-      },
+//      _disconnect: function() {
+//          this.storedData = null;
+//          page.redirect('/#/section-public/page-connexion-visiteur'); 
+//      },
       _routePageChanged: function(page) {
         this.page = page || 'page-actualite';
         if (!this.$.drawer.persistent) {

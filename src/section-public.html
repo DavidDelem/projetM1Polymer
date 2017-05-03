@@ -17,6 +17,11 @@
         color: #fff;
         background-color: var(--app-primary-color);
       }
+        
+      .page-connexion-administrateur {
+            background-color: #455a64;
+      }
+        
       app-header paper-icon-button {
         --paper-icon-button-ink-color: white;
       }
@@ -48,10 +53,15 @@
       <!-- Main content -->
       <app-header-layout has-scrolling-region>
 
-        <app-header condenses reveals effects="waterfall">
+        <app-header condenses reveals effects="waterfall" class$="{{page}}">
           <app-toolbar>
             <paper-icon-button icon="my-icons:menu" drawer-toggle></paper-icon-button>
-            <div main-title>Connexion</div>
+              <template is="dom-if" if="[[_isPage('page-connexion-administrateur', page)]]">
+                <div main-title>Administration des biodatas</div>
+              </template>
+              <template is="dom-if" if="[[_isPage('page-connexion-visiteur', page)]]">
+                <div main-title>Sea Test Base Biodatas</div>
+              </template>
           </app-toolbar>
         </app-header>
 
@@ -100,6 +110,9 @@
       _showPage404: function() {
         this.page = 'view404';
       },
+      _isPage: function(selectedPage, page) {
+          return selectedPage === page;
+      }
     });
   </script>
 </dom-module>

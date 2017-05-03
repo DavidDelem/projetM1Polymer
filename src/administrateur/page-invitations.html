@@ -161,7 +161,7 @@
         id="projetsRequest" 
         method="GET"
         headers="{{_computeHeaders(storedData.token)}}"
-        url="{{serverUrl}}/projets"
+        url="{{serverUrl}}/administration/projets"
         handle-as="json"
         last-response="{{projets}}"
         last-error="{{lastError}}"
@@ -221,15 +221,15 @@
                 <div class="card-actions">
                     <div class="projet-btn">
                         <div class="etat-dossier">
-                            <div class="col-md-4">
+                            <div class="col-sm-4">
                                 <p>En attente</p>
                                 <span>[[item.etatProjet.enAttente]]</span>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-sm-4">
                                 <p>En cours</p>
                                 <span>[[item.etatProjet.enCours]]</span>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-sm-4">
                                 <p>Terminé</p>
                                 <span>[[item.etatProjet.termine]]</span>
                             </div>
@@ -268,12 +268,13 @@
                         "nom" : "6 derniers mois",
                         "dateDebut": moment().subtract(6, 'months').format('x'),
                         "dateFin": moment().format('x') 
-                    },
-                    {
-                        "nom" : "Période personalisée",
-                        "dateDebut": moment().subtract(6, 'months').format('x'),
-                        "dateFin": moment().format('x') 
                     }
+//                ,
+//                    {
+//                        "nom" : "Période personalisée",
+//                        "dateDebut": moment().subtract(6, 'months').format('x'),
+//                        "dateFin": moment().format('x') 
+//                    }
             ]
         },
         tris: {
@@ -311,7 +312,7 @@
         this.$.projetsRequest.generateRequest();
       },
       _handleProjetsError: function(event) {
-        this.fire('connexion-administrateur-denied-event', {});
+//        this.fire('connexion-administrateur-denied-event', {});
       },
       _reloadListePeriode: function(event) {
           this.selectedPeriode = event.model.get('item');

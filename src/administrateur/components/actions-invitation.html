@@ -36,7 +36,7 @@
         id="validationBiodatasRequest" 
         method="PUT"
         headers="{{_computeHeaders(storedData.token)}}"
-        url="{{serverUrl}}/invitations/{{invitation.identifiant}}/validationbiodatas"
+        url="{{serverUrl}}/administration/invitations/{{invitation.identifiant}}/validationbiodatas"
         on-response="_handleActionsResponse"
         on-error="_handleActionsError"></iron-ajax>
       
@@ -44,7 +44,7 @@
         id="transfertAutoritesRequest" 
         method="PUT"
         headers="{{_computeHeaders(storedData.token)}}"
-        url="{{serverUrl}}/invitations/{{invitation.identifiant}}/transfertautorites"
+        url="{{serverUrl}}/administration/invitations/{{invitation.identifiant}}/transfertautorites"
         on-response="_handleActionsResponse"
         on-error="_handleActionsError"></iron-ajax>
       
@@ -52,7 +52,7 @@
         id="retourRequest" 
         method="PUT"
         headers="{{_computeHeaders(storedData.token)}}"
-        url="{{serverUrl}}/invitations/{{invitation.identifiant}}/retour"
+        url="{{serverUrl}}/administration/invitations/{{invitation.identifiant}}/retour"
         on-response="_handleActionsResponse"
         on-error="_handleActionsError"></iron-ajax>
       

@@ -62,6 +62,10 @@
         color: black;
         font-weight: bold;
       }
+        
+        app-toolbar a {
+            color: #fff;
+        }
     </style>
       <iron-meta id="meta"></iron-meta>
       
@@ -80,7 +84,9 @@
           <app-toolbar>
             <paper-icon-button icon="my-icons:menu" on-tap="_toggleMenu" drawer-toggle></paper-icon-button>
             <div main-title>Administration des biodatas</div>
-            <paper-icon-button icon="icons:power-settings-new" on-tap="_disconnect" ></paper-icon-button>
+            <a href="{{baseUrl}}/section-public/page-connexion-administrateur/">
+                <paper-icon-button icon="icons:power-settings-new"></paper-icon-button>
+            </a>
           </app-toolbar>
         </app-header>
           
@@ -163,12 +169,9 @@
         this.storedData = null;
         this._disconnect();
       },
-      _disconnect: function() {
-          page.redirect('/#/section-public/page-connexion-administrateur'); 
-      },
-      _toggleDrawer: function() {
-              
-      },
+//      _disconnect: function() {
+//          page.redirect('/#/section-public/page-connexion-administrateur'); 
+//      },
       _routePageChanged: function(page) {
         console.log(this.routeData);
         this.page = page || 'page-actualite';

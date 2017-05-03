@@ -49,7 +49,7 @@
         id="delegationRequest"
         method="GET"
         headers="{{_computeHeaders(storedData)}}"
-        url="{{serverUrl}}/invitation/delegation"
+        url="{{serverUrl}}/visiteurs/invitation/delegation"
         handle-as="json"
         last-response="{{delegation}}"
         on-error="_handleDelegationError"></iron-ajax> 
@@ -58,7 +58,7 @@
         id="invitationsRequest"
         method="GET"
         headers="{{_computeHeaders(storedData)}}"
-        url="{{serverUrl}}/projets/1/invitations"
+        url="{{serverUrl}}/visiteurs/projets/invitations"
         handle-as="json"
         last-response="{{invitations}}"
         on-error="_handleHttpError"></iron-ajax>  

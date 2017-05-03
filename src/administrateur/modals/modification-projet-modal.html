@@ -21,7 +21,7 @@
     method="PUT"
     content-type="application/x-www-form-urlencoded"   
     headers="{{_computeHeaders(storedData)}}"
-    url="{{serverUrl}}/projets/{{identifiantProjet}}"
+    url="{{serverUrl}}/administration/projets/{{identifiantProjet}}"
     on-response="_handleModificationProjetResponse"
     on-error="_handleModificationProjetError"></iron-ajax>
       

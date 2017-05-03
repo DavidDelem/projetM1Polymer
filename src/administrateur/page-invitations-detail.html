@@ -21,6 +21,10 @@
             width: calc(100% + 1px);
         }
         
+        .btn-retour {
+            text-decoration: none !important;
+        }
+        
       .expandable brainy-tr[expanded] {
         margin: 10px 0;
 
@@ -107,7 +111,7 @@
         id="invitationsRequest"
         method="GET"
         headers="{{_computeHeaders(storedData.token)}}"
-        url="{{serverUrl}}/projets/{{projet}}/invitations"
+        url="{{serverUrl}}/administration/projets/{{projet}}/invitations"
         handle-as="json"
         last-response="{{invitations}}"
         on-error="_handleInvitationsError"></iron-ajax>
@@ -116,7 +120,7 @@
         id="projetRequest" 
         method="GET"
         headers="{{_computeHeaders(storedData.token)}}"
-        url="{{serverUrl}}/projets/{{projet}}"
+        url="{{serverUrl}}/administration/projets/{{projet}}"
         handle-as="json"
         last-response="{{projetDetail}}"
         on-error="_handleProjetError"></iron-ajax>
@@ -126,7 +130,7 @@
         method="PUT" 
         content-type="application/x-www-form-urlencoded"   
         headers="{{_computeHeaders(storedData.token)}}"
-        url="{{serverUrl}}/projets/{{projet}}/delegation"
+        url="{{serverUrl}}/administration/projets/{{projet}}/delegation"
         on-response="_handleToggleActivationDelegationResponse"
         on-error="_handleToggleActivationDelegationError"></iron-ajax>
       
@@ -135,13 +139,13 @@
         method="PUT" 
         content-type="application/x-www-form-urlencoded"   
         headers="{{_computeHeaders(storedData.token)}}"
-        url="{{serverUrl}}/projets/{{projet}}/rappels"
+        url="{{serverUrl}}/administration/projets/{{projet}}/rappels"
         on-response="_handleToggleActivationRappelsResponse"
         on-error="_handleToggleActivationRappelsError"></iron-ajax>
       
         <div class="col-md-12">
             <div class="floating-text">
-                <a href="{{baseUrl}}/section-administrateur/page-invitations/"><paper-icon-button icon="icons:arrow-back"></paper-icon-button>Retour</a>
+                <a href="{{baseUrl}}/section-administrateur/page-invitations/" class="btn-retour"><paper-icon-button icon="icons:arrow-back"></paper-icon-button>Retour</a>
                 <p class="nom-projet">[[projetDetail.nom]]</p>
                 <template is="dom-if" if="{{_showBadgeDateLimite(projetDetail.dateLimite)}}">
                     <important-message message="La date limite pour ce projet est atteinte, les visiteurs ne peuvent plus envoyer leurs biodatas"></important-message>

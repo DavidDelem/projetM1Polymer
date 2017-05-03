@@ -101,7 +101,7 @@
         id="historiqueRequest" 
         method="GET"
         headers="{{_computeHeaders(storedData.token)}}"
-        url="{{serverUrl}}/visiteur/invitation/historique"
+        url="{{serverUrl}}/visiteurs/invitation/historique"
         handle-as="json"
         last-response="{{historique}}"
         on-error="_handleHttpError"></iron-ajax>
@@ -127,7 +127,7 @@
                             <h3>Invitation reçue</h3>
                             <p>Vous pouvez envoyer vos biodatas jusqu'à la date limite de saisie</p>
 
-                            <paper-button raised class="size" on-tap="_suppinvitation">Supprimer mon dossier<iron-icon icon="icons:delete"></iron-icon></paper-button>
+<!--                            <paper-button raised class="size" on-tap="_suppinvitation">Supprimer mon dossier<iron-icon icon="icons:delete"></iron-icon></paper-button>-->
 
 
                         </div>     

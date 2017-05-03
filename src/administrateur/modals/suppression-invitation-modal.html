@@ -18,7 +18,7 @@
     method="DELETE"
     content-type="application/x-www-form-urlencoded"   
     headers="{{_computeHeaders(storedData)}}"
-    url="{{serverUrl}}/projets/{{projet.identifiant}}/invitations"
+    url="{{serverUrl}}/administration/projets/{{projet.identifiant}}/invitations"
     on-response="_handleRemoveInvitationResponse"
     on-error="_handleRemoveInvitationError"></iron-ajax>    
       

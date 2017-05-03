@@ -64,9 +64,6 @@
         on-error="_handleAdministrateursError"></iron-ajax>
       
     <div class="col-md-12">
-        <p class="floating-text">Mon compte</p>
-    </div>
-    <div class="col-md-12">
         <p class="floating-text">Liste des comptes administrateurs</p>
     </div>
     <template is="dom-repeat" items="{{administrateurs}}">
@@ -90,8 +87,8 @@
     Polymer({
       is: 'page-administrateurs',
       properties: {
-            serverUrl: String,
-            configurationRappels: Object
+        serverUrl: String,
+        configurationRappels: Object
       },
       ready: function () {
         this.serverUrl = this.$.meta.byKey("server-url");

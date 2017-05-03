@@ -14,10 +14,10 @@
     <iron-signals on-iron-signal-open-suppression-projet-modal="_handleOpenSuppressionProjetModalEvent"></iron-signals>  
       
     <iron-ajax 
-    id="addInvitationRequest"
+    id="supprimerProjetRequest"
     method="DELETE"  
     headers="{{_computeHeaders(storedData)}}"
-    url="{{serverUrl}}/projets/{{projet.identifiant}}"
+    url="{{serverUrl}}/administration/projets/{{projet.identifiant}}"
     on-response="_handleSuppressionProjetResponse"
     on-error="_handleSuppressionProjetError"></iron-ajax>    
       
@@ -53,8 +53,7 @@
         this.$.dialog.open();
       },
       _supprimerProjet: function() {
-        this.$.addInvitationRequest.body = { email: this.email }
-        this.$.addInvitationRequest.generateRequest();
+        this.$.supprimerProjetRequest.generateRequest();
         this.chargement = true;
       },
       _handleSuppressionProjetResponse: function(response) {
