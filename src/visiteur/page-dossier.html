@@ -98,6 +98,15 @@
     <app-data key="storedData" data="{{storedData}}"></app-data>
       
     <iron-ajax 
+    id="dateLimiteRequest"
+    method="GET"
+    headers="{{_computeHeaders(storedData.token)}}"
+    url="{{serverUrl}}/visiteurs/projets/datelimite"
+    handle-as="json"
+    last-response="{{dateLimite}}"
+    on-error="_handleHttpError"></iron-ajax>
+      
+    <iron-ajax 
         id="historiqueRequest" 
         method="GET"
         headers="{{_computeHeaders(storedData.token)}}"
@@ -125,8 +134,8 @@
                         <div class="card card-timeline">
                             <paper-fab icon="icons:account-circle"></paper-fab>
                             <h3>Invitation reçue</h3>
-                            <p>Vous pouvez envoyer vos biodatas jusqu'à la date limite de saisie</p>
-
+                            <p>Vous pouvez envoyer vos biodatas jusqu'au [[_getDate(dateLimite)]] à 23:59</p>
+                            Il vous reste [[_getTempsRestant(dateLimite)]] 
 <!--                            <paper-button raised class="size" on-tap="_suppinvitation">Supprimer mon dossier<iron-icon icon="icons:delete"></iron-icon></paper-button>-->
 
 
@@ -252,7 +261,7 @@
         this.serverUrl = this.$.meta.byKey("server-url");
       },
       attributeChanged : function(name, type){
-          if(this.getAttribute('class').includes('iron-selected')){
+          if(this.getAttribute('class').includes('iron-selected')) {
              this._generateRequests();
           }
       },
@@ -261,12 +270,16 @@
       },
       _generateRequests: function () {
         this.$.historiqueRequest.generateRequest();
+        this.$.dateLimiteRequest.generateRequest();
       },
       _computeHidden: function(item, type) {
           return item.type == type;
       },
       _getDate: function(timestamp) {
         return moment(timestamp, 'x').format('DD/MM/YYYY');
+      },
+      _getTempsRestant: function(timestamp) {
+          return moment(timestamp, 'x').fromNow(true);
       },
       _suppinvitation: function(){
         this.$.suppRequest.generateRequest();

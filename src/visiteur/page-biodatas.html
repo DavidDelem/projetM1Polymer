@@ -1,8 +1,9 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-countries/paper-countries.html">
 <link rel="import" href="../shared-styles.html">
 <link rel="import" href="../app-data.html">
-<link rel="import" href="../../bower_components/paper-countries/paper-countries.html">
 <link rel="import" href="./components/conseils-biodatas.html">
+<link rel="import" href="./components/informations-champ.html">
 
 <script src="../../bower_components/moment/moment.js"></script>
 <script src="../../bower_components/moment/locale/fr.js"></script>
@@ -108,6 +109,10 @@
             margin: 35px 0 35px 0;
         }
         
+        .row-champ {
+            position: relative;
+        }
+        
         .adresse {
             margin-top: 25px;
             margin-bottom: 25px;
@@ -119,6 +124,15 @@
         
         .passeport img, .carte-identite img, .permis img, .immatriculation img {
             width: 80%;
+        }
+        
+        .big-iron-icon {
+            --iron-icon-height: 48px;
+            --iron-icon-width: 48px;
+        }
+        
+        .file-upload-zone {
+            padding-top: 27px;
         }
         
     </style>
@@ -189,10 +203,14 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="margin-top-bottom text-center">
-                                    <p>SeaTestBase est situé dans une zone à accés réglementé. Obtenir des autorisations est nécessaire pour y accéder.
+                                    <div class="col-md-12">
+                                        <p>SeaTestBase est situé dans une zone à accés réglementé. Obtenir des autorisations est nécessaire pour y accéder.
                                         Complétez chacune des étapes avec les informations demandées, vous pourrez ensuite les envoyer.</p>
-                                    <p>[[_getDate(dateLimite)]]</p>
-                                    <div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <iron-icon class="big-iron-icon" icon="image:timelapse"></iron-icon><p>Vous pouvez envoyer vos biodatas jusqu'au [[_getDate(dateLimite)]] à 23:59</p>
+                                    </div>
+                                    <div class="col-md-6">
                                         <paper-button on-tap="_showStep" data-args="identite">Commencer</paper-button>
                                     </div>
                                 </div>
@@ -207,35 +225,37 @@
                                 <div class="margin-top-bottom">
                                     <template is="dom-repeat" items="{{champs}}">
                                         <template is="dom-if" if="{{_computeHidden(item, 'texte_nomprenom')}}">
-                                            <div class="row nomprenom">
+                                            <div class="row row-champ nomprenom">
                                                 <div class="col-md-6">
                                                     <paper-input-container>
-                                                        <label>Nom <template is="dom-if" if="[[item.obligatoire]]">*</template></label>
+                                                        <label>Nom</label>
                                                         <input is="iron-input" id="nom" type="text" bind-value="{{item.saisie.nom}}">
                                                     </paper-input-container>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <paper-input-container>
-                                                        <label>Prénom <template is="dom-if" if="[[item.obligatoire]]">*</template></label>
+                                                        <label>Prénom</label>
                                                         <input is="iron-input" id="prenom" type="text" bind-value="{{item.saisie.prenom}}">
                                                     </paper-input-container>
                                                 </div>
+                                                <informations-champ obligatoire="[[item.obligatoire]]" erreur="{{_hasErreur(item.nom, erreurs)}}"></informations-champ>
                                             </div>
                                         </template>
                                         <template is="dom-if" if="{{_computeHidden(item, 'texte_date')}}">
-                                            <div class="row datenaissance">
+                                            <div class="row row-champ datenaissance">
                                                 <div class="col-md-12">
                                                     <vaadin-date-picker value="{{item.saisie.date}}" label="Date de naissance"></vaadin-date-picker>
                                                 </div>
+                                                <informations-champ obligatoire="[[item.obligatoire]]" erreur="{{_hasErreur(item.nom, erreurs)}}"></informations-champ>
                                             </div>
                                         </template>
 
                                         <!-- ADRESSE -->
 
                                         <template is="dom-if" if="{{_computeHidden(item, 'texte_adresse')}}">
-                                            <div class="row adresse" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
+                                            <div class="row row-champ adresse" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
                                                 <div class="col-md-12 titre-adresse">
-                                                    <p>[[item.nom]] <template is="dom-if" if="[[item.obligatoire]]">*</template></p>
+                                                    <p>[[item.nom]]</p>
                                                 </div>
                                                 <div class="col-md-3"> 
                                                     <paper-input-container>
@@ -265,31 +285,34 @@
                                                 <div class="col-md-7">
                                                     <paper-countries country="[[country]]" value="{{item.saisie.pays}}" max-suggestions="3" auto-validate="true" label="Pays" placeholder="Saisir le pays"></paper-countries>
                                                 </div>
+                                                <informations-champ obligatoire="[[item.obligatoire]]"></informations-champ>
                                             </div>
                                         </template>
 
                                         <!-- NUMERO DE TELEPHONE -->
 
                                         <template is="dom-if" if="{{_computeHidden(item, 'texte_telephone')}}">
-                                            <div class="row telephone" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
+                                            <div class="row row-champ telephone" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
                                                 <div class="col-md-12">
                                                     <paper-input-container>
-                                                        <label>[[item.nom]] <template is="dom-if" if="[[item.obligatoire]]">*</template></label>
+                                                        <label>[[item.nom]]</label>
                                                         <input is="iron-input" id="telephone" bind-value="{{item.saisie.telephone}}"></input>
                                                     </paper-input-container>
                                                 </div>
+                                                <informations-champ obligatoire="[[item.obligatoire]]"></informations-champ>
                                             </div>
                                         </template>
 
                                         <!-- TEXTE LIBRE TEXTAREAS -->
                                         <template is="dom-if" if="{{_computeHidden(item, 'texte_textarea')}}">
-                                            <div class="row texte" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
+                                            <div class="row row-champ texte" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
                                                 <div class="col-md-12">
                                                     <paper-input-container>
-                                                        <label>[[item.nom]] <template is="dom-if" if="[[item.obligatoire]]">*</template></label>
+                                                        <label>[[item.nom]]</label>
                                                         <iron-autogrow-textarea class="paper-input-input" bind-value="{{item.saisie.remarques}}"></iron-autogrow-textarea>
                                                     </paper-input-container>
                                                 </div>
+                                                <informations-champ obligatoire="[[item.obligatoire]]"></informations-champ>
                                             </div>
                                         </template>
                                     </template>
@@ -299,54 +322,68 @@
                     </div>
                 </div>
                 <div class="col-lg-12" hidden$="{{_hideStep('fichiers', currentStep)}}">
-                        <div class="card">
+                    <div class="card">
                         <div class="row">
                             <div class="col-md-8 col-md-offset-2">
-                                <div class="text-center">
-                                    <p>Merci d'indiquer votre nationalité. Les documents d'identité demandés depéndent de votre nationalité.</p>
-                                </div>
-                                <paper-autocomplete label="Nationalité" source="{{nationalites}}" value="{{selectedNationalite}}"></paper-autocomplete>
-                            </div>
-                            <template is="dom-repeat" items="{{champs}}">
-                                <template is="dom-if" if="{{_computeHidden(item, 'identite_fichier')}}">
-                                    <template is="dom-if" if="{{_isNationality(item, selectedNationalite)}}">
-                                        <div class="col-md-8 col-md-offset-2" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
-                                            <label>{{item.nom}}</label>
-                                            <input id="fichier[[item.identifiant]]" type="file" on-change="_addFile">
+                                <div class="row row-champ">
+                                    <div class="col-md-12">
+                                        <div class="text-center">
+                                            <p>Merci d'indiquer votre nationalité. Les documents d'identité demandés depéndent de votre nationalité.</p>
                                         </div>
+                                    </div>
+                                </div>
+                                <div class="row row-champ">
+                                    <div class="col-md-12">
+                                        <paper-autocomplete label="Nationalité" source="{{nationalites}}" value="{{selectedNationalite}}"></paper-autocomplete>
+                                        <informations-champ obligatoire="true"></informations-champ>
+                                    </div>
+                                </div>
+                                <template is="dom-repeat" items="{{champs}}">
+                                    <template is="dom-if" if="{{_computeHidden(item, 'identite_fichier')}}">
+                                        <template is="dom-if" if="{{_isNationality(item, selectedNationalite)}}">
+                                            <div class="row row-champ">
+                                                <div class="col-md-12 file-upload-zone" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
+                                                    <label>{{item.nom}}</label>
+                                                    <input id="fichier[[item.identifiant]]" type="file" on-change="_addFile">
+                                                </div>
+                                                <informations-champ obligatoire="[[item.obligatoire]]"></informations-champ>
+                                            </div>
+                                        </template>
                                     </template>
-                                </template>
-                            </template>   
-                        </div>                
-                    </div>
+                                </template>   
+                            </div>
+                        </div>
+                    </div> 
                 </div>
                 <div class="col-lg-12" hidden$="{{_hideStep('vehicule', currentStep)}}">
                     <div class="card">
                         <div class="row">
                             <div class="col-md-8 col-md-offset-2 text-center">
-                                    <p>Afin d'accéder au site avec votre véhicule, des informations complémentaires sont nécessaires.
-                                    Passez cette étape si vous n'êtes pas le conducteur d'un véhicule.</p>
-                                    <paper-toggle-button class="toggle-button-vehicule" checked="{{vehicule}}">Je serais le conducteur d'un véhicule</paper-toggle-button>
+                                <p>Afin d'accéder au site avec votre véhicule, des informations complémentaires sont nécessaires.
+                                Passez cette étape si vous n'êtes pas le conducteur d'un véhicule.</p>
+                                <paper-toggle-button class="toggle-button-vehicule" checked="{{vehicule}}">Je serais le conducteur d'un véhicule</paper-toggle-button>
                             </div> 
                             <div class="col-md-8 col-md-offset-2">
                                 <template is="dom-if" if="{{vehicule}}">
                                         <template is="dom-repeat" items="{{champs}}">
                                             <template is="dom-if" if="{{_computeHidden(item, 'vehicule_fichier')}}">
-                                                <div class="row">
-                                                    <div class="col-md-12" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
-                                                        <label>{{item.nom}} <template is="dom-if" if="[[item.obligatoire]]">*</template></label>
+                                                <div class="row row-champ">
+                                                    <div class="col-md-12 file-upload-zone" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
+                                                        <label>{{item.nom}}</label>
                                                         <input id="fichier[[item.identifiant]]" type="file" on-change="_addFile">
                                                     </div>
+                                                    <informations-champ obligatoire="[[item.obligatoire]]"></informations-champ>
                                                 </div>
                                             </template>
                                             <template is="dom-if" if="{{_computeHidden(item, 'vehicule_texte')}}">
-                                                <div class="row">
+                                                <div class="row row-champ">
                                                     <div class="col-md-12" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
                                                         <paper-input-container>
-                                                            <label>{{item.nom}} <template is="dom-if" if="[[item.obligatoire]]">*</template></label>
+                                                            <label>{{item.nom}}</label>
                                                             <input is="iron-input" id="username" type="text" bind-value="{{item.saisie.immatriculation}}">
                                                         </paper-input-container>
                                                     </div>
+                                                    <informations-champ obligatoire="[[item.obligatoire]]" erreur="{{_hasErreur(item.nom, erreurs)}}"></informations-champ>
                                                 </div>
                                             </template>
                                         </template>                   
@@ -437,6 +474,10 @@
         biodatasOk: {
             type: Boolean,
             value: false
+        },
+        erreurs: {
+            type: Object,
+            value: []
         }
       },
       ready: function () {
@@ -763,7 +804,8 @@
              this.biodatasOk = true;
              this.chargement = false;
           } else {
-             this.fire('iron-signal', {name: 'open-erreur-biodatas-modal', data: { erreurs: event.detail.response }});
+             this.erreurs = event.detail.response;
+             this.fire('iron-signal', {name: 'open-erreur-biodatas-modal', data: { erreurs: this.erreurs }});
              this.chargement = false;
           }
       },
@@ -790,6 +832,14 @@
       },
       _getDate: function(timestamp) {
         return moment(timestamp, 'x').format('DD/MM/YYYY');
+      },
+      _hasError: function(nom, erreurs) {
+          for(i=0; i<erreurs.length; i++) {
+              if(erreurs[i].nom === nom) { 
+                return true;
+              }
+          }
+          return false;
       }
     });
   </script>

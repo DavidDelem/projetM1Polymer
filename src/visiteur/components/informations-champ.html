@@ -1,0 +1,47 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../shared-styles.html">
+<link rel="import" href="../../app-data.html">
+
+<dom-module id="informations-champ">
+  <template>
+    <style include="shared-styles">
+        .informations {
+            position: absolute;
+            right: -45px;
+            top: 25px;
+        }
+        
+        .informations > div {
+            display: inline-block;
+        }
+        
+        paper-tooltip {
+            text-align: center;
+        }
+    </style>
+      <div class="informations">
+        <div class="champ-obligatoire" >
+            <div tabindex="0">
+                <iron-icon icon="icons:error-outline" hidden$=[[!obligatoire]]></iron-icon>
+                <paper-tooltip position="top">Obligatoire</paper-tooltip>
+            </div>
+        </div>
+      
+        <div class="champ-erreur" hidden$="[[!erreur]]">
+            <div tabindex="0">
+                <iron-icon icon="icons:report-problem"></iron-icon>
+                <paper-tooltip position="right">Invalide</paper-tooltip>
+            </div>
+        </div>
+      </div>
+      
+  </template>
+
+  <script>
+    Polymer({
+      is: 'informations-champ',
+      properties: {
+      }
+    });
+  </script>
+</dom-module>
