@@ -238,7 +238,7 @@
                                                         <input is="iron-input" id="prenom" type="text" bind-value="{{item.saisie.prenom}}">
                                                     </paper-input-container>
                                                 </div>
-                                                <informations-champ obligatoire="[[item.obligatoire]]" erreur="{{_hasErreur(item.nom, erreurs)}}"></informations-champ>
+                                                <informations-champ obligatoire="[[item.obligatoire]]" nom="[[item.nom]]" erreurs="[[erreurs]]"></informations-champ>
                                             </div>
                                         </template>
                                         <template is="dom-if" if="{{_computeHidden(item, 'texte_date')}}">
@@ -246,7 +246,7 @@
                                                 <div class="col-md-12">
                                                     <vaadin-date-picker value="{{item.saisie.date}}" label="Date de naissance"></vaadin-date-picker>
                                                 </div>
-                                                <informations-champ obligatoire="[[item.obligatoire]]" erreur="{{_hasErreur(item.nom, erreurs)}}"></informations-champ>
+                                                <informations-champ obligatoire="[[item.obligatoire]]" nom="[[item.nom]]" erreurs="[[erreurs]]"></informations-champ>
                                             </div>
                                         </template>
 
@@ -285,7 +285,7 @@
                                                 <div class="col-md-7">
                                                     <paper-countries country="[[country]]" value="{{item.saisie.pays}}" max-suggestions="3" auto-validate="true" label="Pays" placeholder="Saisir le pays"></paper-countries>
                                                 </div>
-                                                <informations-champ obligatoire="[[item.obligatoire]]"></informations-champ>
+                                                <informations-champ obligatoire="[[item.obligatoire]]" nom="[[item.nom]]" erreurs="[[erreurs]]"></informations-champ>
                                             </div>
                                         </template>
 
@@ -299,7 +299,7 @@
                                                         <input is="iron-input" id="telephone" bind-value="{{item.saisie.telephone}}"></input>
                                                     </paper-input-container>
                                                 </div>
-                                                <informations-champ obligatoire="[[item.obligatoire]]"></informations-champ>
+                                                <informations-champ obligatoire="[[item.obligatoire]]" nom="[[item.nom]]" erreurs="[[erreurs]]"></informations-champ>
                                             </div>
                                         </template>
 
@@ -312,7 +312,7 @@
                                                         <iron-autogrow-textarea class="paper-input-input" bind-value="{{item.saisie.remarques}}"></iron-autogrow-textarea>
                                                     </paper-input-container>
                                                 </div>
-                                                <informations-champ obligatoire="[[item.obligatoire]]"></informations-champ>
+                                                <informations-champ obligatoire="[[item.obligatoire]]" nom="{{item.nom}}" erreurs="{{erreurs}}"></informations-champ>
                                             </div>
                                         </template>
                                     </template>
@@ -335,7 +335,7 @@
                                 <div class="row row-champ">
                                     <div class="col-md-12">
                                         <paper-autocomplete label="Nationalité" source="{{nationalites}}" value="{{selectedNationalite}}"></paper-autocomplete>
-                                        <informations-champ obligatoire="true"></informations-champ>
+                                        <informations-champ obligatoire="true" nom="" erreurs="[[erreurs]]"></informations-champ>
                                     </div>
                                 </div>
                                 <template is="dom-repeat" items="{{champs}}">
@@ -346,7 +346,7 @@
                                                     <label>{{item.nom}}</label>
                                                     <input id="fichier[[item.identifiant]]" type="file" on-change="_addFile">
                                                 </div>
-                                                <informations-champ obligatoire="[[item.obligatoire]]"></informations-champ>
+                                                <informations-champ obligatoire="[[item.obligatoire]]" nom="[[item.nom]]" erreurs="[[erreurs]]"></informations-champ>
                                             </div>
                                         </template>
                                     </template>
@@ -372,7 +372,7 @@
                                                         <label>{{item.nom}}</label>
                                                         <input id="fichier[[item.identifiant]]" type="file" on-change="_addFile">
                                                     </div>
-                                                    <informations-champ obligatoire="[[item.obligatoire]]"></informations-champ>
+                                                    <informations-champ obligatoire="[[item.obligatoire]]" nom="[[item.nom]]" erreurs="[[erreurs]]"></informations-champ>
                                                 </div>
                                             </template>
                                             <template is="dom-if" if="{{_computeHidden(item, 'vehicule_texte')}}">
@@ -383,7 +383,7 @@
                                                             <input is="iron-input" id="username" type="text" bind-value="{{item.saisie.immatriculation}}">
                                                         </paper-input-container>
                                                     </div>
-                                                    <informations-champ obligatoire="[[item.obligatoire]]" erreur="{{_hasErreur(item.nom, erreurs)}}"></informations-champ>
+                                                    <informations-champ obligatoire="[[item.obligatoire]]" nom="[[item.nom]]" erreurs="[[erreurs]]"></informations-champ>
                                                 </div>
                                             </template>
                                         </template>                   
@@ -832,14 +832,6 @@
       },
       _getDate: function(timestamp) {
         return moment(timestamp, 'x').format('DD/MM/YYYY');
-      },
-      _hasError: function(nom, erreurs) {
-          for(i=0; i<erreurs.length; i++) {
-              if(erreurs[i].nom === nom) { 
-                return true;
-              }
-          }
-          return false;
       }
     });
   </script>
