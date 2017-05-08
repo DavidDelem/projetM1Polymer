@@ -11,8 +11,8 @@
             margin-right: 0px;
         }
         
-        .card-connexion {
-            margin-top: 100px;
+        .card-logo {
+            margin-top: 60px;
         }
         
         .card-connexion-header  {
@@ -31,6 +31,10 @@
         
         .forgotten-password {
             text-align: center;
+        }
+        
+        .logo-connexion {
+            max-width: 100%;
         }
         
     </style>
@@ -52,10 +56,13 @@
       
     <div class="row">
         <div class="col-sm-4 col-sm-offset-4">
+            <div class="card card-logo">
+                    <img class="logo-connexion" src="/images/logo.png">
+            </div>
             <div class="card card-connexion">
                 <div class="card-connexion-header">
                     <h1>Connexion</h1>
-                    <iron-icon class="large-icon" icon="icons:fingerprint"></iron-icon>
+<!--                    <iron-icon class="large-icon" icon="icons:fingerprint"></iron-icon>-->
                 </div>
                 <paper-input-container>
                     <label>Identifiant</label>

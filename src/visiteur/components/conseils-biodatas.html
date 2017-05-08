@@ -51,6 +51,12 @@
                        Si le numéro n'est pas français, le saisir au format internationnal (ex: +447911123456)</p>
                 </div>
             </div>
+            <div class="date">
+                <p class="floating-text question-text"  on-tap="_setHoveredItemIdentifiant" data-identifiant="2"><iron-icon icon="icons:help"></iron-icon> Quel format de date est valide ?</p>
+                <div class="details" hidden$="{{_hideDetails(2, hoveredItemIdentifiant)}}">
+                    <p>Indiquez les dates au format DD/MM/YYYY (jour/mois/année)</p>
+                </div>
+            </div>
             <div class="adresse">
                 <p class="floating-text question-text"  on-tap="_setHoveredItemIdentifiant" data-identifiant="3"><iron-icon icon="icons:help"></iron-icon> Quelle adresse indiquer ?</p>
                 <div class="details" hidden$="{{_hideDetails(3, hoveredItemIdentifiant)}}">

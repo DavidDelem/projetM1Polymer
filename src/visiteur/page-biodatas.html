@@ -16,6 +16,23 @@
         padding: 10px;
       }
         
+        paper-fab {
+            --paper-fab-background: #5bb47d;
+        }
+        
+        paper-checkbox {
+               --paper-checkbox-checked-color: #5bb47d;
+               --paper-checkbox-checked-ink-color: #5bb47d;
+               --paper-checkbox-unchecked-color: #008975;
+               --paper-checkbox-unchecked-ink-color: #5bb47d;
+        }
+        
+        paper-toggle-button {
+            --paper-toggle-button-checked-bar-color:  #00aa8d;
+            --paper-toggle-button-checked-button-color:  #008975;
+            --paper-toggle-button-checked-ink-color: #00aa8d;
+        }
+        
       .floating-text {
         color: #555555;
         font-size: 14px;
@@ -105,6 +122,10 @@
             margin: 30px 0 30px 0;
         }
         
+        .margin-bottom {
+            margin: 0 0 20px 0;
+        }
+        
         .toggle-button-vehicule {
             margin: 35px 0 35px 0;
         }
@@ -132,9 +153,57 @@
         }
         
         .file-upload-zone {
-            padding-top: 27px;
+            border: 1px dashed;
+            border-color: #dbdbdb;
+            border-radius: 3px;
+            overflow: hidden;
+            padding: 25px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
         }
         
+        .file-upload-zone > label {
+            margin-left: 15px;
+        }
+        
+        .file-upload {
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            left: 0;
+            top: 0;
+            position: absolute;
+            z-index: 10;
+            cursor: pointer;
+        }
+        
+        .file-upload-button {
+            cursor: pointer;
+            border: 1px solid #dbdbdb;
+            padding: 10px;
+            border-radius: 3px;
+        }
+        
+        .file-details {
+            font-size: 0.8em;
+        }
+        
+        .row-champ-fichier:not(:last-of-type) .file-upload-zone:after {
+            content: 'Ou';
+            text-transform: uppercase;
+            background: #eee;
+            padding: 8px;
+            border-radius: 3px;
+            position: absolute;
+            left: -3px;
+            bottom: -20px;
+            z-index: 15;
+        }
+        
+        .conseils-elem p {
+            font-size: 14px;
+        }
     </style>
     
     <iron-meta id="meta"></iron-meta>
@@ -201,20 +270,38 @@
                 <div class="col-lg-12" hidden$="{{_hideStep('accueil', currentStep)}}">
                     <div class="card">
                         <div class="row">
-                            <div class="col-md-12">
+                                    <div class="margin-bottom text-center col-md-12">
+                                        <h1>Saisie des biodatas</h1>
+                                        <p>
+                                            Sea Test Base est situé dans une zone à accés réglementé, obtenir des autorisations est nécessaire pour y accéder.
+                                            Remplir et envoyer ce formulaire est une étape importante qui nous permettra de transférer votre demande aux autorités.
+                                        </p>
+                                    </div>
                                 <div class="margin-top-bottom text-center">
-                                    <div class="col-md-12">
-                                        <p>SeaTestBase est situé dans une zone à accés réglementé. Obtenir des autorisations est nécessaire pour y accéder.
-                                        Complétez chacune des étapes avec les informations demandées, vous pourrez ensuite les envoyer.</p>
+                                    <div class="col-md-3 conseils-elem">
+                                        <iron-icon icon="image:timer"></iron-icon>
+                                        <p>Le temps estimé pour saisir vos données est de 5 à 10 minutes</p>
                                     </div>
-                                    <div class="col-md-6">
-                                        <iron-icon class="big-iron-icon" icon="image:timelapse"></iron-icon><p>Vous pouvez envoyer vos biodatas jusqu'au [[_getDate(dateLimite)]] à 23:59</p>
+                                    <div class="col-md-3 conseils-elem">
+                                        <iron-icon icon="icons:event"></iron-icon>
+                                        <p>Vous pouvez remplir ce formulaire jusqu'au [[_getDate(dateLimite)]] à 23:59</p>
                                     </div>
+                                    <div class="col-md-3 conseils-elem">
+                                        <iron-icon icon="icons:error-outline"></iron-icon>
+                                        <p>Ce symbole indique une information dont la saisie est obligatoire</p>
+                                    </div>
+                                    <div class="col-md-3 conseils-elem">
+                                        <iron-icon icon="icons:folder-open"></iron-icon>
+                                        <p>Les données non envoyées ne sont pas sauvegardées</p>
+                                    </div>
+                                </div>
+<!--
+                                <div class="text-center col-md-12">
                                     <div class="col-md-6">
                                         <paper-button on-tap="_showStep" data-args="identite">Commencer</paper-button>
                                     </div>
                                 </div>
-                            </div>
+-->
                         </div>
                     </div>
                 </div>
@@ -242,9 +329,9 @@
                                             </div>
                                         </template>
                                         <template is="dom-if" if="{{_computeHidden(item, 'texte_date')}}">
-                                            <div class="row row-champ datenaissance">
+                                            <div class="row row-champ datenaissance" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
                                                 <div class="col-md-12">
-                                                    <vaadin-date-picker value="{{item.saisie.date}}" label="Date de naissance"></vaadin-date-picker>
+                                                    <vaadin-date-picker i18n="{{dateFormat}}" min="1900-01-01" max="{{dateMax}}" value="{{item.saisie.date}}" label="Date de naissance"></vaadin-date-picker>
                                                 </div>
                                                 <informations-champ obligatoire="[[item.obligatoire]]" nom="[[item.nom]]" erreurs="[[erreurs]]"></informations-champ>
                                             </div>
@@ -279,7 +366,7 @@
                                                 <!--*****************-->
                                                 <div class="col-md-12">
                                                     <paper-input-container>
-                                                        <label>Autre...</label>
+                                                        <label>Ligne adresse 2</label>
                                                         <input is="iron-input" id="username" type="text" bind-value="{{item.saisie.autreReponse}}">
                                                     </paper-input-container>
                                                 </div>
@@ -349,10 +436,16 @@
                                 <template is="dom-repeat" items="{{champs}}">
                                     <template is="dom-if" if="{{_computeHidden(item, 'identite_fichier')}}">
                                         <template is="dom-if" if="{{_isNationality(item, selectedNationalite)}}">
-                                            <div class="row row-champ">
-                                                <div class="col-md-12 file-upload-zone" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
-                                                    <label>{{item.nom}}</label>
-                                                    <input id="fichier[[item.identifiant]]" type="file" on-change="_addFile">
+                                            <div class="row row-champ row-champ-fichier">
+                                                <div class="col-md-12" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
+                                                    <div class="file-upload-zone file-upload-zone-identite">
+                                                        <span class="file-upload-button"><iron-icon icon="icons:file-upload"></iron-icon> Choisir un fichier</span>
+                                                        <label for="fichier[[item.identifiant]]">{{item.nom}}</label>
+                                                        <div>
+                                                            <span class="file-details">{{_getFileName(item, fichiers)}}</span>
+                                                        </div>
+                                                        <input class="file-upload" id="fichier[[item.identifiant]]" type="file" on-change="_addFile">
+                                                    </div>
                                                 </div>
                                                 <informations-champ obligatoire="[[item.obligatoire]]" nom="[[item.nom]]" erreurs="[[erreurs]]"></informations-champ>
                                             </div>
@@ -376,9 +469,12 @@
                                         <template is="dom-repeat" items="{{champs}}">
                                             <template is="dom-if" if="{{_computeHidden(item, 'vehicule_fichier')}}">
                                                 <div class="row row-champ">
-                                                    <div class="col-md-12 file-upload-zone" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
-                                                        <label>{{item.nom}}</label>
-                                                        <input id="fichier[[item.identifiant]]" type="file" on-change="_addFile">
+                                                    <div class="col-md-12" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
+                                                        <div class="file-upload-zone">
+                                                            <span class="file-upload-button"><iron-icon icon="icons:file-upload"></iron-icon> Choisir un fichier</span>
+                                                            <label for="fichier[[item.identifiant]]">{{item.nom}}</label>
+                                                            <input class="file-upload" id="fichier[[item.identifiant]]" type="file" on-change="_addFile">
+                                                        </div>
                                                     </div>
                                                     <informations-champ obligatoire="[[item.obligatoire]]" nom="[[item.nom]]" erreurs="[[erreurs]]"></informations-champ>
                                                 </div>
@@ -387,7 +483,7 @@
                                                 <div class="row row-champ">
                                                     <div class="col-md-12" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
                                                         <paper-input-container>
-                                                            <label>{{item.nom}}</label>
+                                                            <label >{{item.nom}}</label>
                                                             <input is="iron-input" id="username" type="text" bind-value="{{item.saisie.immatriculation}}">
                                                         </paper-input-container>
                                                     </div>
@@ -406,7 +502,7 @@
                             <div class="col-md-8 col-md-offset-2">
                                 <div class="margin-top-bottom">
                                     <paper-checkbox checked="{{confirmationValidite}}">Je confirme la validité des données saisies</paper-checkbox>
-                                    <paper-checkbox checked="{{confirmationAutorite}}">J'accepte la transmission des données aux autorités françaises</paper-checkbox>
+                                    <paper-checkbox checked="{{confirmationAutorite}}">J'accepte la transmission des données aux autorités</paper-checkbox>
                                 </div>
                                 <div class="text-center margin-top-bottom">
                                     <paper-button on-tap="_sendBiodatas" hidden$="{{chargement}}" disabled$="{{_validateBiodatas(champs, confirmationValidite, confirmationAutorite)}}">Envoyer mes données</paper-button>
@@ -424,7 +520,6 @@
             </div>
       </template>
       <template is="dom-if" if="{{biodatasOk}}">
-          <div class="row">
               <div class="col-md-8 col-md-offset-2">
                 <div class="card">
                     <div class="text-center">
@@ -435,10 +530,9 @@
                     </div>
                 </div>
               </div>
-          </div>
       </template>
       <template is="dom-if" if="{{biodatasEnvoyees}}">
-          <div class="row">
+        
               <div class="col-md-8 col-md-offset-2">
                 <div class="card">
                     <div class="text-center">
@@ -447,7 +541,7 @@
                     </div>
                 </div>
               </div>
-          </div>
+        
       </template>
   </template>
 
@@ -455,13 +549,17 @@
     Polymer({
       is: 'page-biodatas',
       properties: {
-        champs: Object,
+        champs: {
+            type: Object,
+            notify: true
+        },
         serverUrl: String,
         nationalites: Object,
         selectedNationalite: String,
         fichiers: {
             type: Object,
-            value: []
+            value: [],
+            notify: true
         },
         currentStep: {
             type: String,
@@ -486,10 +584,82 @@
         erreurs: {
             type: Object,
             value: []
+        },
+        dateFormat: Object,
+        dateMax: {
+            type: String,
+            value: moment().format('YYYY-MM-DD')
         }
       },
       ready: function () {
-          
+        this.dateFormat = {
+  // An array with the full names of months starting
+  // with January.
+  monthNames: [
+    'Janvier', 'Février', 'Mars', 'Avril', 'Mai',
+    'Juin', 'Juillet', 'Août', 'Septembre',
+    'Octobre', 'Novembre', 'Décembre'
+  ],
+
+  // An array of weekday names starting with Sunday. Used
+  // in screen reader announcements.
+  weekdays: [
+    'Dimanche', 'Lundi', 'Mardi', 'Mercredi',
+    'Jeudi', 'Vendredi', 'Samedi'
+  ],
+
+  // An array of short weekday names starting with Sunday.
+  // Displayed in the calendar.
+  weekdaysShort: [
+    'Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'
+  ],
+
+  // An integer indicating the first day of the week
+  // (0 = Sunday, 1 = Monday, etc.).
+  firstDayOfWeek: 0,
+
+  // Used in screen reader announcements along with week
+  // numbers, if they are displayed.
+  week: 'Semaine',
+
+  // Translation of the Calendar icon button title.
+  calendar: 'Calendrier',
+
+  // Translation of the Clear icon button title.
+  clear: 'Effacer',
+
+  // Translation of the Today shortcut button text.
+  today: 'Aujourd\'hui',
+
+  // Translation of the Cancel button text.
+  cancel: 'Annuler',
+
+  // A function to format given `Date` object as
+  // date string.
+  formatDate: function(d) {
+    // returns a string representation of the given
+    // Date object in 'MM/DD/YYYY' -format
+    return moment(d).format(moment.localeData().longDateFormat('L'));
+  },
+
+  // A function to parse the given text to a `Date`
+  // object. Must properly parse (at least) text
+  // formatted by `formatDate`.
+  // Setting the property to null will disable
+  // keyboard input feature.
+  parseDate: function(text) {
+    // Parses a string in 'MM/DD/YY', 'MM/DD' or 'DD' -format to
+    // a Date object
+    return moment(text, moment.localeData().longDateFormat('L')).toDate();
+  },
+
+  // A function to format given `monthName` and
+  // `fullYear` integer as calendar title string.
+  formatTitle: function(monthName, fullYear) {
+    return monthName + ' ' + fullYear;
+  }
+
+}
         this.nationalites = [
    "Afghan",
    "Albanian",
@@ -705,7 +875,7 @@
       _handleChampsResponse: function(res) {
           console.log(this.champs);
           for (var i = 0; i < this.champs.length; i++) {
-            this.champs[i].saisie = { };
+            this.champs[i].saisie = {};
           }
       },
       _showNext: function(event) {
@@ -758,7 +928,6 @@
       _addFile: function(event) {
           var item = event.model.get('item');
           var fichier = Polymer.dom(this.root).querySelector('#fichier'+item.identifiant).files[0];
-          
           if (this.fichiers.find(fichier => fichier.identifiantChamp === item.identifiant)) {
               console.log(this.fichiers.find(fichier => fichier.identifiantChamp === item.identifiant));
               
@@ -777,6 +946,24 @@
           }
           
           this.fichiers.push({ identifiantChamp: item.identifiant, fichier: fichier});
+          this.notifyPath('champs', this.champs);
+          let arr_clone = this.fichiers.slice(0);
+          this.set('fichiers', arr_clone);
+      },
+      _getFileName: function(item, fichiers) {
+          //var item = event.model.get('item');
+          for(var i=0 ; i < this.fichiers.length; i++) {
+                    if(this.fichiers[i].identifiantChamp == item.identifiant) {
+                        return 'Fichier selectionné:' + this.fichiers[i].fichier.name;
+                    }
+          }
+//          
+//          if(this.fichiers[0] != undefined && this.fichiers[0].identifiantChamp != undefined) {
+//            return this.fichiers[0].identifiantChamp;
+//          }
+          //var fichier = Polymer.dom(this.root).querySelector('#fichier'+item.identifiant).files[0];
+          //console.log(item);
+          //return 'fichier.nom';
       },
       _validateBiodatas: function(champs, confirmationValidite, confirmationAutorite) {
           if(confirmationValidite == true && confirmationAutorite == true) {
@@ -793,7 +980,7 @@
           }
       },
       _sendBiodatas: function() {
-          this.chargement = true;
+          //this.chargement = true;
           var formData = new FormData();
           
           /* Ajout des fichiers à la requette */
@@ -809,8 +996,8 @@
       },
       _handleBiodatasResponse: function(event) {
           if(event.detail.response == true) {
-             this.biodatasOk = true;
-             this.chargement = false;
+             //this.biodatasOk = true;
+             //this.chargement = false;
           } else {
              this.erreurs = event.detail.response;
              this.fire('iron-signal', {name: 'open-erreur-biodatas-modal', data: { erreurs: this.erreurs }});

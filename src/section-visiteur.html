@@ -18,7 +18,7 @@
       app-header {
         color: #fff;
 /*        background-color: var(--app-primary-color);*/
-        background-color: #5db37d;
+        background-color: #5bb47d;
       }
       app-header paper-icon-button {
         --paper-icon-button-ink-color: white;
@@ -43,6 +43,13 @@
         
         app-toolbar a {
             color: #fff;
+        }
+        
+        .logo-stb {
+            position: absolute;
+            left: 12px;
+            top: calc(100% - 230px);
+            max-width: 230px;
         }
     </style>
       
@@ -74,6 +81,7 @@
                 <a class="drawer-elem" name="page-biodatas" href="{{baseUrl}}/section-visiteur/page-biodatas">Envoi des biodatas</a>
                 <a class="drawer-elem" name="page-delegation" href="{{baseUrl}}/section-visiteur/page-delegation">Délégation d'invitation</a>
             </iron-selector>
+            <img class="logo-stb" src="/images/logo.png">
           </app-drawer>
     
             <iron-pages

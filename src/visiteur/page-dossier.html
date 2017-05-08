@@ -8,6 +8,11 @@
 <dom-module id="page-dossier">
   <template>
     <style include="shared-styles">
+        
+        paper-fab {
+            --paper-fab-background: #5bb47d;
+        }
+        
         google-map {
             height: 200px;
         }
@@ -135,10 +140,8 @@
                             <paper-fab icon="icons:account-circle"></paper-fab>
                             <h3>Invitation reçue</h3>
                             <p>Vous pouvez envoyer vos biodatas jusqu'au [[_getDate(dateLimite)]] à 23:59</p>
-                            Il vous reste [[_getTempsRestant(dateLimite)]] 
+<!--                            Il vous reste [[_getTempsRestant(dateLimite)]] -->
 <!--                            <paper-button raised class="size" on-tap="_suppinvitation">Supprimer mon dossier<iron-icon icon="icons:delete"></iron-icon></paper-button>-->
-
-
                         </div>     
                     </div>
                 </div>
