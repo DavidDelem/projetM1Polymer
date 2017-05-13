@@ -1,0 +1,84 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../shared-styles.html">
+<link rel="import" href="../../app-data.html">
+
+<script src="../../bower_components/moment/moment.js"></script>
+<script src="../../bower_components/moment/locale/fr.js"></script>
+
+<dom-module id="accueil-biodatas">
+  <template>
+    <style include="shared-styles">
+        .text-center {
+            text-align: center;
+        }
+        
+        .margin-top-bottom {
+            margin: 30px 0 30px 0;
+        }
+        
+        .margin-bottom {
+            margin: 0 0 20px 0;
+        }
+        
+        .conseils-elem p {
+            font-size: 14px;
+        }
+    </style>
+      
+    <iron-meta id="meta"></iron-meta>
+    <iron-localstorage name="data-storage" value="{{storedData}}" on-iron-localstorage-load="_generateRequests"></iron-localstorage>
+    <app-data key="storedData" data="{{storedData}}"></app-data>
+      
+    <iron-ajax 
+    id="dateLimiteRequest"
+    method="GET"
+    headers="{{_computeHeaders(storedData)}}"
+    url="{{serverUrl}}/visiteurs/projets/datelimite"
+    handle-as="json"
+    last-response="{{dateLimite}}"
+    on-error="_handleHttpError"></iron-ajax>
+      
+    <div class="row">
+        <div class="margin-bottom text-center col-md-12">
+            <h1>Saisie des biodatas</h1>
+            <p>Sea Test Base est situé dans une zone à accés réglementé, obtenir des autorisations est nécessaire pour y accéder.
+               Remplir et envoyer ce formulaire est une étape importante qui nous permettra de transférer votre demande aux autorités.
+            </p>
+        </div>
+        <div class="margin-top-bottom text-center">
+            <div class="col-md-3 conseils-elem">
+                <iron-icon icon="image:timer"></iron-icon>
+                <p>Le temps estimé pour saisir vos données est de 5 à 10 minutes</p>
+            </div>
+            <div class="col-md-3 conseils-elem">
+                <iron-icon icon="icons:event"></iron-icon>
+                <p>Vous pouvez remplir ce formulaire jusqu'au [[_getDate(dateLimite)]] à 23:59</p>
+            </div>
+            <div class="col-md-3 conseils-elem">
+                <iron-icon icon="icons:error-outline"></iron-icon>
+                <p>Ce symbole indique une information dont la saisie est obligatoire</p>
+            </div>
+            <div class="col-md-3 conseils-elem">
+                <iron-icon icon="icons:folder-open"></iron-icon>
+                <p>Les données non envoyées ne sont pas sauvegardées</p>
+            </div>
+        </div>
+    </div>
+    
+  </template>
+
+  <script>
+    Polymer({
+      is: 'accueil-biodatas',
+      _computeHeaders: function(storedData) {
+        return {"Authorization": "JWT " + storedData.token };
+      },
+      _generateRequests: function() {
+          this.$.dateLimiteRequest.generateRequest();
+      },
+      _getDate: function(timestamp) {
+        return moment(timestamp, 'x').format('DD/MM/YYYY');
+      },
+    });
+  </script>
+</dom-module>

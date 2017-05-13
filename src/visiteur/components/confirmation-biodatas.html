@@ -1,0 +1,46 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../shared-styles.html">
+<link rel="import" href="../../app-data.html">
+
+<dom-module id="confirmation-biodatas">
+  <template>
+    <style include="shared-styles">
+        .text-center {
+            text-align: center;
+        }
+        
+        .margin-top-bottom {
+            margin: 30px 0 30px 0;
+        }
+    </style>
+
+      <template is="dom-if" if="{{biodatasOk}}">
+              <div class="col-md-8 col-md-offset-2">
+                <div class="card">
+                    <div class="text-center">
+                        <iron-icon class="large-icon" icon="icons:check"></iron-icon>
+                        <p>Vos biodatas ont bien été envoyées</p>
+                        <p>Vous recevrez un mal de confirmation dans les prochaines minutes</p>
+                        <p>Après controle par un administrateur, elles seront transférées aux autorités.</p>
+                    </div>
+                </div>
+              </div>
+      </template>
+      <template is="dom-if" if="{{biodatasEnvoyees}}">
+              <div class="col-md-8 col-md-offset-2">
+                <div class="card">
+                    <div class="text-center">
+                        <iron-icon class="large-icon" icon="icons:check"></iron-icon>
+                        <p>Merci, vous avez déjà envoyé vos biodatas</p>
+                    </div>
+                </div>
+              </div>
+      </template>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'confirmation-biodatas'
+    });
+  </script>
+</dom-module>

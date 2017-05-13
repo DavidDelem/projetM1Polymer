@@ -4,6 +4,9 @@
 <link rel="import" href="../app-data.html">
 <link rel="import" href="./components/conseils-biodatas.html">
 <link rel="import" href="./components/informations-champ.html">
+<link rel="import" href="./components/etapes-biodatas.html">
+<link rel="import" href="./components/accueil-biodatas.html">
+<link rel="import" href="./components/confirmation-biodatas.html">
 
 <script src="../../bower_components/moment/moment.js"></script>
 <script src="../../bower_components/moment/locale/fr.js"></script>
@@ -49,69 +52,6 @@
         position: absolute;
         bottom: 0px;
         left: 25px;
-      }
-    
-      .steps {
-          text-align: center;
-          color: #555555;
-      }
-        
-      .step {
-            display: inline-block;
-            text-align: center;
-            margin: 15px;
-          width: 80px;
-          position: relative;
-      }
-        .step:hover {
-            cursor: pointer;
-        }
-        
-        .step:hover .step-element::before  {
-            transform: scale(1.4);
-            transition: all 0.08s ease;
-
-        }
-        
-        .step-selected > .step-element {
-            opacity: 1 !important;
-            transition: all 0.2s ease;
-        }
-        .step-element {
-            margin-top: 10px;
-            opacity: 0.3;
-            color: #555555;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-        
-      .step-element::before {
-           content: "";
-           display: block;
-           background-color: #555555;
-           border-radius: 25%;
-	       width: 8px;
-	       height: 8px;
-           position: relative;
-           margin: auto;
-           margin-bottom: 10px;
-           opacity: inherit;
-          transform: scale(1);
-          
-            transition: all 0.08s ease;
-      }
-        
-        .step:not(:first-child) .step-element::after {
-           content: "";
-           display: block;
-           background-color: #555555;
-	       width: 97px;
-	       height: 2px;
-           position: absolute;
-           right: calc(50% + 9px);
-           top: 3px;
-           opacity: inherit;
       }
         
         .text-center {
@@ -200,10 +140,6 @@
             bottom: -20px;
             z-index: 15;
         }
-        
-        .conseils-elem p {
-            font-size: 14px;
-        }
     </style>
     
     <iron-meta id="meta"></iron-meta>
@@ -230,15 +166,6 @@
         on-error="_handleHttpError"></iron-ajax>
       
     <iron-ajax 
-    id="dateLimiteRequest"
-    method="GET"
-    headers="{{_computeHeaders(storedData)}}"
-    url="{{serverUrl}}/visiteurs/projets/datelimite"
-    handle-as="json"
-    last-response="{{dateLimite}}"
-    on-error="_handleHttpError"></iron-ajax>
-      
-    <iron-ajax 
     id="biodatasRequest"
     method="POST"
     headers="{{_computeHeaders(storedData)}}"
@@ -249,60 +176,11 @@
     <template is="dom-if" if="{{_afficherFormulaire(biodatasOk, biodatasEnvoyees)}}">
             <div class="col-md-8">
                 <div class="col-md-12">
-                    <div class="steps" >
-                        <div class$="step {{_getClassesStep(currentStep, steps, 'accueil')}}" on-tap="_showStep" data-args="accueil">
-                            <span on-tap="_showStep" data-args="accueil" class="step-element">Accueil</span>
-                        </div>
-                        <div class$="step {{_getClassesStep(currentStep, steps, 'identite')}}" on-tap="_showStep" data-args="identite">
-                            <span on-tap="_showStep" data-args="identite" class="step-element">Identité</span>
-                        </div>
-                        <div class$="step {{_getClassesStep(currentStep, steps, 'fichiers')}}" on-tap="_showStep" data-args="fichiers">
-                            <span on-tap="_showStep" data-args="fichiers" class="step-element">Documents</span>
-                        </div>
-                        <div class$="step {{_getClassesStep(currentStep, steps, 'vehicule')}}" on-tap="_showStep" data-args="vehicule">
-                            <span on-tap="_showStep" data-args="vehicule" class="step-element">Véhicule</span>
-                        </div>
-                        <div class$="step {{_getClassesStep(currentStep, steps, 'envoi')}}" on-tap="_showStep" data-args="envoi">
-                            <span on-tap="_showStep" data-args="envoi" class="step-element">Envoi</span>
-                        </div>
-                    </div>
+                    <etapes-biodatas steps={{steps}} current={{currentStep}}></etapes-biodatas>
                 </div>
                 <div class="col-lg-12" hidden$="{{_hideStep('accueil', currentStep)}}">
                     <div class="card">
-                        <div class="row">
-                                    <div class="margin-bottom text-center col-md-12">
-                                        <h1>Saisie des biodatas</h1>
-                                        <p>
-                                            Sea Test Base est situé dans une zone à accés réglementé, obtenir des autorisations est nécessaire pour y accéder.
-                                            Remplir et envoyer ce formulaire est une étape importante qui nous permettra de transférer votre demande aux autorités.
-                                        </p>
-                                    </div>
-                                <div class="margin-top-bottom text-center">
-                                    <div class="col-md-3 conseils-elem">
-                                        <iron-icon icon="image:timer"></iron-icon>
-                                        <p>Le temps estimé pour saisir vos données est de 5 à 10 minutes</p>
-                                    </div>
-                                    <div class="col-md-3 conseils-elem">
-                                        <iron-icon icon="icons:event"></iron-icon>
-                                        <p>Vous pouvez remplir ce formulaire jusqu'au [[_getDate(dateLimite)]] à 23:59</p>
-                                    </div>
-                                    <div class="col-md-3 conseils-elem">
-                                        <iron-icon icon="icons:error-outline"></iron-icon>
-                                        <p>Ce symbole indique une information dont la saisie est obligatoire</p>
-                                    </div>
-                                    <div class="col-md-3 conseils-elem">
-                                        <iron-icon icon="icons:folder-open"></iron-icon>
-                                        <p>Les données non envoyées ne sont pas sauvegardées</p>
-                                    </div>
-                                </div>
-<!--
-                                <div class="text-center col-md-12">
-                                    <div class="col-md-6">
-                                        <paper-button on-tap="_showStep" data-args="identite">Commencer</paper-button>
-                                    </div>
-                                </div>
--->
-                        </div>
+                        <accueil-biodatas></accueil-biodatas>
                     </div>
                 </div>
                 <div class="col-lg-12" hidden$="{{_hideStep('identite', currentStep)}}">
@@ -519,30 +397,7 @@
                  <conseils-biodatas current-step="{{currentStep}}" steps="{{steps}}" hovered-item-identifiant={{hoveredItemIdentifiant}}></conseils-biodatas>
             </div>
       </template>
-      <template is="dom-if" if="{{biodatasOk}}">
-              <div class="col-md-8 col-md-offset-2">
-                <div class="card">
-                    <div class="text-center">
-                        <iron-icon class="large-icon" icon="icons:check"></iron-icon>
-                        <p>Vos biodatas ont bien été envoyées</p>
-                        <p>Vous recevrez un mal de confirmation dans les prochaines minutes</p>
-                        <p>Après controle par un administrateur, elles seront transférées aux autorités.</p>
-                    </div>
-                </div>
-              </div>
-      </template>
-      <template is="dom-if" if="{{biodatasEnvoyees}}">
-        
-              <div class="col-md-8 col-md-offset-2">
-                <div class="card">
-                    <div class="text-center">
-                        <iron-icon class="large-icon" icon="icons:check"></iron-icon>
-                        <p>Merci, vous avez déjà envoyé vos biodatas</p>
-                    </div>
-                </div>
-              </div>
-        
-      </template>
+      <confirmation-biodatas biodatas-ok="[[biodatasOk]]" biodatas-envoyees="[[biodatasEnvoyees]]"></confirmation-biodatas>
   </template>
 
   <script>
@@ -867,10 +722,8 @@
         return {"Authorization": "JWT " + storedData.token };
       },
       _generateRequests: function() {
-          //this.$.champsRequest.params = { profil: 'e86e3ad8-7ddb-4d1c-a0bd-0b20efcf328d' }; // A RENDRE VARIABLE
           this.$.champsRequest.generateRequest();
           this.$.historiqueEnvoyeRequest.generateRequest();
-          this.$.dateLimiteRequest.generateRequest();
       },
       _handleChampsResponse: function(res) {
           console.log(this.champs);
@@ -888,20 +741,8 @@
             this.currentStep = this.steps[this.steps.indexOf(this.currentStep) - 1];
           }
       },
-      _showStep: function(event) {
-          if(this.steps[this.steps.indexOf(event.target.getAttribute('data-args'))]) {
-              this.currentStep = event.target.getAttribute('data-args');
-          }
-      },
       _hideStep: function(step, currentStep) {
         return !(step == currentStep);
-      },
-      _getClassesStep: function(currentStep, steps, step) {
-        if(steps.indexOf(currentStep) >= steps.indexOf(step)) {
-            return 'step-selected';
-        } else {
-            return 'step-unselected';
-        }
       },
       _computeHidden: function(item, type) {
           return (item.type == type && item.coche == true);
@@ -1024,9 +865,6 @@
           } else {
             return false;
           }
-      },
-      _getDate: function(timestamp) {
-        return moment(timestamp, 'x').format('DD/MM/YYYY');
       }
     });
   </script>

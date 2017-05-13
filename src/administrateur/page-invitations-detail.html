@@ -3,6 +3,7 @@
 <link rel="import" href="../app-data.html">
 <link rel="import" href="components/actions-invitation.html">
 <link rel="import" href="components/important-message.html">
+<link rel="import" href="components/historique-dossier.html">
 
 <script src="../../bower_components/moment/moment.js"></script>
 <script src="../../bower_components/moment/locale/fr.js"></script>
@@ -207,51 +208,7 @@
                         </template>
                     </brainy-table-column>
                     <template is="row-detail">
-                        <template is="dom-repeat" items="{{item.historique}}">
-                            <template is="dom-if" if="{{_historiqueIs(item.type, 'RECEPTION_INVITATION')}}">
-                                <div tabindex="0">
-                                    <span class="label">Invitation envoyée</span>
-                                    <paper-tooltip>[[_getDate(item.date)]]</paper-tooltip>
-                                </div>
-                            </template>
-                            <template is="dom-if" if="{{_historiqueIs(item.type, 'ENVOI_BIODATAS')}}">
-                                <div tabindex="0">
-                                    <span class="label">Biodatas reçues</span>
-                                    <paper-tooltip>[[_getDate(item.date)]]</paper-tooltip>
-                                </div>
-                            </template>
-                            <template is="dom-if" if="{{_historiqueIs(item.type, 'VALIDATION_BIODATAS')}}">
-                                <div tabindex="0">
-                                    <span class="label">Biodatas validées</span>
-                                    <paper-tooltip>[[_getDate(item.date)]]</paper-tooltip>
-                                </div>
-                            </template>
-                            <template is="dom-if" if="{{_historiqueIs(item.type, 'REFUS_BIODATAS')}}">
-                                <div tabindex="0">
-                                    <span class="label">Biodatas refusées</span>
-                                    <paper-tooltip>[[_getDate(item.date)]]</paper-tooltip>
-                                </div>
-                            </template>
-                            <template is="dom-if" if="{{_historiqueIs(item.type, 'TRANSFERT_AUTORITES')}}">
-                                <div tabindex="0">
-                                    <span class="label">Transféré aux autorités</span>
-                                    <paper-tooltip>[[_getDate(item.date)]]</paper-tooltip>
-                                </div>
-                            </template>
-                            <template is="dom-if" if="{{_historiqueIs(item.type, 'DEMANDE_ACCESS_OK')}}">
-                                <div tabindex="0">
-                                    <span class="label">Clos</span>
-                                    <paper-tooltip>[[_getDate(item.date)]]</paper-tooltip>
-                                </div>
-                            </template>
-                            <template is="dom-if" if="{{_historiqueIs(item.type, 'DEMANDE_ACCESS_KO')}}">
-                                <div tabindex="0">
-                                    <span class="label">Clos</span>
-                                    <paper-tooltip>[[_getDate(item.date)]]</paper-tooltip>
-                                </div>
-                            </template>
-                        </template>
-
+                        <historique-dossier historique="{{item.historique}}"></historique-dossier>
                     </template>
                 </brainy-table>
                 <paper-fab class="paper-fab-flotant" icon="add" on-tap="_openAddInvitationModal"></paper-fab>
@@ -369,9 +326,6 @@
           } else {
               return false;
           }
-      },
-      _historiqueIs: function(typeHistorique, type) {
-          return typeHistorique === type;
       },
       _getDate: function(timestamp) {
         return moment(timestamp, 'x').format('DD/MM/YYYY');

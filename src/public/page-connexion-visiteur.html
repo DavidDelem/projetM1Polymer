@@ -37,9 +37,22 @@
             max-width: 100%;
         }
         
+        .langue-btns {
+            text-align: center;
+            padding: 10px 0;
+        }
+        
+        paper-radio-button {
+            --paper-radio-button-checked-color: #000;
+            --paper-radio-button-checked-ink-color: #000;
+            --paper-radio-button-unchecked-ink-color: #000;
+        }
+        
     </style>
       
     <iron-meta id="meta"></iron-meta>
+    <iron-meta key="langue" value="{{langue}}"></iron-meta>
+      
     <iron-localstorage name="data-storage" value="{{storedData}}"></iron-localstorage>
     <app-data key="storedData" data="{{storedData}}"></app-data>
       
@@ -57,12 +70,11 @@
     <div class="row">
         <div class="col-sm-4 col-sm-offset-4">
             <div class="card card-logo">
-                    <img class="logo-connexion" src="/images/logo.png">
+                <img class="logo-connexion" src="http://192.168.224.212/projetbiodata/images/logo.png">
             </div>
             <div class="card card-connexion">
                 <div class="card-connexion-header">
                     <h1>Connexion</h1>
-<!--                    <iron-icon class="large-icon" icon="icons:fingerprint"></iron-icon>-->
                 </div>
                 <paper-input-container>
                     <label>Identifiant</label>
@@ -73,7 +85,14 @@
                     <label>Mot de passe</label>
                     <input is="iron-input" id="password" type="password" bind-value="{{formData.password}}">
                 </paper-input-container>
-
+                
+                <div class="langue-btns">
+                    <paper-radio-group selected="{{langue}}">
+                      <paper-radio-button name="fr">Français</paper-radio-button>
+                      <paper-radio-button name="en">English</paper-radio-button>
+                    </paper-radio-group>
+                </div>
+                
                 <div class="wrapper-btns">
                     <paper-button raised class="primary btn-connexion" on-tap="_postLogin" disabled$="{{_validateForm(formData.identifiant, formData.password)}}">Connexion</paper-button>
                 </div>
@@ -99,11 +118,17 @@
             notify: true
         },
         serverUrl: String,
-        baseUrl: String
+        baseUrl: String,
+        nomDomaine: String,
+        langue: {
+            type: String,
+            value: 'fr'
+        }
       },
       ready: function () {
         this.serverUrl = this.$.meta.byKey("server-url");
         this.baseUrl = this.$.meta.byKey("base-url");
+        this.nomDomaine = this.$.meta.byKey("nom-domaine");
       },
       _postLogin: function() {
         this.$.tokenRequest.generateRequest();
