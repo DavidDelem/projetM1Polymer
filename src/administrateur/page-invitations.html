@@ -76,6 +76,7 @@
     <iron-localstorage name="data-storage" value="{{storedData}}" on-iron-localstorage-load="_generateRequests"></iron-localstorage>
     <app-data key="storedData" data="{{storedData}}"></app-data>
       
+    <iron-signals on-iron-signal-choix-periode="_handleChoixPeriodeEvent"></iron-signals>  
     <iron-signals on-iron-signal-modal-success="_handleModalSuccessEvent"></iron-signals>  
       
     <iron-ajax 
@@ -153,13 +154,12 @@
                         "nom" : "6 derniers mois",
                         "dateDebut": moment().subtract(6, 'months').format('x'),
                         "dateFin": moment().format('x') 
+                    },
+                {
+                        "nom" : "Période personalisée",
+                        "dateDebut": moment().subtract(6, 'months').format('x'),
+                        "dateFin": moment().format('x') 
                     }
-//                ,
-//                    {
-//                        "nom" : "Période personalisée",
-//                        "dateDebut": moment().subtract(6, 'months').format('x'),
-//                        "dateFin": moment().format('x') 
-//                    }
             ]
         },
         tris: {
@@ -200,8 +200,25 @@
 //        this.fire('connexion-administrateur-denied-event', {});
       },
       _reloadListePeriode: function(event) {
-          this.selectedPeriode = event.model.get('item');
-          this._generateRequests();
+          
+          if(event.model.get('item').nom == 'Période personalisée') {
+            this.fire('iron-signal', {
+                name: 'open-choix-periode-modal',
+                data: {
+                    dateDebut: moment(this.selectedPeriode.dateDebut, 'x').format('YYYY-MM-DD'),
+                    dateFin: moment(this.selectedPeriode.dateFin, 'x').format('YYYY-MM-DD')
+                }                       
+            });
+            this.selectedPeriode = event.model.get('item');
+          } else {
+            this.selectedPeriode = event.model.get('item');
+            this._generateRequests();  
+          }
+      },
+      _handleChoixPeriodeEvent: function(event) {
+        this.selectedPeriode.dateDebut = moment(event.detail.dateDebut, 'YYYY-MM-DD').format('x');
+        this.selectedPeriode.dateFin = moment(event.detail.dateFin, 'YYYY-MM-DD').format('x');
+        this._generateRequests();
       },
       _reloadListeTris: function(event) {
           this.selectedTris = event.model.get('item');

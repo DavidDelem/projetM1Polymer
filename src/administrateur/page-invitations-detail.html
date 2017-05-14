@@ -4,6 +4,7 @@
 <link rel="import" href="components/actions-invitation.html">
 <link rel="import" href="components/important-message.html">
 <link rel="import" href="components/historique-dossier.html">
+<link rel="import" href="components/configuration-projet.html">
 
 <script src="../../bower_components/moment/moment.js"></script>
 <script src="../../bower_components/moment/locale/fr.js"></script>
@@ -125,25 +126,7 @@
         handle-as="json"
         last-response="{{projetDetail}}"
         on-error="_handleProjetError"></iron-ajax>
-      
-    <iron-ajax 
-        id="toggleActivationDelegationRequest" 
-        method="PUT" 
-        content-type="application/x-www-form-urlencoded"   
-        headers="{{_computeHeaders(storedData.token)}}"
-        url="{{serverUrl}}/administration/projets/{{projet}}/delegation"
-        on-response="_handleToggleActivationDelegationResponse"
-        on-error="_handleToggleActivationDelegationError"></iron-ajax>
-      
-    <iron-ajax 
-        id="toggleActivationRappelsRequest" 
-        method="PUT" 
-        content-type="application/x-www-form-urlencoded"   
-        headers="{{_computeHeaders(storedData.token)}}"
-        url="{{serverUrl}}/administration/projets/{{projet}}/rappels"
-        on-response="_handleToggleActivationRappelsResponse"
-        on-error="_handleToggleActivationRappelsError"></iron-ajax>
-      
+
         <div class="col-md-12">
             <div class="floating-text">
                 <a href="{{baseUrl}}/section-administrateur/page-invitations/" class="btn-retour"><paper-icon-button icon="icons:arrow-back"></paper-icon-button>Retour</a>
@@ -215,31 +198,7 @@
             </div>
         </div>
       <div class="col-md-4">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card"> 
-                    <p><iron-icon icon="icons:description"></iron-icon> Profil: [[projetDetail.nomProfil]]</p>
-                    <p><iron-icon icon="icons:event"></iron-icon> Date de création: [[_getDate(projetDetail.dateCreation)]]</p>
-                    <p><iron-icon icon="icons:date-range"></iron-icon> Date limite: [[_getDate(projetDetail.dateLimite)]]</p>
-                    <div class="paper-fab-section">
-                        <paper-fab class="paper-fab" icon="icons:create" on-tap="_openModificationProjetModal"></paper-fab>
-                        <paper-fab class="paper-fab" icon="icons:delete" on-tap="_openSuppressionProjetModal"></paper-fab>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-12">
-                <div class="card">
-                    <p>Configuration</p>
-                    <paper-toggle-button checked="{{projetDetail.rappels}}" on-tap="_toggleActivationRappels">Activer les rappels automatisés</paper-toggle-button>
-                </div>
-            </div>
-            <div class="col-md-12">
-                <div class="card">
-                    <p>Délégation d'invitation</p>
-                    <paper-toggle-button checked="{{projetDetail.delegation}}" on-tap="_toggleActivationDelegation">Autoriser la délégation d'invitation</paper-toggle-button>
-                </div>
-            </div>
-        </div>
+        <configuration-projet projet-detail="[[projetDetail]]" projet="[[projet]]"></configuration-projet>
       </div>
 
         
@@ -277,37 +236,11 @@
       _handleProjetError: function(event) {
         this.fire('connexion-administrateur-denied-event', {});
       },
-      _toggleActivationRappels: function() {
-        this.$.toggleActivationRappelsRequest.body = { rappels: this.projetDetail.rappels };
-        this.$.toggleActivationRappelsRequest.generateRequest();
-      },
-      _handleToggleActivationRappelsResponse: function(response) {
-        this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Modifications enregistrées'}});
-      },
-      _handleToggleActivationRappelsError: function(error) {
-        this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Echec lors de l\'enregistrement des modifications'}});
-      },
-      _toggleActivationDelegation: function() {
-        this.$.toggleActivationDelegationRequest.body = { delegation: this.projetDetail.delegation };
-        this.$.toggleActivationDelegationRequest.generateRequest();
-      },
-      _handleToggleActivationDelegationResponse: function(response) {
-        this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Modifications enregistrées'}});
-      },
-      _handleToggleActivationDelegationError: function(error) {
-        this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Echec lors de l\'enregistrement des modifications'}});
-      },
       _openAddInvitationModal: function(event) {
         this.fire('iron-signal', {name: 'open-ajout-invitation-modal', data: {projet: this.projetDetail}});
       },
       _openRemoveInvitationModal: function(event) {
         this.fire('iron-signal', {name: 'open-suppression-invitation-modal', data: {projet: this.projetDetail, invitation: event.model.get('item')}});
-      },
-      _openSuppressionProjetModal: function(event) {
-        this.fire('iron-signal', {name: 'open-suppression-projet-modal', data: {projet: this.projetDetail}});
-      },
-      _openModificationProjetModal: function(event) {
-        this.fire('iron-signal', {name: 'open-modification-projet-modal', data: {projet: this.projetDetail}});
       },
       _handleActionSuccessEvent: function(event) {
         this._generateRequests();

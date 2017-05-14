@@ -1,0 +1,50 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../shared-styles.html">
+
+<dom-module id="choix-periode-modal">
+  <template>
+    <style include="shared-styles">  
+    </style>
+      
+    <iron-signals on-iron-signal-open-choix-periode-modal="_handleOpenChoixPeriodeModalEvent"></iron-signals>      
+      
+    <paper-dialog id="dialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
+        <h2>Période personnalisée</h2>
+        <vaadin-date-picker value="{{dateDebut}}" label="Date de début"></vaadin-date-picker>
+        <vaadin-date-picker value="{{dateFin}}" label="Date de fin"></vaadin-date-picker>
+        <div class="buttons">
+            <paper-button dialog-dismiss>Annuler</paper-button>
+            <paper-button autofocus on-tap="_choisirPeriode">
+                <span>Valider</span>
+            </paper-button>
+        </div>
+    </paper-dialog>
+      
+  </template>
+
+  <script>
+    Polymer({
+      is: 'choix-periode-modal',
+      properties: {
+        dateDebut: {
+            type: String,
+            value: ""
+        },
+        dateFin: {
+            type: String,
+            value: ""
+        }
+      },
+      _handleOpenChoixPeriodeModalEvent: function(event) {
+        this.dateDebut = event.detail.dateDebut;
+        this.dateFin = event.detail.dateFin;
+        this.$.dialog.open();
+      },
+      _choisirPeriode: function() {
+        this.fire('iron-signal', {name: 'choix-periode', data: {dateDebut: this.dateDebut, dateFin: this.dateFin}});
+        this.$.dialog.close();
+      },
+        
+    });
+  </script>
+</dom-module>

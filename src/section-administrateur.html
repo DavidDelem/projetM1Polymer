@@ -16,6 +16,8 @@
 <link rel="import" href="administrateur/modals/action-refus-biodatas-modal.html">
 <link rel="import" href="administrateur/modals/action-demande-access-ok-modal.html">
 <link rel="import" href="administrateur/modals/action-demande-access-ko-modal.html">
+<link rel="import" href="administrateur/modals/action-envoi-message-modal.html">
+<link rel="import" href="administrateur/modals/choix-periode-modal.html">
 <link rel="import" href="app-data.html">
 
 <dom-module id="section-administrateur">
@@ -141,6 +143,9 @@
     <action-refus-biodatas-modal></action-refus-biodatas-modal>
     <action-demande-access-ok-modal></action-demande-access-ok-modal>
     <action-demande-access-ko-modal></action-demande-access-ko-modal>
+    <action-envoi-message-modal></action-envoi-message-modal>
+      
+    <choix-periode-modal></choix-periode-modal>
       
     <toasts-administration></toasts-administration>
   </template>
@@ -181,7 +186,6 @@
       },
       _pageChanged: function(page) {
         // Load page import on demand. Show 404 page if fails
-         // console.log(this.test);
           console.log(this.routeData);
         var resolvedPageUrl = this.resolveUrl('administrateur/' + page + '.html');
         this.importHref(resolvedPageUrl, null, this._showPage404, true);  
