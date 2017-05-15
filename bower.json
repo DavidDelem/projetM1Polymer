@@ -43,6 +43,7 @@
     "gold-zip-input": "PolymerElements/gold-zip-input#^1.0.6",
     "gold-phone-input": "PolymerElements/gold-phone-input#^1.1.0",
     "neon-animation": "PolymerElements/neon-animation#^1.2.4",
+    "app-localize-behavior": "PolymerElements/app-localize-behavior#^1.0.2",
     "vaadin-date-picker": "vaadin/vaadin-date-picker#^1.2.1",
     "google-map": "GoogleWebComponents/google-map#^1.2.0",
     "brainy-table": "^1.5.2",
