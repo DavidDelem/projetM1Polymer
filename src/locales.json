@@ -2,11 +2,13 @@
   "en": {
     "section-visiteur": "My documents",
     "header2": "Send of biodata",
-    "header3": "Delegate invitation"
+    "header3": "Delegate invitation",
+    "accueil-biodatas": "Write your biodata"
   },
   "fr": {
     "section-visiteur": "Mon dossier",
     "header2": "Envoi des biodatas",
-    "header3": "Délégation d'invitation"
+    "header3": "Délégation d'invitation",
+    "accueil-biodatas": "Write your biodata"
   }
 }
