@@ -1,8 +1,12 @@
 {
   "en": {
-    "header_1": "Administration of biodata"
+    "section-visiteur": "My documents",
+    "header2": "Send of biodata",
+    "header3": "Delegate invitation"
   },
   "fr": {
-    "header_1": "Administration des biodatas"
+    "section-visiteur": "Mon dossier",
+    "header2": "Envoi des biodatas",
+    "header3": "Délégation d'invitation"
   }
 }

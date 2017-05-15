@@ -1,9 +1,10 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../shared-styles.html">
 <link rel="import" href="../../app-data.html">
+<link rel="import" href="../../../bower_components/app-localize-behavior/app-localize-behavior.html">
 
-<script src="../../bower_components/moment/moment.js"></script>
-<script src="../../bower_components/moment/locale/fr.js"></script>
+<script src="../../../bower_components/moment/moment.js"></script>
+<script src="../../../bower_components/moment/locale/fr.js"></script>
 
 <dom-module id="accueil-biodatas">
   <template>
@@ -40,9 +41,9 @@
       
     <div class="row">
         <div class="margin-bottom text-center col-md-12">
-            <h1>Saisie des biodatas</h1>
+            <h1>Saisie des biodatas{{localize('accueil-biodatas')}}</h1>
             <p>Sea Test Base est situé dans une zone à accés réglementé, obtenir des autorisations est nécessaire pour y accéder.
-               Remplir et envoyer ce formulaire est une étape importante qui nous permettra de transférer votre demande aux autorités.
+               Remplir et envoyer ce formulaire est une étape importante qui nous permettra de transférer votre demande aux autorités.{{localize('header4')}}
             </p>
         </div>
         <div class="margin-top-bottom text-center">
@@ -70,6 +71,18 @@
   <script>
     Polymer({
       is: 'accueil-biodatas',
+      behaviors: [
+        Polymer.AppLocalizeBehavior
+      ],
+      properties: {
+        language: {
+          value: 'en'
+        }
+      },
+      attached: function() {
+        this.loadResources(this.resolveUrl('locales.json'));
+        console.log(this.resolveUrl('locales.json'));
+      },
       _computeHeaders: function(storedData) {
         return {"Authorization": "JWT " + storedData.token };
       },
@@ -78,7 +91,7 @@
       },
       _getDate: function(timestamp) {
         return moment(timestamp, 'x').format('DD/MM/YYYY');
-      },
+      }
     });
   </script>
 </dom-module>

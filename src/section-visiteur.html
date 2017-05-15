@@ -3,6 +3,7 @@
 <link rel="import" href="visiteur/modals/ajout-delegation-modal.html">
 <link rel="import" href="visiteur/modals/annulation-delegation-modal.html">
 <link rel="import" href="visiteur/modals/erreur-biodatas-modal.html">
+<link rel="import" href="../bower_components/app-localize-behavior/app-localize-behavior.html">
 
 <dom-module id="section-visiteur">
   <template>
@@ -77,9 +78,9 @@
           <app-drawer id="drawer">
             <app-toolbar>Menu</app-toolbar>
             <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-                <a class="drawer-elem" name="page-dossier" href="{{baseUrl}}/section-visiteur/page-dossier">Mon dossier</a>
-                <a class="drawer-elem" name="page-biodatas" href="{{baseUrl}}/section-visiteur/page-biodatas">Envoi des biodatas</a>
-                <a class="drawer-elem" name="page-delegation" href="{{baseUrl}}/section-visiteur/page-delegation">Délégation d'invitation</a>
+                <a class="drawer-elem" name="page-dossier" href="{{baseUrl}}/section-visiteur/page-dossier">{{localize('section-visiteur')}}</a>
+                <a class="drawer-elem" name="page-biodatas" href="{{baseUrl}}/section-visiteur/page-biodatas">{{localize('header2')}}</a>
+                <a class="drawer-elem" name="page-delegation" href="{{baseUrl}}/section-visiteur/page-delegation">{{localize('header3')}}</a>
             </iron-selector>
             <img class="logo-stb" src="/images/logo.png">
           </app-drawer>
@@ -108,17 +109,27 @@
       ready: function () {
         this.baseUrl = this.$.meta.byKey("base-url");
       },
+      behaviors: [
+        Polymer.AppLocalizeBehavior
+      ],
       properties: {
         page: {
           type: String,
           reflectToAttribute: true,
           observer: '_pageChanged',
         },
+        language: {
+          value: 'en'
+        },
         baseUrl: String
       },
       observers: [
         '_routePageChanged(routeData.sub_page)',
       ],
+      attached: function() {
+        this.loadResources(this.resolveUrl('locales.json'));
+        console.log(this.resolveUrl('locales.json'));
+      },
       _handleConnexionVisiteurDeniedEvent: function(event) {
         this._disconnect();
       },

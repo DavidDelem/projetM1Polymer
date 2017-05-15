@@ -1,0 +1,21 @@
+{
+  "en": {
+    "accueil-biodatas": "Write your biodata",
+    "header4": "zzzzzzzzzzzz"
+    /*"header5": "",
+    "header6": "",
+    "header7": "",
+    "header8": ""*/
+
+
+  },
+  "fr": {
+    "accueil-biodatas": "Saisie des biodatas",
+    "header4": "Sea Test Base est situé dans une zone à accés réglementé, obtenir des autorisations est nécessaire pour y accéder.
+               Remplir et envoyer ce formulaire est une étape importante qui nous permettra de transférer votre demande aux autorités."
+    /*"header5": "Le temps estimé pour saisir vos données est de 5 à 10 minutes",
+    "header6": "Vous pouvez remplir ce formulaire jusqu'au [[_getDate(dateLimite)]] à 23:59",
+    "header7": "Ce symbole indique une information dont la saisie est obligatoire",
+    "header8": "Les données non envoyées ne sont pas sauvegardées"*/
+  }
+}
