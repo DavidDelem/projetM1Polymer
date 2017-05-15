@@ -41,27 +41,25 @@
       
     <div class="row">
         <div class="margin-bottom text-center col-md-12">
-            <h1>Saisie des biodatas {{localize('accueil-biodatas')}}</h1>
-            <p>Sea Test Base est situé dans une zone à accés réglementé, obtenir des autorisations est nécessaire pour y accéder.
-               Remplir et envoyer ce formulaire est une étape importante qui nous permettra de transférer votre demande aux autorités.
-            </p>
+            <h1>{{localize('accueil-biodatas')}}</h1>
+            <p>{{localize('header4')}}</p>
         </div>
         <div class="margin-top-bottom text-center">
             <div class="col-md-3 conseils-elem">
                 <iron-icon icon="image:timer"></iron-icon>
-                <p>Le temps estimé pour saisir vos données est de 5 à 10 minutes</p>
+                <p>{{localize('header5')}}</p>
             </div>
             <div class="col-md-3 conseils-elem">
                 <iron-icon icon="icons:event"></iron-icon>
-                <p>Vous pouvez remplir ce formulaire jusqu'au [[_getDate(dateLimite)]] à 23:59</p>
+                <p>{{localize('header6')}} [[_getDate(dateLimite)]] {{localize('header7')}} </p>
             </div>
             <div class="col-md-3 conseils-elem">
                 <iron-icon icon="icons:error-outline"></iron-icon>
-                <p>Ce symbole indique une information dont la saisie est obligatoire</p>
+                <p>{{localize('header8')}}</p>
             </div>
             <div class="col-md-3 conseils-elem">
                 <iron-icon icon="icons:folder-open"></iron-icon>
-                <p>Les données non envoyées ne sont pas sauvegardées</p>
+                <p>{{localize('header9')}}</p>
             </div>
         </div>
     </div>
@@ -82,7 +80,7 @@
       },
       ready: function() {
         this.serverUrl = this.$.meta.byKey("server-url");
-        this.language  = 'en';
+        this.language = this.$.meta.byKey("langue") || "fr";
       },
       attached: function() {
         this.loadResources(this.resolveUrl('../../locales.json'));

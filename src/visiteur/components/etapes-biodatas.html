@@ -1,6 +1,7 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../shared-styles.html">
 <link rel="import" href="../../app-data.html">
+<link rel="import" href="../../../bower_components/app-localize-behavior/app-localize-behavior.html">
 
 <dom-module id="etapes-biodatas">
   <template>
@@ -72,19 +73,19 @@
 
     <div class="steps" >
                         <div class$="step {{_getClassesStep(current, steps, 'accueil')}}" on-tap="_showStep" data-args="accueil">
-                            <span on-tap="_showStep" data-args="accueil" class="step-element">Accueil</span>
+                            <span on-tap="_showStep" data-args="accueil" class="step-element">{{localize('etapes-biodatas')}}</span>
                         </div>
                         <div class$="step {{_getClassesStep(current, steps, 'identite')}}" on-tap="_showStep" data-args="identite">
-                            <span on-tap="_showStep" data-args="identite" class="step-element">Identité</span>
+                            <span on-tap="_showStep" data-args="identite" class="step-element">{{localize('header13')}}</span>
                         </div>
                         <div class$="step {{_getClassesStep(current, steps, 'fichiers')}}" on-tap="_showStep" data-args="fichiers">
-                            <span on-tap="_showStep" data-args="fichiers" class="step-element">Documents</span>
+                            <span on-tap="_showStep" data-args="fichiers" class="step-element">{{localize('header14')}}</span>
                         </div>
                         <div class$="step {{_getClassesStep(current, steps, 'vehicule')}}" on-tap="_showStep" data-args="vehicule">
-                            <span on-tap="_showStep" data-args="vehicule" class="step-element">Véhicule</span>
+                            <span on-tap="_showStep" data-args="vehicule" class="step-element">{{localize('header15')}}</span>
                         </div>
                         <div class$="step {{_getClassesStep(current, steps, 'envoi')}}" on-tap="_showStep" data-args="envoi">
-                            <span on-tap="_showStep" data-args="envoi" class="step-element">Envoi</span>
+                            <span on-tap="_showStep" data-args="envoi" class="step-element">{{localize('header16')}}</span>
                         </div>
   </div>
       
@@ -93,12 +94,25 @@
   <script>
     Polymer({
       is: 'etapes-biodatas',
+      behaviors: [
+        Polymer.AppLocalizeBehavior
+      ],
       properties: {
         current: {
             type: String,
             notify: true
         },
+        language: {
+          value: 'fr'
+        },
         steps: Object
+      },
+      ready: function() {
+        this.language = this.$.meta.byKey("langue") || "fr";
+      },
+      attached: function() {
+        this.loadResources(this.resolveUrl('../../locales.json'));
+//        console.log(this.resolveUrl('locales.json'));
       },
       _showStep: function(event) {
           if(this.steps[this.steps.indexOf(event.target.getAttribute('data-args'))]) {

@@ -1,6 +1,7 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../shared-styles.html">
 <link rel="import" href="../../app-data.html">
+<link rel="import" href="../../../bower_components/app-localize-behavior/app-localize-behavior.html">
 
 <dom-module id="confirmation-biodatas">
   <template>
@@ -19,9 +20,9 @@
                 <div class="card">
                     <div class="text-center">
                         <iron-icon class="large-icon" icon="icons:check"></iron-icon>
-                        <p>Vos biodatas ont bien été envoyées</p>
-                        <p>Vous recevrez un mal de confirmation dans les prochaines minutes</p>
-                        <p>Après controle par un administrateur, elles seront transférées aux autorités.</p>
+                        <p>{{localize('confirmation-biodatas')}}</p>
+                        <p>{{localize('header10')}}</p>
+                        <p>{{localize('header11')}}</p>
                     </div>
                 </div>
               </div>
@@ -31,7 +32,7 @@
                 <div class="card">
                     <div class="text-center">
                         <iron-icon class="large-icon" icon="icons:check"></iron-icon>
-                        <p>Merci, vous avez déjà envoyé vos biodatas</p>
+                        <p>{{localize('header12')}}</p>
                     </div>
                 </div>
               </div>
@@ -40,7 +41,22 @@
 
   <script>
     Polymer({
-      is: 'confirmation-biodatas'
+      is: 'confirmation-biodatas',
+      behaviors: [
+        Polymer.AppLocalizeBehavior
+      ],
+      properties: {
+        language: {
+          value: 'fr'
+        }
+      },
+      ready: function() {
+        this.language = this.$.meta.byKey("langue") || "fr";
+      },
+      attached: function() {
+        this.loadResources(this.resolveUrl('../../locales.json'));
+//        console.log(this.resolveUrl('locales.json'));
+      }
     });
   </script>
 </dom-module>
