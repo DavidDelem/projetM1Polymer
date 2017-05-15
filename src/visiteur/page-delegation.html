@@ -1,6 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../shared-styles.html">
 <link rel="import" href="../app-data.html">
+<link rel="import" href="../../bower_components/app-localize-behavior/app-localize-behavior.html">
 
 <dom-module id="page-delegation">
   <template>
@@ -68,16 +69,15 @@
       
 
     <div class="col-md-12">
-       <p class="floating-text">Informations</p>
-       <p>Déléguer votre invitation vous permet d'envoyer une invitation aux personnes venant dans le cadre du même projet.
-          Vous pouvez également annuler une délégation.</p>
+       <p class="floating-text">{{localize('delegation-titre-section-1')}}</p>
+       <p>{{localize('delegation-detail-section-1')}}</p>
     </div>
     <template is="dom-if" if="[[!delegation]]">
-        <p>La délégation d'invitation est désactivée par les administrateurs pour ce projet</p>
+        <p>{{localize('delegation-desactivee')}}</p>
     </template>
     <template is="dom-if" if="[[delegation]]">
         <div class="col-md-12">
-            <p class="floating-text">Invitations envoyées par l'administrateur</p>
+            <p class="floating-text">{{localize('delegation-titre-section-2')}}</p>
         </div>
         <template is="dom-repeat" items="{{invitations}}">
             <template is="dom-if" if="{{!_haveParent(item.identifiantParent)}}">
@@ -92,7 +92,7 @@
         </template>
 
         <div class="col-md-12">
-            <p class="floating-text">Invitations déléguées par vous ou un autre visiteur</p>
+            <p class="floating-text">{{localize('delegation-titre-section-3')}}</p>
         </div> 
 
         <template is="dom-repeat" items="{{invitations}}">
@@ -117,12 +117,22 @@
   <script>
     Polymer({
       is: 'page-delegation',
+      behaviors: [
+        Polymer.AppLocalizeBehavior
+      ],
       properties: {
         projet: Object,
-        serverUrl: String
+        serverUrl: String,
+        language: {
+          value: 'fr'
+        }
       },
       ready: function () {
         this.serverUrl = this.$.meta.byKey("server-url");
+        this.language = this.$.meta.byKey("langue") || 'fr';
+      },
+      attached: function() {
+        this.loadResources(this.resolveUrl('../locales.json'));
       },
       attributeChanged : function(name, type){
           if(this.getAttribute('class').includes('iron-selected')){

@@ -108,6 +108,8 @@
       is: 'section-visiteur',
       ready: function () {
         this.baseUrl = this.$.meta.byKey("base-url");
+        console.log(this.$.meta.byKey("langue"));
+        this.language = this.$.meta.byKey("langue");
       },
       behaviors: [
         Polymer.AppLocalizeBehavior

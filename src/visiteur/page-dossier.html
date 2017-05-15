@@ -1,7 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../shared-styles.html">
 <link rel="import" href="../app-data.html">
-<link rel="import" href="../bower_components/app-localize-behavior/app-localize-behavior.html">
+<link rel="import" href="../../bower_components/app-localize-behavior/app-localize-behavior.html">
 
 <script src="../../bower_components/moment/moment.js"></script>
 <script src="../../bower_components/moment/locale/fr.js"></script>
@@ -130,7 +130,6 @@
         handle-as="json"
         last-response="{{historique}}"
         on-error="_handleHttpError"></iron-ajax>
-      {{localize('section-visiteur')}}
     <div class="timeline">
         <template is="dom-repeat" items="{{historique}}">
             <template is="dom-if" if="{{_computeHidden(item, 'RECEPTION_INVITATION')}}">
@@ -139,8 +138,8 @@
                         <span class="timeline-date">[[_getDate(item.date)]]</span>
                         <div class="card card-timeline">
                             <paper-fab icon="icons:account-circle"></paper-fab>
-                            <h3>Invitation reçue</h3>
-                            <p>Vous pouvez envoyer vos biodatas jusqu'au [[_getDate(dateLimite)]] à 23:59</p>
+                            <h3>{{localize('invitation-recue-titre')}}</h3>
+                            <p>{{localize('invitation-recue-detail-1')}} {{_getDate(dateLimite)}} {{localize('invitation-recue-detail-2')}}</p>
 <!--                            Il vous reste [[_getTempsRestant(dateLimite)]] -->
 <!--                            <paper-button raised class="size" on-tap="_suppinvitation">Supprimer mon dossier<iron-icon icon="icons:delete"></iron-icon></paper-button>-->
                         </div>     
@@ -153,8 +152,8 @@
                         <span class="timeline-date">[[_getDate(item.date)]]</span>
                         <div class="card card-timeline">
                             <paper-fab icon="icons:cloud-queue"></paper-fab>
-                            <h3>Biodatas envoyées</h3>
-                            <p>Vos biodatas vont être controlées par un administrateur</p>
+                            <h3>{{localize('biodatas-envoyes-titre')}}</h3>
+                            <p>{{localize('biodatas-envoyes-detail')}}</p>
                         </div>
                     </div>
                 </div>
@@ -165,8 +164,8 @@
                         <span class="timeline-date">[[_getDate(item.date)]]</span>
                         <div class="card card-timeline">
                             <paper-fab icon="icons:assignment-turned-in"></paper-fab>
-                            <h3>Biodatas validées</h3>
-                            <p>Vos biodatas sont valides et vont prochainement être tansmises aux autorités</p>
+                            <h3>{{localize('biodatas-valides-titre')}}</h3>
+                            <p>{{localize('biodatas-valides-detail')}}</p>
                         </div>
                     </div>
                 </div>
@@ -177,8 +176,8 @@
                         <span class="timeline-date">[[_getDate(item.date)]]</span>
                         <div class="card card-timeline">
                             <paper-fab icon="icons:assignment-late"></paper-fab>
-                            <h3>Biodatas refusées</h3>
-                            <p>Vos biodatas sont invalides, merci de les renvoyer avant la date limite</p>
+                            <h3>{{localize('biodatas-refusees-titre')}}</h3>
+                            <p>{{localize('biodatas-refusees-detail')}}</p>
                         </div>
                     </div>
                 </div>
@@ -189,8 +188,8 @@
                         <span class="timeline-date">[[_getDate(item.date)]]</span>
                         <div class="card card-timeline">
                             <paper-fab icon="communication:mail-outline"></paper-fab>
-                            <h3>Biodatas transférées aux autorités</h3>
-                            <p>Votre demande est en cours de traitement par les autorités</p>
+                            <h3>{{localize('biodatas-transferees-titre')}}</h3>
+                            <p>{{localize('biodatas-transferees-detail')}}</p>
                         </div>
                     </div>
                 </div>
@@ -201,8 +200,8 @@
                         <span class="timeline-date">[[_getDate(item.date)]]</span>
                         <div class="card card-timeline">
                             <paper-fab icon="icons:check"></paper-fab>
-                            <h3>Demande d'accès acceptée</h3>
-                            <p>Sur la base des renseignements fournis, les autorités ont accepté votre demande d'accès</p>
+                            <h3>{{localize('demande-ok-titre')}}</h3>
+                            <p>{{localize('demande-ok-detail')}}</p>
                             <google-map fit-to-marker  latitude="48.282423" longitude="-4.441707" api-key="AIzaSyD3E1D9b-Z7ekrT3tbhl_dy8DCXuIuDDRc">
                                 <google-map-marker latitude="48.282423" longitude="-4.441707" title="Sea Test Base"></google-map-marker>
                             </google-map>
@@ -216,9 +215,8 @@
                         <span class="timeline-date">[[_getDate(item.date)]]</span>
                         <div class="card card-timeline">
                             <paper-fab icon="icons:clear"></paper-fab>
-                            <h3>Demande d'accès refusée</h3>
-                            <p>Sur la base des renseignements fournis, les autorités ont refusé votre demande d'accè
-                            <br/>Merci de contacter un administrateur afin d'obtenir des renseignements complémentaires</p>
+                            <h3>{{localize('demande-ko-titre')}}</h3>
+                            <p>{{localize('demande-ko-detail')}}</p>
                         </div>
                     </div>
                 </div>
@@ -241,8 +239,8 @@
                         <span class="timeline-date">[[_getDate(item.date)]]</span>
                         <div class="card card-timeline">
                             <paper-fab icon="icons:alarm"></paper-fab>
-                            <h3>Date limite atteinte</h3>
-                            <p>L'envoi des biodatas n'est plus possible mais les biodatas déjà envoyées seront traitées.</p>
+                            <h3>{{localize('date-limite-titre')}}</h3>
+                            <p>{{localize('date-limite-detail')}}</p>
                         </div>
                     </div>
                 </div>
@@ -264,16 +262,15 @@
         historique: Object,
         serverUrl: String,
         language: {
-          value: 'en'
+          value: 'fr'
         }
       },
       ready: function () {
         this.serverUrl = this.$.meta.byKey("server-url");
-        console.log(this.$.meta.byKey("langue"));
+        this.language = this.$.meta.byKey("langue") || 'fr';
       },
       attached: function() {
         this.loadResources(this.resolveUrl('../locales.json'));
-        console.log(this.resolveUrl('locales.json'));
       },
       attributeChanged: function(name, type){
           if(this.getAttribute('class').includes('iron-selected')) {
