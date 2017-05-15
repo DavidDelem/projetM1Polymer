@@ -1,6 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../shared-styles.html">
 <link rel="import" href="../app-data.html">
+<link rel="import" href="../bower_components/app-localize-behavior/app-localize-behavior.html">
 
 <script src="../../bower_components/moment/moment.js"></script>
 <script src="../../bower_components/moment/locale/fr.js"></script>
@@ -46,12 +47,10 @@
             transition: all 0.3s ease;
         }
         
-
         .timeline > div:not(:last-of-type):hover {
             filter: none;
             opacity: 0.7;
         }
-
         
         .card-timeline {
             position: relative;
@@ -129,7 +128,7 @@
         handle-as="json"
         last-response="{{historique}}"
         on-error="_handleHttpError"></iron-ajax>
-      
+      {{localize('section-visiteur')}}
     <div class="timeline">
         <template is="dom-repeat" items="{{historique}}">
             <template is="dom-if" if="{{_computeHidden(item, 'RECEPTION_INVITATION')}}">
@@ -256,13 +255,23 @@
   <script>
     Polymer({
       is: 'page-dossier',
+      behaviors: [
+        Polymer.AppLocalizeBehavior
+      ],
       properties: {
         historique: Object,
-        serverUrl: String
+        serverUrl: String,
+        language: {
+          value: 'en'
+        }
       },
       ready: function () {
         this.serverUrl = this.$.meta.byKey("server-url");
         console.log(this.$.meta.byKey("langue"));
+      },
+      attached: function() {
+        this.loadResources(this.resolveUrl('../locales.json'));
+        console.log(this.resolveUrl('locales.json'));
       },
       attributeChanged: function(name, type){
           if(this.getAttribute('class').includes('iron-selected')) {

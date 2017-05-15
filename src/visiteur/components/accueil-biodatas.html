@@ -41,9 +41,9 @@
       
     <div class="row">
         <div class="margin-bottom text-center col-md-12">
-            <h1>Saisie des biodatas{{localize('accueil-biodatas')}}</h1>
+            <h1>Saisie des biodatas {{localize('accueil-biodatas')}}</h1>
             <p>Sea Test Base est situé dans une zone à accés réglementé, obtenir des autorisations est nécessaire pour y accéder.
-               Remplir et envoyer ce formulaire est une étape importante qui nous permettra de transférer votre demande aux autorités.{{localize('header4')}}
+               Remplir et envoyer ce formulaire est une étape importante qui nous permettra de transférer votre demande aux autorités.
             </p>
         </div>
         <div class="margin-top-bottom text-center">
@@ -75,13 +75,18 @@
         Polymer.AppLocalizeBehavior
       ],
       properties: {
+        serverUrl: String,
         language: {
-          value: 'en'
+          value: 'fr'
         }
       },
+      ready: function() {
+        this.serverUrl = this.$.meta.byKey("server-url");
+        this.language  = 'en';
+      },
       attached: function() {
-        this.loadResources(this.resolveUrl('locales.json'));
-        console.log(this.resolveUrl('locales.json'));
+        this.loadResources(this.resolveUrl('../../locales.json'));
+//        console.log(this.resolveUrl('locales.json'));
       },
       _computeHeaders: function(storedData) {
         return {"Authorization": "JWT " + storedData.token };
