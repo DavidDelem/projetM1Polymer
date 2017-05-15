@@ -16,7 +16,8 @@
 <link rel="import" href="administrateur/modals/action-refus-biodatas-modal.html">
 <link rel="import" href="administrateur/modals/action-demande-access-ok-modal.html">
 <link rel="import" href="administrateur/modals/action-demande-access-ko-modal.html">
-<link rel="import" href="../bower_components/app-localize-behavior/app-localize-behavior.html">
+<link rel="import" href="administrateur/modals/action-envoi-message-modal.html">
+<link rel="import" href="administrateur/modals/choix-periode-modal.html">
 <link rel="import" href="app-data.html">
 
 <dom-module id="section-administrateur">
@@ -28,7 +29,6 @@
         --app-secondary-color: black;
         display: block;
       }
-
                 
      app-drawer {
         --app-drawer-content-container: {
@@ -46,11 +46,9 @@
       app-header paper-icon-button {
         --paper-icon-button-ink-color: white;
       }
-
       .drawer-list {
         margin: 0 20px;
       }
-
       .drawer-elem {
         display: block;
         padding: 0 16px;
@@ -58,7 +56,6 @@
         color: var(--app-secondary-color);
         line-height: 40px;
       }
-
       .drawer-elem.iron-selected {
         color: black;
         font-weight: bold;
@@ -84,7 +81,7 @@
         <app-header condenses reveals fixed full effects="waterfall">
           <app-toolbar>
             <paper-icon-button icon="my-icons:menu" on-tap="_toggleMenu" drawer-toggle></paper-icon-button>
-            <div main-title>Administration des biodatas {{localize('header_1')}}</div>
+            <div main-title>Administration des biodatas</div>
             <a href="{{baseUrl}}/section-public/page-connexion-administrateur/">
                 <paper-icon-button icon="icons:power-settings-new"></paper-icon-button>
             </a>
@@ -142,6 +139,9 @@
     <action-refus-biodatas-modal></action-refus-biodatas-modal>
     <action-demande-access-ok-modal></action-demande-access-ok-modal>
     <action-demande-access-ko-modal></action-demande-access-ko-modal>
+    <action-envoi-message-modal></action-envoi-message-modal>
+      
+    <choix-periode-modal></choix-periode-modal>
       
     <toasts-administration></toasts-administration>
   </template>
@@ -151,26 +151,12 @@
       ready: function () {
         this.baseUrl = this.$.meta.byKey("base-url");
       },
-      behaviors: [
-        Polymer.AppLocalizeBehavior
-      ],
       properties: {
         page: {
           type: String,
           reflectToAttribute: true,
           observer: '_pageChanged',
         },
-        language: {
-          value: 'en'
-        },
-        /*resources: {
-            value: function() {
-              return {
-                'en': { 'header_1': 'Administration of biodata' },
-                'fr': { 'header_1': 'Administration des biodatas' }
-              }
-            }
-        },*/
         baseUrl: String,
         storedData: Object
       },
@@ -179,10 +165,6 @@
       ],
       listeners: {
         'connexion-administrateur-denied-event': '_handleConnexionAdministrateurDeniedEvent',
-      },
-      attached: function() {
-        this.loadResources(this.resolveUrl('locales.json'));
-        console.log(this.resolveUrl('locales.json'));
       },
       _handleConnexionAdministrateurDeniedEvent: function(event) {
         this.storedData = null;
@@ -200,7 +182,6 @@
       },
       _pageChanged: function(page) {
         // Load page import on demand. Show 404 page if fails
-         // console.log(this.test);
           console.log(this.routeData);
         var resolvedPageUrl = this.resolveUrl('administrateur/' + page + '.html');
         this.importHref(resolvedPageUrl, null, this._showPage404, true);  

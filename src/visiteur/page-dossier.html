@@ -262,8 +262,9 @@
       },
       ready: function () {
         this.serverUrl = this.$.meta.byKey("server-url");
+        console.log(this.$.meta.byKey("langue"));
       },
-      attributeChanged : function(name, type){
+      attributeChanged: function(name, type){
           if(this.getAttribute('class').includes('iron-selected')) {
              this._generateRequests();
           }

@@ -1,6 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../shared-styles.html">
 <link rel="import" href="../app-data.html">
+<link rel="import" href="./components/card-projet.html">
 
 <script src="../../bower_components/moment/moment.js"></script>
 <script src="../../bower_components/moment/locale/fr.js"></script>
@@ -11,36 +12,6 @@
         :host {
             display: block;
             padding: 10px;
-        }
-        
-        .card-projet {
-            width: 100%;
-            margin-bottom: 20px;
-            transition: all 0.2s ease;
-        }
-        .card-projet:hover {
-            transform: scale(1.02);
-        }
-        
-        .card-projet a {
-            text-decoration: none;
-            color: #444;
-        }
-        
-        .nom-projet {
-            display: inline-block;
-            padding-top: 8px;
-        }
-
-        .projet-btn {
-            /*float: right;*/
-           /* padding-bottom: 5px;*/
-        }
-        
-        .texte-light {
-            color: var(--paper-grey-600);
-            padding-top: 10px;
-        
         }
         
         .special-paper-menu paper-menu {
@@ -63,15 +34,6 @@
         
         .special-paper-menu span {
             padding-left: 15px;
-        }
-        
-        .project-title {
-            @apply(--paper-font-title);
-        }
-        
-        .etat-dossier {
-            @apply(--paper-font-caption);
-            text-transform: uppercase;
         }
         
         paper-fab.float-paper-fab {
@@ -108,53 +70,13 @@
             left: 6px;
         }
         
-        .badge {
-            min-width: 3rem;
-            padding: 0 6px;
-            margin-left: 14px;
-            text-align: center;
-            font-size: 1rem;
-            line-height: 22px;
-            height: 22px;
-            float: right;
-            box-sizing: border-box;
-            font-weight: 300;
-            font-size: 0.8rem;
-            color: #fff;
-            background-color: #ff4081;
-            border-radius: 2px;
-            position: relative;
-            right: -4px;
-            top: -4px;
-        }
-        
-        .etat-dossier {
-            text-align: center;
-        }
-        
-        .etat-dossier span {
-            font-size: 2em;
-        }
-        
-        .projet-clos {
-            opacity: 0.4;
-        }
-        
-        .projet-clos .badge-datelimite {
-            display: none;
-        }
-        
-        .label-date {
-            position: relative;
-            top: 3px;
-            left: 5px;
-        }
     </style>
     
     <iron-meta id="meta"></iron-meta>
     <iron-localstorage name="data-storage" value="{{storedData}}" on-iron-localstorage-load="_generateRequests"></iron-localstorage>
     <app-data key="storedData" data="{{storedData}}"></app-data>
       
+    <iron-signals on-iron-signal-choix-periode="_handleChoixPeriodeEvent"></iron-signals>  
     <iron-signals on-iron-signal-modal-success="_handleModalSuccessEvent"></iron-signals>  
       
     <iron-ajax 
@@ -202,43 +124,7 @@
     </div>
     <template is="dom-repeat" items="{{projets}}">
         <div class="col-md-4">
-            <paper-card class$="card-projet {{_getEtatProjet(item)}}">
-                <template is="dom-if" if="{{_showBadgeDateLimite(item.dateLimite)}}">
-                    <span class="badge badge-datelimite">Date limite atteinte</span>
-                </template>
-                <a href="{{baseUrl}}/section-administrateur/page-invitations-detail/{{item.identifiant}}">                                                                              
-                <div class="card-content">
-                    <span class="project-title">[[item.nom]]</span>
-                    <div class="row texte-light">
-                        <div class="col-md-5">
-                            <iron-icon icon="icons:event"></iron-icon><span class="label-date">[[_getDate(item.dateCreation)]]</span>
-                        </div>
-                        <div class="col-md-7">
-                            <iron-icon icon="icons:date-range"></iron-icon><span class="label-date">Limite: [[_getDate(item.dateLimite)]]</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-actions">
-                    <div class="projet-btn">
-                        <div class="etat-dossier">
-                            <div class="col-sm-4">
-                                <p>En attente</p>
-                                <span>[[item.etatProjet.enAttente]]</span>
-                            </div>
-                            <div class="col-sm-4">
-                                <p>En cours</p>
-                                <span>[[item.etatProjet.enCours]]</span>
-                            </div>
-                            <div class="col-sm-4">
-                                <p>Terminé</p>
-                                <span>[[item.etatProjet.termine]]</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                </a>
-            </paper-card>
-</paper-badge>
+            <card-projet projet="{{item}}"></card-projet>
         </div>
     </template>
       
@@ -268,13 +154,12 @@
                         "nom" : "6 derniers mois",
                         "dateDebut": moment().subtract(6, 'months').format('x'),
                         "dateFin": moment().format('x') 
+                    },
+                {
+                        "nom" : "Période personalisée",
+                        "dateDebut": moment().subtract(6, 'months').format('x'),
+                        "dateFin": moment().format('x') 
                     }
-//                ,
-//                    {
-//                        "nom" : "Période personalisée",
-//                        "dateDebut": moment().subtract(6, 'months').format('x'),
-//                        "dateFin": moment().format('x') 
-//                    }
             ]
         },
         tris: {
@@ -315,8 +200,25 @@
 //        this.fire('connexion-administrateur-denied-event', {});
       },
       _reloadListePeriode: function(event) {
-          this.selectedPeriode = event.model.get('item');
-          this._generateRequests();
+          
+          if(event.model.get('item').nom == 'Période personalisée') {
+            this.fire('iron-signal', {
+                name: 'open-choix-periode-modal',
+                data: {
+                    dateDebut: moment(this.selectedPeriode.dateDebut, 'x').format('YYYY-MM-DD'),
+                    dateFin: moment(this.selectedPeriode.dateFin, 'x').format('YYYY-MM-DD')
+                }                       
+            });
+            this.selectedPeriode = event.model.get('item');
+          } else {
+            this.selectedPeriode = event.model.get('item');
+            this._generateRequests();  
+          }
+      },
+      _handleChoixPeriodeEvent: function(event) {
+        this.selectedPeriode.dateDebut = moment(event.detail.dateDebut, 'YYYY-MM-DD').format('x');
+        this.selectedPeriode.dateFin = moment(event.detail.dateFin, 'YYYY-MM-DD').format('x');
+        this._generateRequests();
       },
       _reloadListeTris: function(event) {
           this.selectedTris = event.model.get('item');
@@ -328,22 +230,9 @@
       _handleModalSuccessEvent: function(event) {
         this._generateRequests();
       },
-      _showBadgeDateLimite: function(dateLimite) {
-         return Date.now() > dateLimite;
-      },
-      _getEtatProjet: function(projet) {
-          if(projet.etatProjet.enAttente == 0 && projet.etatProjet.enCours == 0 && projet.etatProjet.termine != 0) {
-              return "projet-clos";
-          } else {
-              return "projet-en-cours";
-          }
-     },
-    _reverseProjets: function() {
-        this.projets = this.projets.slice().reverse();
-    },
-    _getDate: function(timestamp) {
-        return moment(timestamp, 'x').format('DD/MM/YYYY');
-    }
+      _reverseProjets: function() {
+            this.projets = this.projets.slice().reverse();
+      }
     });
   </script>
 </dom-module>

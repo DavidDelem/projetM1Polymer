@@ -1,0 +1,91 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../shared-styles.html">
+<link rel="import" href="../../app-data.html">
+
+<script src="../../../bower_components/moment/moment.js"></script>
+<script src="../../../bower_components/moment/locale/fr.js"></script>
+
+<dom-module id="historique-dossier">
+  <template>
+    <style include="shared-styles">
+        .label {
+            background-color: #bfbfbf;
+            padding: 6px 15px 6px 15px;
+            color: #fff;
+            font-weight: 500;
+            text-transform: uppercase;
+            text-align: center;
+            white-space: nowrap;
+            font-size: 0.8em;
+            border-radius: 3px;
+            margin-right: 10px;
+            display: inline-block;
+        }
+        .label-elem {
+            display: inline-block;
+        }
+    </style>
+    <template is="dom-repeat" items="{{historique}}">
+                            <template is="dom-if" if="{{_historiqueIs(item.type, 'RECEPTION_INVITATION')}}">
+                                <div class="label-elem" tabindex="0">
+                                    <span class="label">Invitation envoyée</span>
+                                    <paper-tooltip>[[_getDate(item.date)]]</paper-tooltip>
+                                </div>
+                            </template>
+                            <template is="dom-if" if="{{_historiqueIs(item.type, 'ENVOI_BIODATAS')}}">
+                                <div class="label-elem" tabindex="0">
+                                    <span class="label">Biodatas reçues</span>
+                                    <paper-tooltip>[[_getDate(item.date)]]</paper-tooltip>
+                                </div>
+                            </template>
+                            <template is="dom-if" if="{{_historiqueIs(item.type, 'VALIDATION_BIODATAS')}}">
+                                <div class="label-elem" tabindex="0">
+                                    <span class="label">Biodatas validées</span>
+                                    <paper-tooltip>[[_getDate(item.date)]]</paper-tooltip>
+                                </div>
+                            </template>
+                            <template is="dom-if" if="{{_historiqueIs(item.type, 'REFUS_BIODATAS')}}">
+                                <div class="label-elem" tabindex="0">
+                                    <span class="label">Biodatas refusées</span>
+                                    <paper-tooltip>[[_getDate(item.date)]]</paper-tooltip>
+                                </div>
+                            </template>
+                            <template is="dom-if" if="{{_historiqueIs(item.type, 'TRANSFERT_AUTORITES')}}">
+                                <div class="label-elem" tabindex="0">
+                                    <span class="label">Transféré aux autorités</span>
+                                    <paper-tooltip>[[_getDate(item.date)]]</paper-tooltip>
+                                </div>
+                            </template>
+                            <template is="dom-if" if="{{_historiqueIs(item.type, 'DEMANDE_ACCESS_OK')}}">
+                                <div class="label-elem" tabindex="0">
+                                    <span class="label">Clos</span>
+                                    <paper-tooltip>[[_getDate(item.date)]]</paper-tooltip>
+                                </div>
+                            </template>
+                            <template is="dom-if" if="{{_historiqueIs(item.type, 'DEMANDE_ACCESS_KO')}}">
+                                <div class="label-elem" tabindex="0">
+                                    <span class="label">Clos</span>
+                                    <paper-tooltip>[[_getDate(item.date)]]</paper-tooltip>
+                                </div>
+                            </template>
+    </template>
+      
+  </template>
+
+  <script>
+  Polymer({
+    is: 'historique-dossier',
+    properties: {
+      historique: Object
+    },
+    _historiqueIs: function(typeHistorique, type) {
+          return typeHistorique === type;
+    },
+    _getDate: function(timestamp) {
+        return moment(timestamp, 'x').format('DD/MM/YYYY');
+    }
+      
+  });
+  </script>
+
+</dom-module>

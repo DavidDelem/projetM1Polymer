@@ -1,0 +1,127 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../shared-styles.html">
+<link rel="import" href="../../app-data.html">
+
+<script src="../../../bower_components/moment/moment.js"></script>
+<script src="../../../bower_components/moment/locale/fr.js"></script>
+
+<dom-module id="configuration-projet">
+  <template>
+    <style include="shared-styles">
+        .card {
+            margin: 7px 0 24px 0;
+            width: calc(100% + 1px);
+        }
+        
+        .paper-fab-section {
+            position: absolute;
+            bottom: 5px;
+            right: 40px;
+        }
+        
+        .paper-fab-section paper-fab {
+            display: inline-block;
+            margin-right: 15px;
+        }
+    </style>
+      
+    <iron-meta id="meta"></iron-meta>
+    <iron-localstorage name="data-storage" value="{{storedData}}"></iron-localstorage>
+    <app-data key="storedData" data="{{storedData}}"></app-data> 
+      
+    <iron-ajax 
+        id="toggleActivationDelegationRequest" 
+        method="PUT" 
+        content-type="application/x-www-form-urlencoded"   
+        headers="{{_computeHeaders(storedData.token)}}"
+        url="{{serverUrl}}/administration/projets/{{projet}}/delegation"
+        on-response="_handleToggleActivationDelegationResponse"
+        on-error="_handleToggleActivationDelegationError"></iron-ajax>
+      
+    <iron-ajax 
+        id="toggleActivationRappelsRequest" 
+        method="PUT" 
+        content-type="application/x-www-form-urlencoded"   
+        headers="{{_computeHeaders(storedData.token)}}"
+        url="{{serverUrl}}/administration/projets/{{projet}}/rappels"
+        on-response="_handleToggleActivationRappelsResponse"
+        on-error="_handleToggleActivationRappelsError"></iron-ajax>
+      
+    <div class="row">
+            <div class="col-md-12">
+                <div class="card"> 
+                    <p><iron-icon icon="icons:description"></iron-icon> Profil: [[projetDetail.nomProfil]]</p>
+                    <p><iron-icon icon="icons:event"></iron-icon> Date de création: [[_getDate(projetDetail.dateCreation)]]</p>
+                    <p><iron-icon icon="icons:date-range"></iron-icon> Date limite: [[_getDate(projetDetail.dateLimite)]]</p>
+                    <div class="paper-fab-section">
+                        <paper-fab class="paper-fab" icon="icons:create" on-tap="_openModificationProjetModal"></paper-fab>
+                        <paper-fab class="paper-fab" icon="icons:delete" on-tap="_openSuppressionProjetModal"></paper-fab>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="card">
+                    <p>Rappels automatisés</p>
+                    <paper-toggle-button checked="{{projetDetail.rappels}}" on-tap="_toggleActivationRappels">Activer les rappels automatisés</paper-toggle-button>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="card">
+                    <p>Délégation d'invitation</p>
+                    <paper-toggle-button checked="{{projetDetail.delegation}}" on-tap="_toggleActivationDelegation">Autoriser la délégation d'invitation</paper-toggle-button>
+                </div>
+            </div>
+    </div>
+      
+  </template>
+
+  <script>
+  Polymer({
+    is: 'configuration-projet',
+    properties: {
+        projet: String,
+        projetDetail: Object,
+        serverUrl: String,
+        baseUrl: String
+    },
+    ready: function () {
+        this.serverUrl = this.$.meta.byKey("server-url");
+        this.baseUrl = this.$.meta.byKey("base-url");
+    },
+    _computeHeaders: function(token) {
+        return {"Authorization": "JWT " + token };
+    },
+    _openSuppressionProjetModal: function(event) {
+        this.fire('iron-signal', {name: 'open-suppression-projet-modal', data: {projet: this.projetDetail}});
+    },
+    _openModificationProjetModal: function(event) {
+        this.fire('iron-signal', {name: 'open-modification-projet-modal', data: {projet: this.projetDetail}});
+    },
+    _toggleActivationRappels: function() {
+        this.$.toggleActivationRappelsRequest.body = { rappels: this.projetDetail.rappels };
+        this.$.toggleActivationRappelsRequest.generateRequest();
+    },
+    _handleToggleActivationRappelsResponse: function(response) {
+        this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Modification des rappels enregistrée'}});
+    },
+    _handleToggleActivationRappelsError: function(error) {
+        this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Echec lors de la modification des rappels'}});
+    },
+    _toggleActivationDelegation: function() {
+        this.$.toggleActivationDelegationRequest.body = { delegation: this.projetDetail.delegation };
+        this.$.toggleActivationDelegationRequest.generateRequest();
+    },
+    _handleToggleActivationDelegationResponse: function(response) {
+        this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Modification de la délégation enregistrée'}});
+    },
+    _handleToggleActivationDelegationError: function(error) {
+        this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Echec lors de la modification de la délégation'}});
+    },
+    _getDate: function(timestamp) {
+        return moment(timestamp, 'x').format('DD/MM/YYYY');
+    }
+      
+  });
+  </script>
+
+</dom-module>

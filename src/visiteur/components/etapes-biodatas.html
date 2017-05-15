@@ -1,0 +1,117 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../shared-styles.html">
+<link rel="import" href="../../app-data.html">
+
+<dom-module id="etapes-biodatas">
+  <template>
+    <style include="shared-styles">
+.steps {
+          text-align: center;
+          color: #555555;
+      }
+        
+      .step {
+            display: inline-block;
+            text-align: center;
+            margin: 15px;
+          width: 80px;
+          position: relative;
+      }
+        .step:hover {
+            cursor: pointer;
+        }
+        
+        .step:hover .step-element::before  {
+            transform: scale(1.4);
+            transition: all 0.08s ease;
+
+        }
+        
+        .step-selected > .step-element {
+            opacity: 1 !important;
+            transition: all 0.2s ease;
+        }
+        .step-element {
+            margin-top: 10px;
+            opacity: 0.3;
+            color: #555555;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+      .step-element::before {
+           content: "";
+           display: block;
+           background-color: #555555;
+           border-radius: 25%;
+	       width: 8px;
+	       height: 8px;
+           position: relative;
+           margin: auto;
+           margin-bottom: 10px;
+           opacity: inherit;
+          transform: scale(1);
+          
+            transition: all 0.08s ease;
+      }
+        
+        .step:not(:first-child) .step-element::after {
+           content: "";
+           display: block;
+           background-color: #555555;
+	       width: 97px;
+	       height: 2px;
+           position: absolute;
+           right: calc(50% + 9px);
+           top: 3px;
+           opacity: inherit;
+      }
+        
+    </style>
+
+    <div class="steps" >
+                        <div class$="step {{_getClassesStep(current, steps, 'accueil')}}" on-tap="_showStep" data-args="accueil">
+                            <span on-tap="_showStep" data-args="accueil" class="step-element">Accueil</span>
+                        </div>
+                        <div class$="step {{_getClassesStep(current, steps, 'identite')}}" on-tap="_showStep" data-args="identite">
+                            <span on-tap="_showStep" data-args="identite" class="step-element">Identité</span>
+                        </div>
+                        <div class$="step {{_getClassesStep(current, steps, 'fichiers')}}" on-tap="_showStep" data-args="fichiers">
+                            <span on-tap="_showStep" data-args="fichiers" class="step-element">Documents</span>
+                        </div>
+                        <div class$="step {{_getClassesStep(current, steps, 'vehicule')}}" on-tap="_showStep" data-args="vehicule">
+                            <span on-tap="_showStep" data-args="vehicule" class="step-element">Véhicule</span>
+                        </div>
+                        <div class$="step {{_getClassesStep(current, steps, 'envoi')}}" on-tap="_showStep" data-args="envoi">
+                            <span on-tap="_showStep" data-args="envoi" class="step-element">Envoi</span>
+                        </div>
+  </div>
+      
+  </template>
+
+  <script>
+    Polymer({
+      is: 'etapes-biodatas',
+      properties: {
+        current: {
+            type: String,
+            notify: true
+        },
+        steps: Object
+      },
+      _showStep: function(event) {
+          if(this.steps[this.steps.indexOf(event.target.getAttribute('data-args'))]) {
+              this.current = event.target.getAttribute('data-args');
+          }
+      },
+      _getClassesStep: function(current, steps, step) {
+        if(steps.indexOf(current) >= steps.indexOf(step)) {
+            return 'step-selected';
+        } else {
+            return 'step-unselected';
+        }
+      }
+    });
+  </script>
+</dom-module>

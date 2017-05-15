@@ -63,17 +63,30 @@
                 <paper-item on-tap="_openRefusBiodatasModal"><iron-icon icon="icons:thumb-down"></iron-icon><span>Biodatas refusées</span></paper-item>
                 <paper-item on-tap="_validerBiodatas"><iron-icon icon="icons:thumb-up"></iron-icon><span>Biodatas validées</span></paper-item>
 <!--                <paper-item><iron-icon icon="icons:thumb-up"></iron-icon><span>Biodatas validées et transférées aux autorités</span></paper-item>-->
+                <paper-item on-tap="_retour"><iron-icon icon="icons:undo"></iron-icon><span>Retour à l'état précédent</span></paper-item>
             </template>
             <template is="dom-if"  if="{{_lastHistoriqueIs(invitation, 'VALIDATION_BIODATAS')}}">
                 <paper-item on-tap="_transfererAuxAutorites"><iron-icon icon="communication:mail-outline"></iron-icon><span>Transfert aux autorités</span></paper-item>
+                <paper-item on-tap="_retour"><iron-icon icon="icons:undo"></iron-icon><span>Retour à l'état précédent</span></paper-item>
+            </template>
+            <template is="dom-if"  if="{{_lastHistoriqueIs(invitation, 'REFUS_BIODATAS')}}">
+                <paper-item on-tap="_retour"><iron-icon icon="icons:undo"></iron-icon><span>Retour à l'état précédent</span></paper-item>
             </template>
             <template is="dom-if"  if="{{_lastHistoriqueIs(invitation, 'TRANSFERT_AUTORITES')}}">
                 <paper-item on-tap="_accepterDemandeAccess"><iron-icon icon="icons:check"></iron-icon><span>Demande d'accès acceptée</span></paper-item>
                 <paper-item on-tap="_refuserDemandeAccess"><iron-icon icon="icons:clear"></iron-icon><span>Demande d'accès refusée</span></paper-item>
+                   
+                <paper-item on-tap="_retour"><iron-icon icon="icons:undo"></iron-icon><span>Retour à l'état précédent</span></paper-item>
             </template>
-            <paper-item><iron-icon icon="icons:cached"></iron-icon><span>Réinitialiser l'invitation</span></paper-item>
+            <template is="dom-if"  if="{{_lastHistoriqueIs(invitation, 'DEMANDE_ACCESS_OK')}}">
+                <paper-item on-tap="_retour"><iron-icon icon="icons:undo"></iron-icon><span>Retour à l'état précédent</span></paper-item>
+            </template>
+            <template is="dom-if"  if="{{_lastHistoriqueIs(invitation, 'DEMANDE_ACCESS_KO')}}">
+                <paper-item on-tap="_retour"><iron-icon icon="icons:undo"></iron-icon><span>Retour à l'état précédent</span></paper-item>
+            </template>
+<!--            <paper-item><iron-icon icon="icons:cached"></iron-icon><span>Réinitialiser l'invitation</span></paper-item>-->
+            <paper-item on-tap="_openEnvoiMessageModal"><iron-icon icon="communication:chat"></iron-icon><span>Envoyer un message</span></paper-item>
             <paper-item on-tap="_openRemoveInvitationModal"><iron-icon icon="icons:delete-forever"></iron-icon><span>Supprimer l'invitation</span></paper-item>
-             <paper-item on-tap="_retour"><iron-icon icon="icons:undo"></iron-icon><span>Retour à l'état précédent</span></paper-item>
         </paper-menu>
     </paper-menu-button>
   </template>
@@ -130,6 +143,9 @@
     },
     _openRemoveInvitationModal: function(event) {
         this.fire('iron-signal', {name: 'open-suppression-invitation-modal', data: {projet: this.projet, invitation: this.invitation}});
+    },
+    _openEnvoiMessageModal: function(event) {
+        this.fire('iron-signal', {name: 'open-action-envoi-message-modal', data: {projet: this.projet, invitation: this.invitation}});
     }
   });
   </script>
