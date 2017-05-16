@@ -231,10 +231,10 @@
         this.$.projetRequest.generateRequest();
       },
       _handleInvitationsError: function(event) {
-        this.fire('connexion-administrateur-denied-event', {});
+       // this.fire('connexion-administrateur-denied-event', {});
       },
       _handleProjetError: function(event) {
-        this.fire('connexion-administrateur-denied-event', {});
+       // this.fire('connexion-administrateur-denied-event', {});
       },
       _openAddInvitationModal: function(event) {
         this.fire('iron-signal', {name: 'open-ajout-invitation-modal', data: {projet: this.projetDetail}});
