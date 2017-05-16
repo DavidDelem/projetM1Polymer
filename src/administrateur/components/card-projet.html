@@ -9,16 +9,16 @@
   <template>
     <style include="shared-styles">
         
-        .card-projet {
+        .projet {
             width: 100%;
             margin-bottom: 20px;
             transition: all 0.2s ease;
         }
-        .card-projet:hover {
+        .projet:hover {
             transform: scale(1.02);
         }
         
-        .card-projet a {
+        .projet a {
             text-decoration: none;
             color: #444;
         }
@@ -26,7 +26,6 @@
         .texte-light {
             color: var(--paper-grey-600);
             padding-top: 10px;
-        
         }
         
         .project-title {
@@ -83,11 +82,11 @@
       
     <iron-meta id="meta"></iron-meta>
       
-    <paper-card class$="card-projet {{_getEtatProjet(projet)}}">
+    <paper-card class$="projet {{_getEtatProjet(projet)}}">
         <template is="dom-if" if="{{_showBadgeDateLimite(projet.dateLimite)}}">
             <span class="badge badge-datelimite">Date limite atteinte</span>
         </template>
-        <a href="{{baseUrl}}/section-administrateur/page-invitations-detail/{{projet.identifiant}}">                                                                              
+        <a href="{{baseUrl}}/section-administrateur/page-invitations-detail/{{projet.identifiant}}">                                                                
                 <div class="card-content">
                     <span class="project-title">[[projet.nom]]</span>
                     <div class="row texte-light">
