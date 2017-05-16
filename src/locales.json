@@ -1,6 +1,6 @@
 {
   "en": {
-    "section-visiteur": "My documents",
+    "section-visiteur": "My history",
     "header2": "Send of biodata",
     "header3": "Delegate invitation",
     "accueil-biodatas": "Write your biodata",
@@ -41,7 +41,9 @@
     "date-limite-detail": "The sending of biodatas is no longer possible, but the biodata already sent will be processed",
     "delegation-titre-section-1": "Information",
     "delegation-detail-section-1": "Delegating your invitation allows you to send an invitation to people coming in the same project. You can also cancel a delegation.",
-    "delegation-desactivee": "Invitation delegation is disabled by administrators for this project"
+    "delegation-desactivee": "Invitation delegation is disabled by administrators for this project",
+    "delegation-titre-section-2": "Invitations sent by the administrator",
+    "delegation-titre-section-3": "Invitations delegated by you or another visitor"
   },
   "fr": {
     "section-visiteur": "Mon dossier",
@@ -86,7 +88,7 @@
     "delegation-titre-section-1": "Informations",
     "delegation-detail-section-1": "Déléguer votre invitation vous permet d'envoyer une invitation aux personnes venant dans le cadre du même projet. Vous pouvez également annuler une délégation.",
     "delegation-desactivee": "La délégation d'invitation est désactivée par les administrateurs pour ce projet",
-    "delegation-titre-section-2": "Invitations sent by the administrator",
-    "delegation-titre-section-3": "Invitations delegated by you or another visitor"
+    "delegation-titre-section-2": "Invitations envoyées par les administrateurs",
+    "delegation-titre-section-3": "Invitations déléguées par vous ou un autre visiteur"
   }
 }

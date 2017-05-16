@@ -27,7 +27,6 @@
         }
         
     </style>
-    <iron-meta id="meta"></iron-meta>
       <div class="informations">
         <div class="champ-obligatoire" >
             <div tabindex="0">
@@ -64,13 +63,8 @@
           value: 'fr'
         }
       },
-      ready: function() {
-        this.serverUrl = this.$.meta.byKey("server-url");
-        this.language = this.$.meta.byKey("langue") || "fr";
-      },
       attached: function() {
         this.loadResources(this.resolveUrl('../../locales.json'));
-//        console.log(this.resolveUrl('locales.json'));
       },
       _hasErreur: function(nom, erreurs) {
           for(i=0; i<erreurs.length; i++) {

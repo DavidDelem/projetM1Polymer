@@ -176,11 +176,11 @@
     <template is="dom-if" if="{{_afficherFormulaire(biodatasOk, biodatasEnvoyees)}}">
             <div class="col-md-8">
                 <div class="col-md-12">
-                    <etapes-biodatas steps={{steps}} current={{currentStep}}></etapes-biodatas>
+                    <etapes-biodatas steps={{steps}} current={{currentStep}} language={{storedData.language}}></etapes-biodatas>
                 </div>
                 <div class="col-lg-12" hidden$="{{_hideStep('accueil', currentStep)}}">
                     <div class="card">
-                        <accueil-biodatas></accueil-biodatas>
+                        <accueil-biodatas language="{{storedData.language}}"></accueil-biodatas>
                     </div>
                 </div>
                 <div class="col-lg-12" hidden$="{{_hideStep('identite', currentStep)}}">
@@ -203,7 +203,7 @@
                                                         <input is="iron-input" id="prenom" type="text" bind-value="{{item.saisie.prenom}}">
                                                     </paper-input-container>
                                                 </div>
-                                                <informations-champ obligatoire="[[item.obligatoire]]" nom="[[item.nom]]" erreurs="[[erreurs]]"></informations-champ>
+                                                <informations-champ obligatoire="[[item.obligatoire]]" nom="[[item.nom]]" erreurs="[[erreurs]]" language="{{storedData.language}}"></informations-champ>
                                             </div>
                                         </template>
                                         <template is="dom-if" if="{{_computeHidden(item, 'texte_date')}}">
@@ -211,7 +211,7 @@
                                                 <div class="col-md-12">
                                                     <vaadin-date-picker i18n="{{dateFormat}}" min="1900-01-01" max="{{dateMax}}" value="{{item.saisie.date}}" label="Date de naissance"></vaadin-date-picker>
                                                 </div>
-                                                <informations-champ obligatoire="[[item.obligatoire]]" nom="[[item.nom]]" erreurs="[[erreurs]]"></informations-champ>
+                                                <informations-champ obligatoire="[[item.obligatoire]]" nom="[[item.nom]]" erreurs="[[erreurs]]" language="{{storedData.language}}"></informations-champ>
                                             </div>
                                         </template>
 
@@ -258,7 +258,7 @@
                                                 <div class="col-md-7">
                                                     <paper-countries country="[[country]]" value="{{item.saisie.pays}}" max-suggestions="3" auto-validate="true" label="Pays" placeholder="Saisir le pays"></paper-countries>
                                                 </div>
-                                                <informations-champ obligatoire="[[item.obligatoire]]" nom="[[item.nom]]" erreurs="[[erreurs]]"></informations-champ>
+                                                <informations-champ obligatoire="[[item.obligatoire]]" nom="[[item.nom]]" erreurs="[[erreurs]]" language="{{storedData.language}}"></informations-champ>
                                             </div>
                                         </template>
 
@@ -272,7 +272,7 @@
                                                         <input is="iron-input" id="telephone" bind-value="{{item.saisie.telephone}}"></input>
                                                     </paper-input-container>
                                                 </div>
-                                                <informations-champ obligatoire="[[item.obligatoire]]" nom="[[item.nom]]" erreurs="[[erreurs]]"></informations-champ>
+                                                <informations-champ obligatoire="[[item.obligatoire]]" nom="[[item.nom]]" erreurs="[[erreurs]]" language="{{storedData.language}}"></informations-champ>
                                             </div>
                                         </template>
 
@@ -285,7 +285,7 @@
                                                         <iron-autogrow-textarea class="paper-input-input" bind-value="{{item.saisie.remarques}}"></iron-autogrow-textarea>
                                                     </paper-input-container>
                                                 </div>
-                                                <informations-champ obligatoire="[[item.obligatoire]]" nom="{{item.nom}}" erreurs="{{erreurs}}"></informations-champ>
+                                                <informations-champ obligatoire="[[item.obligatoire]]" nom="{{item.nom}}" erreurs="{{erreurs}}" language="{{storedData.language}}"></informations-champ>
                                             </div>
                                         </template>
                                     </template>
@@ -308,7 +308,7 @@
                                 <div class="row row-champ">
                                     <div class="col-md-12">
                                         <paper-autocomplete label="Nationalité" source="{{nationalites}}" value="{{selectedNationalite}}"></paper-autocomplete>
-                                        <informations-champ obligatoire="true" nom="" erreurs="[[erreurs]]"></informations-champ>
+                                        <informations-champ obligatoire="true" nom="" erreurs="[[erreurs]]" language="{{storedData.language}}"></informations-champ>
                                     </div>
                                 </div>
                                 <template is="dom-repeat" items="{{champs}}">
@@ -325,7 +325,7 @@
                                                         <input class="file-upload" id="fichier[[item.identifiant]]" type="file" on-change="_addFile">
                                                     </div>
                                                 </div>
-                                                <informations-champ obligatoire="[[item.obligatoire]]" nom="[[item.nom]]" erreurs="[[erreurs]]"></informations-champ>
+                                                <informations-champ obligatoire="[[item.obligatoire]]" nom="[[item.nom]]" erreurs="[[erreurs]]" language="{{storedData.language}}"></informations-champ>
                                             </div>
                                         </template>
                                     </template>
@@ -354,7 +354,7 @@
                                                             <input class="file-upload" id="fichier[[item.identifiant]]" type="file" on-change="_addFile">
                                                         </div>
                                                     </div>
-                                                    <informations-champ obligatoire="[[item.obligatoire]]" nom="[[item.nom]]" erreurs="[[erreurs]]"></informations-champ>
+                                                    <informations-champ obligatoire="[[item.obligatoire]]" nom="[[item.nom]]" erreurs="[[erreurs]]" language="{{storedData.language}}"></informations-champ>
                                                 </div>
                                             </template>
                                             <template is="dom-if" if="{{_computeHidden(item, 'vehicule_texte')}}">
@@ -365,7 +365,7 @@
                                                             <input is="iron-input" id="username" type="text" bind-value="{{item.saisie.immatriculation}}">
                                                         </paper-input-container>
                                                     </div>
-                                                    <informations-champ obligatoire="[[item.obligatoire]]" nom="[[item.nom]]" erreurs="[[erreurs]]"></informations-champ>
+                                                    <informations-champ obligatoire="[[item.obligatoire]]" nom="[[item.nom]]" erreurs="[[erreurs]]" language="{{storedData.language}}"></informations-champ>
                                                 </div>
                                             </template>
                                         </template>                   

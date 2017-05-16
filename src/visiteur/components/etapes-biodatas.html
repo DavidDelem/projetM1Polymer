@@ -107,12 +107,8 @@
         },
         steps: Object
       },
-      ready: function() {
-        this.language = this.$.meta.byKey("langue") || "fr";
-      },
       attached: function() {
         this.loadResources(this.resolveUrl('../../locales.json'));
-//        console.log(this.resolveUrl('locales.json'));
       },
       _showStep: function(event) {
           if(this.steps[this.steps.indexOf(event.target.getAttribute('data-args'))]) {

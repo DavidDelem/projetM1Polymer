@@ -129,7 +129,6 @@
       },
       ready: function () {
         this.serverUrl = this.$.meta.byKey("server-url");
-        this.language = this.$.meta.byKey("langue") || 'fr';
       },
       attached: function() {
         this.loadResources(this.resolveUrl('../locales.json'));
@@ -143,6 +142,7 @@
         return {"Authorization": "JWT " + storedData.token };
       },
       _generateRequests: function() {
+          this.language = this.storedData.language || 'fr';
           this.$.invitationsRequest.generateRequest();
           this.$.delegationRequest.generateRequest();
       },

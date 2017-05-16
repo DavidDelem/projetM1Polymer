@@ -265,7 +265,6 @@
       },
       ready: function () {
         this.serverUrl = this.$.meta.byKey("server-url");
-        this.language = this.$.meta.byKey("langue") || 'fr';
       },
       attached: function() {
         this.loadResources(this.resolveUrl('../locales.json'));
@@ -278,7 +277,8 @@
       _computeHeaders: function(token) {
         return {"Authorization": "JWT " + token };
       },
-      _generateRequests: function () {
+      _generateRequests: function () {  
+        this.language = this.storedData.language || 'fr';
         this.$.historiqueRequest.generateRequest();
         this.$.dateLimiteRequest.generateRequest();
       },

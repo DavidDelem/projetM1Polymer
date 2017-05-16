@@ -55,7 +55,7 @@
     </style>
       
       <iron-meta id="meta"></iron-meta>
-      <iron-localstorage name="data-storage" value="{{storedData}}"></iron-localstorage>
+      <iron-localstorage name="data-storage" value="{{storedData}}" on-iron-localstorage-load="_selectLangue"></iron-localstorage>
       <iron-signals on-iron-signal-connexion-visiteur-denied="_handleConnexionVisiteurDeniedEvent"></iron-signals>  
       
       <app-route
@@ -154,6 +154,9 @@
       },
       _toggleMenu: function() {
           this.$.drawer.opened = !this.$.drawer.opened;
+      },
+      _selectLangue: function() {
+        this.language = this.storedData.language || 'fr';
       }
     });
   </script>
