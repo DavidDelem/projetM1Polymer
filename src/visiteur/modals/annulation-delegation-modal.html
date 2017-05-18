@@ -1,6 +1,7 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../shared-styles.html">
 <link rel="import" href="../../app-data.html">
+<link rel="import" href="../../../bower_components/app-localize-behavior/app-localize-behavior.html">
 
 <dom-module id="annulation-delegation-modal">
   <template>
@@ -25,11 +26,11 @@
     on-error="_handleRemoveDelegationError"></iron-ajax>
       
     <paper-dialog id="dialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
-        <h2>Annulation de la délégation</h2>
-        <p>Voulez-vous vraiment supprimer définitivement l'invitation déléguée à [[invitation.email]]</p>
+        <h2>{{localize('annulation-delegation-modal')}}</h2>
+        <p>{{localize('header48')}} [[invitation.email]]</p>
         <div class="buttons">
-            <paper-button dialog-dismiss>Annuler</paper-button>
-            <paper-button autofocus on-tap="_removeDelegation">Valider</paper-button>
+            <paper-button dialog-dismiss>{{localize('header49')}}</paper-button>
+            <paper-button autofocus on-tap="_removeDelegation">{{localize('header50')}}</paper-button>
         </div>
     </paper-dialog>
       
@@ -38,12 +39,21 @@
   <script>
     Polymer({
       is: 'annulation-delegation-modal',
+      behaviors: [
+        Polymer.AppLocalizeBehavior
+      ],
       properties: {
         invitattion: Object,
+        language: {
+          value: 'en'
+        },
         serverUrl: String
       },
       ready: function () {
         this.serverUrl = this.$.meta.byKey("server-url");
+      },
+      attached: function() {
+        this.loadResources(this.resolveUrl('../../locales.json'));
       },
       _computeHeaders: function(storedData) {
         return {"Authorization": "JWT " + storedData.token };

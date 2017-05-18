@@ -7,6 +7,7 @@
 <link rel="import" href="./components/etapes-biodatas.html">
 <link rel="import" href="./components/accueil-biodatas.html">
 <link rel="import" href="./components/confirmation-biodatas.html">
+<link rel="import" href="../../../bower_components/app-localize-behavior/app-localize-behavior.html">
 
 <script src="../../bower_components/moment/moment.js"></script>
 <script src="../../bower_components/moment/locale/fr.js"></script>
@@ -193,13 +194,13 @@
                                             <div class="row row-champ nomprenom">
                                                 <div class="col-md-6">
                                                     <paper-input-container>
-                                                        <label>Nom</label>
+                                                        <label>{{localize('page-biodatas')}}</label>
                                                         <input is="iron-input" id="nom" type="text" bind-value="{{item.saisie.nom}}">
                                                     </paper-input-container>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <paper-input-container>
-                                                        <label>Prénom</label>
+                                                        <label>{{localize('header53')}}</label>
                                                         <input is="iron-input" id="prenom" type="text" bind-value="{{item.saisie.prenom}}">
                                                     </paper-input-container>
                                                 </div>
@@ -224,19 +225,19 @@
                                                 </div>
                                                 <div class="col-md-3"> 
                                                     <paper-input-container>
-                                                        <label>Numéro</label>
+                                                        <label>{{localize('header54')}}</label>
                                                         <input is="iron-input" id="username" type="number" bind-value="{{item.saisie.numero}}">
                                                     </paper-input-container>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <paper-input-container>
-                                                        <label>Rue</label>
+                                                        <label>{{localize('header55')}}</label>
                                                         <input is="iron-input" id="username" type="text" bind-value="{{item.saisie.rue}}">
                                                     </paper-input-container>
                                                 </div>
                                                 <div class="col-md-3">
                                                     <paper-input-container>
-                                                        <label>Code postal</label>
+                                                        <label>{{localize('header56')}}</label>
                                                         <input is="iron-input" id="codepostal" type="number" bind-value="{{item.saisie.codePostal}}">
                                                     </paper-input-container>
 <!--                                                    <gold-zip-input label="Code postal" value="{{item.saisie.codepostal}}"></gold-zip-input>-->
@@ -244,14 +245,14 @@
                                                 <!--*****************-->
                                                 <div class="col-md-12">
                                                     <paper-input-container>
-                                                        <label>Ligne adresse 2</label>
+                                                        <label>{{localize('header57')}}</label>
                                                         <input is="iron-input" id="username" type="text" bind-value="{{item.saisie.autreReponse}}">
                                                     </paper-input-container>
                                                 </div>
                                                 <!--*****************-->
                                                 <div class="col-md-5">
                                                     <paper-input-container>
-                                                        <label>Ville</label>
+                                                        <label>{{localize('header58')}}</label>
                                                         <input is="iron-input" id="username" type="text" bind-value="{{item.saisie.ville}}">
                                                     </paper-input-container>
                                                 </div>
@@ -301,7 +302,7 @@
                                 <div class="row row-champ">
                                     <div class="col-md-12">
                                         <div class="text-center">
-                                            <p>Merci d'indiquer votre nationalité. Les documents d'identité demandés depéndent de votre nationalité.</p>
+                                            <p>{{localize('header59')}}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -317,7 +318,7 @@
                                             <div class="row row-champ row-champ-fichier">
                                                 <div class="col-md-12" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
                                                     <div class="file-upload-zone file-upload-zone-identite">
-                                                        <span class="file-upload-button"><iron-icon icon="icons:file-upload"></iron-icon> Choisir un fichier</span>
+                                                        <span class="file-upload-button"><iron-icon icon="icons:file-upload"></iron-icon>{{localize('header60')}}</span>
                                                         <label for="fichier[[item.identifiant]]">{{item.nom}}</label>
                                                         <div>
                                                             <span class="file-details">{{_getFileName(item, fichiers)}}</span>
@@ -338,9 +339,8 @@
                     <div class="card">
                         <div class="row">
                             <div class="col-md-8 col-md-offset-2 text-center">
-                                <p>Afin d'accéder au site avec votre véhicule, des informations complémentaires sont nécessaires.
-                                Passez cette étape si vous n'êtes pas le conducteur d'un véhicule.</p>
-                                <paper-toggle-button class="toggle-button-vehicule" checked="{{vehicule}}">Je serais le conducteur d'un véhicule</paper-toggle-button>
+                                <p>{{localize('header61')}}</p>
+                                <paper-toggle-button class="toggle-button-vehicule" checked="{{vehicule}}">{{localize('header62')}}</paper-toggle-button>
                             </div> 
                             <div class="col-md-8 col-md-offset-2">
                                 <template is="dom-if" if="{{vehicule}}">
@@ -349,7 +349,7 @@
                                                 <div class="row row-champ">
                                                     <div class="col-md-12" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
                                                         <div class="file-upload-zone">
-                                                            <span class="file-upload-button"><iron-icon icon="icons:file-upload"></iron-icon> Choisir un fichier</span>
+                                                            <span class="file-upload-button"><iron-icon icon="icons:file-upload"></iron-icon>{{localize('header63')}}</span>
                                                             <label for="fichier[[item.identifiant]]">{{item.nom}}</label>
                                                             <input class="file-upload" id="fichier[[item.identifiant]]" type="file" on-change="_addFile">
                                                         </div>
@@ -379,11 +379,11 @@
                         <div class="row">
                             <div class="col-md-8 col-md-offset-2">
                                 <div class="margin-top-bottom">
-                                    <paper-checkbox checked="{{confirmationValidite}}">Je confirme la validité des données saisies</paper-checkbox>
-                                    <paper-checkbox checked="{{confirmationAutorite}}">J'accepte la transmission des données aux autorités</paper-checkbox>
+                                    <paper-checkbox checked="{{confirmationValidite}}">{{localize('header64')}}</paper-checkbox>
+                                    <paper-checkbox checked="{{confirmationAutorite}}">{{localize('header65')}}</paper-checkbox>
                                 </div>
                                 <div class="text-center margin-top-bottom">
-                                    <paper-button on-tap="_sendBiodatas" hidden$="{{chargement}}" disabled$="{{_validateBiodatas(champs, confirmationValidite, confirmationAutorite)}}">Envoyer mes données</paper-button>
+                                    <paper-button on-tap="_sendBiodatas" hidden$="{{chargement}}" disabled$="{{_validateBiodatas(champs, confirmationValidite, confirmationAutorite)}}">{{localize('header66')}}</paper-button>
                                     <paper-spinner hidden$="{{!chargement}}" active={{chargement}}></paper-spinner>
                                 </div>
                             </div>
@@ -394,7 +394,7 @@
                 <paper-fab hidden$="[[!_hideStep('envoi', currentStep)]]" class="see-next" icon=":icons:chevron-right" on-tap="_showNext"></paper-fab>
             </div>
             <div class="col-md-4">
-                 <conseils-biodatas current-step="{{currentStep}}" steps="{{steps}}" hovered-item-identifiant={{hoveredItemIdentifiant}}></conseils-biodatas>
+                 <conseils-biodatas current-step="{{currentStep}}" steps="{{steps}}" hovered-item-identifiant="{{hoveredItemIdentifiant}}" language="{{storedData.language}}"></conseils-biodatas>
             </div>
       </template>
       <confirmation-biodatas biodatas-ok="[[biodatasOk]]" biodatas-envoyees="[[biodatasEnvoyees]]"></confirmation-biodatas>
@@ -403,10 +403,16 @@
   <script>
     Polymer({
       is: 'page-biodatas',
+      behaviors: [
+        Polymer.AppLocalizeBehavior
+      ],
       properties: {
         champs: {
             type: Object,
             notify: true
+        },
+        language: {
+          value: 'en'
         },
         serverUrl: String,
         nationalites: Object,
@@ -717,6 +723,9 @@
           if(this.getAttribute('class').includes('iron-selected')){
             this._generateRequests();
           }
+      },
+      attached: function() {
+        this.loadResources(this.resolveUrl('../locales.json'));
       },
       _computeHeaders: function(storedData) {
         return {"Authorization": "JWT " + storedData.token };

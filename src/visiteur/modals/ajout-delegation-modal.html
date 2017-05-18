@@ -1,6 +1,7 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../shared-styles.html">
 <link rel="import" href="../../app-data.html">
+<link rel="import" href="../../../bower_components/app-localize-behavior/app-localize-behavior.html">
 
 <dom-module id="ajout-delegation-modal">
   <template>
@@ -41,12 +42,12 @@
     </iron-ajax> 
       
     <paper-dialog id="dialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
-        <h2>Délégation de l'invitation</h2>
-        <p>Indiquez les adresses email des visiteurs à ajouter.</p>
+        <h2>{{localize('ajout-delegation-modal')}}</h2>
+        <p>{{localize('header44')}}</p>
         <template id="emails" is="dom-repeat" items="{{emailsList}}">
             <div class="email-element">
                 <paper-input-container>
-                    <label>Email</label>
+                    <label>{{localize('header45')}}</label>
                     <input is="iron-input" type="email" on-input="_onEmailChanged" bind-value="{{item.value}}">
                 </paper-input-container>
                 <span class="paper-input-delete-button">
@@ -55,8 +56,8 @@
             </div>
         </template>
         <div class="buttons">
-            <paper-button dialog-dismiss>Annuler</paper-button>
-            <paper-button autofocus on-tap="_addInvitation">Valider</paper-button>
+            <paper-button dialog-dismiss>{{localize('header46')}}</paper-button>
+            <paper-button autofocus on-tap="_addInvitation">{{localize('header47')}}</paper-button>
         </div>
     </paper-dialog>
       
@@ -65,16 +66,25 @@
   <script>
     Polymer({
       is: 'ajout-delegation-modal',
+      behaviors: [
+        Polymer.AppLocalizeBehavior
+      ],
       properties: {
         emailsList: {
             type: Object,
             value: [{value: ''}],
             notify: true
         },
+        language: {
+          value: 'en'
+        },
         serverUrl: String
       },
       ready: function () {
         this.serverUrl = this.$.meta.byKey("server-url");
+      },
+      attached: function() {
+        this.loadResources(this.resolveUrl('../../locales.json'));
       },
       _computeHeaders: function(storedData) {
         return {"Authorization": "JWT " + storedData.token };
