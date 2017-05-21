@@ -1,5 +1,9 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../shared-styles.html">
+<link rel="import" href="../components/date-format.html">
+
+<script src="../../../bower_components/moment/moment.js"></script>
+<script src="../../../bower_components/moment/locale/fr.js"></script>
 
 <dom-module id="choix-periode-modal">
   <template>
@@ -10,8 +14,9 @@
       
     <paper-dialog id="dialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
         <h2>Période personnalisée</h2>
-        <vaadin-date-picker value="{{dateDebut}}" label="Date de début"></vaadin-date-picker>
-        <vaadin-date-picker value="{{dateFin}}" label="Date de fin"></vaadin-date-picker>
+        <date-format date-format="{{dateFormat}}"></date-format>
+        <vaadin-date-picker i18n="{{dateFormat}}" value="{{dateDebut}}" label="Date de début"></vaadin-date-picker>
+        <vaadin-date-picker i18n="{{dateFormat}}" value="{{dateFin}}" label="Date de fin"></vaadin-date-picker>
         <div class="buttons">
             <paper-button dialog-dismiss>Annuler</paper-button>
             <paper-button autofocus on-tap="_choisirPeriode">

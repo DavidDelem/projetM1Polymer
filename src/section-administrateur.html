@@ -70,17 +70,17 @@
       <iron-localstorage name="data-storage" value="{{storedData}}"></iron-localstorage>
       <app-data key="storedData" data="{{storedData}}"></app-data>
       <app-route
-    route="{{route}}"
-    pattern="/:sub_page/:p2"
-    data="{{routeData}}"
-    tail={{tail}}></app-route>
-          
+        route="{{route}}"
+        pattern="/:sub_page/:p2"
+        data="{{routeData}}"
+        tail={{tail}}></app-route>
+
       <!-- Main content -->
       <app-header-layout fullbleed has-scrolling-region>
 
         <app-header condenses reveals fixed full effects="waterfall">
           <app-toolbar>
-            <paper-icon-button icon="my-icons:menu" on-tap="_toggleMenu" drawer-toggle></paper-icon-button>
+            <paper-icon-button icon="icons:menu" on-tap="_toggleMenu" drawer-toggle></paper-icon-button>
             <div main-title>Administration des biodatas</div>
             <a href="{{baseUrl}}/public/page-connexion-administrateur/">
                 <paper-icon-button icon="icons:power-settings-new"></paper-icon-button>
@@ -112,7 +112,6 @@
               <page-profils name="page-profils"></page-profils>
               <page-rappels name="page-rappels"></page-rappels>
               <page-administrateurs name="page-administrateurs"></page-administrateurs>
-              <view-404 name="view404"></view-404>
             </iron-pages>
                
         </app-drawer-layout>
@@ -167,22 +166,19 @@
         'connexion-administrateur-denied-event': '_handleConnexionAdministrateurDeniedEvent',
       },
       _handleConnexionAdministrateurDeniedEvent: function(event) {
-        this.storedData = null;
         this._disconnect();
       },
-//      _disconnect: function() {
-//          page.redirect('/#/section-public/page-connexion-administrateur'); 
-//      },
+      _disconnect: function() {
+          //page.redirect('/#/section-public/page-connexion-administrateur'); 
+          window.location.href = this.baseUrl + '/public/page-connexion-administrateur';
+      },
       _routePageChanged: function(page) {
-        console.log(this.routeData);
         this.page = page || 'page-actualite';
         if (!this.$.drawer.persistent) {
           this.$.drawer.close();
         }
       },
       _pageChanged: function(page) {
-        // Load page import on demand. Show 404 page if fails
-          console.log(this.routeData);
         var resolvedPageUrl = this.resolveUrl('administrateur/' + page + '.html');
         this.importHref(resolvedPageUrl, null, this._showPage404, true);  
       },

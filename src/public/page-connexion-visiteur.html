@@ -70,7 +70,7 @@
     <div class="row">
         <div class="col-sm-4 col-sm-offset-4">
             <div class="card card-logo">
-                <img class="logo-connexion" src="http://192.168.224.212/projetbiodata/images/logo.png">
+                <img class="logo-connexion" src="[[baseUrl]]/images/logo.png">
             </div>
             <div class="card card-connexion">
                 <div class="card-connexion-header">
@@ -160,7 +160,7 @@
         this.$.toast.open();
       },
       _openRecuperationIdentifiantsModal: function(event) {
-            this.fire('iron-signal', {name: 'open-recuperation-identifiants-modal', data: {}});
+        this.fire('iron-signal', {name: 'open-recuperation-identifiants-modal', data: {}});
       }
     });
   </script>

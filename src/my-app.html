@@ -59,32 +59,31 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/google-map/google-map-marker.html">
 <link rel="import" href="../bower_components/paper-autocomplete/paper-autocomplete.html">
 <link rel="import" href="../bower_components/paper-spiner/paper-spinner.html">
-<link rel="import" href="my-icons.html">
 
 <dom-module id="my-app">
   <template>
-    <app-location route="{{route}}"></app-location>
+      
+    <app-location route="{{route}}" use-hash-as-path></app-location>
     <app-route
         route="{{route}}"
         pattern="/:page"
         data="{{routeData}}"
         tail="{{subroute}}"></app-route>
 
-        <iron-pages
-            selected="[[page]]"
-            attr-for-selected="name"
-            fallback-selection="view404"
-            role="main">
-          <section-administrateur name="administrateur" route="{{subroute}}"></section-administrateur>
-          <section-visiteur name="visiteur" route="{{subroute}}"></section-visiteur>
-          <section-public name="public" route="{{subroute}}"></section-public>
-        </iron-pages>
+    <iron-pages
+        selected="[[page]]"
+        attr-for-selected="name"
+        fallback-selection="public"
+        role="main">
+        <section-administrateur name="administrateur" route="{{subroute}}"></section-administrateur>
+        <section-visiteur name="visiteur" route="{{subroute}}"></section-visiteur>
+        <section-public name="public" route="{{subroute}}"></section-public>
+    </iron-pages>
       
-      <iron-meta key="nom-domaine" value="http://localhost:8080"></iron-meta>
-      <iron-meta key="base-url" value="http://localhost:8080"></iron-meta>
-      <iron-meta key="langue" value="fr"></iron-meta>
-      <!--<iron-meta key="base-url" value="/the/path/if/the/apps/is/in/sub/directory/#"></iron-meta>-->
-      <iron-meta key="server-url" value="http://localhost:8088"></iron-meta>
+    <iron-meta key="nom-domaine" value="https://biodata.seatestbase.com"></iron-meta>
+    <iron-meta key="base-url" value="/#"></iron-meta>
+    <iron-meta key="langue" value="fr"></iron-meta>
+    <iron-meta key="server-url" value="http://localhost:8088"></iron-meta>
   </template>
 
   <script>      
@@ -98,24 +97,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           observer: '_pageChanged',
         }
       },
-
       observers: [
         '_routePageChanged(routeData.page)',
       ],
       _routePageChanged: function(page) {
-        this.page = page || 'view1';
+          console.log(page);
+            this.page = page || 'public';
       },
       _pageChanged: function(page) {
-        // Load page import on demand. Show 404 page if fails
-          console.log(page);
         var resolvedPageUrl = this.resolveUrl('section-' + page + '.html');
         this.importHref(resolvedPageUrl, null, this._showPage404, true);
-          
-        console.log(this.importHref(resolvedPageUrl, null, this._showPage404, true));
-          
       },
       _showPage404: function() {
-        this.page = 'view404';
+        this.page = 'public';
       }
     });
   </script>

@@ -6,18 +6,19 @@
 <dom-module id="etapes-biodatas">
   <template>
     <style include="shared-styles">
-.steps {
+      .steps {
           text-align: center;
           color: #555555;
-      }
+          margin-top: 25px;
+       }
         
-      .step {
+       .step {
             display: inline-block;
             text-align: center;
             margin: 15px;
-          width: 80px;
-          position: relative;
-      }
+            width: 80px;
+            position: relative;
+       }
         .step:hover {
             cursor: pointer;
         }
@@ -32,6 +33,7 @@
             opacity: 1 !important;
             transition: all 0.2s ease;
         }
+        
         .step-element {
             margin-top: 10px;
             opacity: 0.3;
@@ -41,7 +43,7 @@
             transition: all 0.2s ease;
         }
         
-      .step-element::before {
+        .step-element::before {
            content: "";
            display: block;
            background-color: #555555;
@@ -52,10 +54,9 @@
            margin: auto;
            margin-bottom: 10px;
            opacity: inherit;
-          transform: scale(1);
-          
-            transition: all 0.08s ease;
-      }
+           transform: scale(1);
+           transition: all 0.08s ease;
+        }
         
         .step:not(:first-child) .step-element::after {
            content: "";
@@ -67,27 +68,45 @@
            right: calc(50% + 9px);
            top: 3px;
            opacity: inherit;
-      }
+        }
+        
+        .step iron-icon {
+            position: absolute;
+            top: -35px;
+            left: 28px;
+        }
         
     </style>
 
-    <div class="steps" >
-                        <div class$="step {{_getClassesStep(current, steps, 'accueil')}}" on-tap="_showStep" data-args="accueil">
-                            <span on-tap="_showStep" data-args="accueil" class="step-element">{{localize('etapes-biodatas')}}</span>
-                        </div>
-                        <div class$="step {{_getClassesStep(current, steps, 'identite')}}" on-tap="_showStep" data-args="identite">
-                            <span on-tap="_showStep" data-args="identite" class="step-element">{{localize('header13')}}</span>
-                        </div>
-                        <div class$="step {{_getClassesStep(current, steps, 'fichiers')}}" on-tap="_showStep" data-args="fichiers">
-                            <span on-tap="_showStep" data-args="fichiers" class="step-element">{{localize('header14')}}</span>
-                        </div>
-                        <div class$="step {{_getClassesStep(current, steps, 'vehicule')}}" on-tap="_showStep" data-args="vehicule">
-                            <span on-tap="_showStep" data-args="vehicule" class="step-element">{{localize('header15')}}</span>
-                        </div>
-                        <div class$="step {{_getClassesStep(current, steps, 'envoi')}}" on-tap="_showStep" data-args="envoi">
-                            <span on-tap="_showStep" data-args="envoi" class="step-element">{{localize('header16')}}</span>
-                        </div>
-  </div>
+        <div class="steps" >
+            <div class$="step {{_getClassesStep(current, steps, 'accueil')}}" on-tap="_showStep" data-args="accueil">
+                <span on-tap="_showStep" data-args="accueil" class="step-element">{{localize('etape-biodata-1')}}</span>
+            </div>
+            <template is="dom-if" if="{{_isPresent(steps, 'identite')}}">
+                <div class$="step {{_getClassesStep(current, steps, 'identite')}}" on-tap="_showStep" data-args="identite">
+                    <iron-icon icon="icons:report-problem" hidden$="[[_isInvalid(erreurs, 'identite')]]"></iron-icon>
+                    <iron-icon icon="icons:check-circle" hidden$="[[_isValid(erreurs, 'identite')]]"></iron-icon>
+                    <span on-tap="_showStep" data-args="identite" class="step-element">{{localize('etape-biodata-2')}}</span>
+                </div>
+            </template>
+            <template is="dom-if" if="{{_isPresent(steps, 'fichiers')}}">
+                <div class$="step {{_getClassesStep(current, steps, 'fichiers')}}" on-tap="_showStep" data-args="fichiers">
+                    <iron-icon icon="icons:report-problem" hidden$="[[_isInvalid(erreurs, 'fichiers')]]"></iron-icon>
+                    <iron-icon icon="icons:check-circle" hidden$="[[_isValid(erreurs, 'fichiers')]]"></iron-icon>
+                    <span on-tap="_showStep" data-args="fichiers" class="step-element">{{localize('etape-biodata-3')}}</span>
+                </div>
+            </template>
+            <template is="dom-if" if="{{_isPresent(steps, 'vehicule')}}">
+                <div class$="step {{_getClassesStep(current, steps, 'vehicule')}}" on-tap="_showStep" data-args="vehicule">
+                    <iron-icon icon="icons:report-problem" hidden$="[[_isInvalid(erreurs, 'vehicule')]]"></iron-icon>
+                    <iron-icon icon="icons:check-circle" hidden$="[[_isValid(erreurs, 'vehicule')]]"></iron-icon>
+                    <span on-tap="_showStep" data-args="vehicule" class="step-element">{{localize('etape-biodata-4')}}</span>
+                </div>
+            </template>
+            <div class$="step {{_getClassesStep(current, steps, 'envoi')}}" on-tap="_showStep" data-args="envoi">
+                <span on-tap="_showStep" data-args="envoi" class="step-element">{{localize('etape-biodata-5')}}</span>
+            </div>
+      </div>
       
   </template>
 
@@ -110,6 +129,9 @@
       attached: function() {
         this.loadResources(this.resolveUrl('../../locales.json'));
       },
+      _isPresent: function(steps, step) {
+          return steps.indexOf(step) != -1;
+      },
       _showStep: function(event) {
           if(this.steps[this.steps.indexOf(event.target.getAttribute('data-args'))]) {
               this.current = event.target.getAttribute('data-args');
@@ -118,8 +140,30 @@
       _getClassesStep: function(current, steps, step) {
         if(steps.indexOf(current) >= steps.indexOf(step)) {
             return 'step-selected';
+        }
+      },
+      _isValid: function(erreurs, step) {
+          if(erreurs.length > 0) {
+              for(i=0; i<erreurs.length; i++) {
+                  if(erreurs[i].etape === step) { 
+                    return true;
+                  }
+              }
+              return false;
+          } else {
+              return true;
+          }
+      },
+      _isInvalid: function(erreurs, step) {
+        if(erreurs.length > 0) {
+          for(i=0; i<erreurs.length; i++) {
+              if(erreurs[i].etape === step) { 
+                return false;
+              }
+          }
+          return true;
         } else {
-            return 'step-unselected';
+            return true;
         }
       }
     });

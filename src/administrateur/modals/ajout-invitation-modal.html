@@ -72,6 +72,10 @@
             value: [{value: ''}],
             notify: true
         },
+        chargement: {
+            type: Boolean,
+            value: false
+        },
         serverUrl: String
       },
       ready: function () {
@@ -109,14 +113,12 @@
         this.$.dialog.close();
         this.emailsList = [{value: ''}];
         this.chargement = false;
-          
+        
         this.fire('iron-signal', {name: 'modal-projet-success'});
         this.fire('iron-signal', {name: 'open-toast', data: {texte: 'L\'invitation à été ajoutée'}});
       },
       _handleAddInvitationError: function(error) {
-        this.$.dialog.close();
         this.chargement = false;
-          
         this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Echec lors de l\'ajout de l\'invitation'}});
       }
         

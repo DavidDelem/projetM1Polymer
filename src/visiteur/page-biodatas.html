@@ -7,7 +7,9 @@
 <link rel="import" href="./components/etapes-biodatas.html">
 <link rel="import" href="./components/accueil-biodatas.html">
 <link rel="import" href="./components/confirmation-biodatas.html">
-<link rel="import" href="../../../bower_components/app-localize-behavior/app-localize-behavior.html">
+<link rel="import" href="./components/date-format.html">
+<link rel="import" href="./components/liste-nationalites.html">
+<link rel="import" href="../../bower_components/app-localize-behavior/app-localize-behavior.html">
 
 <script src="../../bower_components/moment/moment.js"></script>
 <script src="../../bower_components/moment/locale/fr.js"></script>
@@ -146,12 +148,12 @@
     <iron-meta id="meta"></iron-meta>
     <iron-localstorage name="data-storage" value="{{storedData}}" on-iron-localstorage-load="_generateRequests"></iron-localstorage>
     <app-data key="storedData" data="{{storedData}}"></app-data>
-      
+    
     <iron-ajax 
     id="champsRequest"
     method="GET"
     headers="{{_computeHeaders(storedData)}}"
-    url="{{serverUrl}}/visiteur/profils/champs"
+    url="{{serverUrl}}/visiteurs/profils/champs"
     handle-as="json"
     last-response="{{champs}}"
     on-response="_handleChampsResponse"
@@ -161,23 +163,32 @@
         id="historiqueEnvoyeRequest" 
         method="GET"
         headers="{{_computeHeaders(storedData)}}"
-        url="{{serverUrl}}/biodatas"
+        url="{{serverUrl}}/visiteurs/biodatas"
         handle-as="json"
         last-response="{{biodatasEnvoyees}}"
         on-error="_handleHttpError"></iron-ajax>
+    
+    <iron-ajax 
+    id="dateLimiteRequest"
+    method="GET"
+    headers="{{_computeHeaders(storedData)}}"
+    url="{{serverUrl}}/visiteurs/projets/datelimite"
+    handle-as="json"
+    last-response="{{dateLimite}}"
+    on-error="_handleHttpError"></iron-ajax>
       
     <iron-ajax 
     id="biodatasRequest"
     method="POST"
     headers="{{_computeHeaders(storedData)}}"
-    url="{{serverUrl}}/biodatas"
+    url="{{serverUrl}}/visiteurs/biodatas"
     on-response="_handleBiodatasResponse"
     on-error="_handleBiodatasError"></iron-ajax>
     
-    <template is="dom-if" if="{{_afficherFormulaire(biodatasOk, biodatasEnvoyees)}}">
+    <template is="dom-if" if="{{_afficherFormulaire(biodatasOk, biodatasEnvoyees, dateLimite)}}">
             <div class="col-md-8">
                 <div class="col-md-12">
-                    <etapes-biodatas steps={{steps}} current={{currentStep}} language={{storedData.language}}></etapes-biodatas>
+                    <etapes-biodatas steps={{steps}} current={{currentStep}} erreurs="[[erreurs]]" language={{storedData.language}}></etapes-biodatas>
                 </div>
                 <div class="col-lg-12" hidden$="{{_hideStep('accueil', currentStep)}}">
                     <div class="card">
@@ -210,6 +221,7 @@
                                         <template is="dom-if" if="{{_computeHidden(item, 'texte_date')}}">
                                             <div class="row row-champ datenaissance" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
                                                 <div class="col-md-12">
+                                                    <date-format date-format="{{dateFormat}}" language="{{storedData.language}}"></date-format>
                                                     <vaadin-date-picker i18n="{{dateFormat}}" min="1900-01-01" max="{{dateMax}}" value="{{item.saisie.date}}" label="Date de naissance"></vaadin-date-picker>
                                                 </div>
                                                 <informations-champ obligatoire="[[item.obligatoire]]" nom="[[item.nom]]" erreurs="[[erreurs]]" language="{{storedData.language}}"></informations-champ>
@@ -308,6 +320,7 @@
                                 </div>
                                 <div class="row row-champ">
                                     <div class="col-md-12">
+                                        <liste-nationalites nationalites="{{nationalites}}"></liste-nationalites>
                                         <paper-autocomplete label="Nationalité" source="{{nationalites}}" value="{{selectedNationalite}}"></paper-autocomplete>
                                         <informations-champ obligatoire="true" nom="" erreurs="[[erreurs]]" language="{{storedData.language}}"></informations-champ>
                                     </div>
@@ -397,7 +410,7 @@
                  <conseils-biodatas current-step="{{currentStep}}" steps="{{steps}}" hovered-item-identifiant="{{hoveredItemIdentifiant}}" language="{{storedData.language}}"></conseils-biodatas>
             </div>
       </template>
-      <confirmation-biodatas biodatas-ok="[[biodatasOk]]" biodatas-envoyees="[[biodatasEnvoyees]]"></confirmation-biodatas>
+      <confirmation-biodatas biodatas-ok="[[biodatasOk]]" biodatas-envoyees="[[biodatasEnvoyees]]" date-limite=[[dateLimite]]></confirmation-biodatas>
   </template>
 
   <script>
@@ -412,7 +425,7 @@
             notify: true
         },
         language: {
-          value: 'en'
+          value: 'fr'
         },
         serverUrl: String,
         nationalites: Object,
@@ -450,273 +463,13 @@
         dateMax: {
             type: String,
             value: moment().format('YYYY-MM-DD')
+        },
+        dateLimite: {
+            type: String,
+            value: ''
         }
       },
       ready: function () {
-        this.dateFormat = {
-  // An array with the full names of months starting
-  // with January.
-  monthNames: [
-    'Janvier', 'Février', 'Mars', 'Avril', 'Mai',
-    'Juin', 'Juillet', 'Août', 'Septembre',
-    'Octobre', 'Novembre', 'Décembre'
-  ],
-
-  // An array of weekday names starting with Sunday. Used
-  // in screen reader announcements.
-  weekdays: [
-    'Dimanche', 'Lundi', 'Mardi', 'Mercredi',
-    'Jeudi', 'Vendredi', 'Samedi'
-  ],
-
-  // An array of short weekday names starting with Sunday.
-  // Displayed in the calendar.
-  weekdaysShort: [
-    'Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'
-  ],
-
-  // An integer indicating the first day of the week
-  // (0 = Sunday, 1 = Monday, etc.).
-  firstDayOfWeek: 0,
-
-  // Used in screen reader announcements along with week
-  // numbers, if they are displayed.
-  week: 'Semaine',
-
-  // Translation of the Calendar icon button title.
-  calendar: 'Calendrier',
-
-  // Translation of the Clear icon button title.
-  clear: 'Effacer',
-
-  // Translation of the Today shortcut button text.
-  today: 'Aujourd\'hui',
-
-  // Translation of the Cancel button text.
-  cancel: 'Annuler',
-
-  // A function to format given `Date` object as
-  // date string.
-  formatDate: function(d) {
-    // returns a string representation of the given
-    // Date object in 'MM/DD/YYYY' -format
-    return moment(d).format(moment.localeData().longDateFormat('L'));
-  },
-
-  // A function to parse the given text to a `Date`
-  // object. Must properly parse (at least) text
-  // formatted by `formatDate`.
-  // Setting the property to null will disable
-  // keyboard input feature.
-  parseDate: function(text) {
-    // Parses a string in 'MM/DD/YY', 'MM/DD' or 'DD' -format to
-    // a Date object
-    return moment(text, moment.localeData().longDateFormat('L')).toDate();
-  },
-
-  // A function to format given `monthName` and
-  // `fullYear` integer as calendar title string.
-  formatTitle: function(monthName, fullYear) {
-    return monthName + ' ' + fullYear;
-  }
-
-}
-        this.nationalites = [
-   "Afghan",
-   "Albanian",
-   "Algerian",
-   "American",
-   "Andorran",
-   "Angolan",
-   "Antiguans",
-   "Argentinean",
-   "Armenian",
-   "Australian",
-   "Austrian",
-   "Azerbaijani",
-   "Bahamian",
-   "Bahraini",
-   "Bangladeshi",
-   "Barbadian",
-   "Barbudans",
-   "Batswana",
-   "Belarusian",
-   "Belge",
-   "Belizean",
-   "Beninese",
-   "Bhutanese",
-   "Bolivian",
-   "Bosnian",
-   "Brazilian",
-   "British",
-   "Bruneian",
-   "Bulgarian",
-   "Burkinabe",
-   "Burmese",
-   "Burundian",
-   "Cambodian",
-   "Cameroonian",
-   "Canadienne",
-   "Cape Verdean",
-   "Central African",
-   "Chadian",
-   "Chilean",
-   "Chinese",
-   "Colombian",
-   "Comoran",
-   "Congolese",
-   "Costa Rican",
-   "Croatian",
-   "Cuban",
-   "Cypriot",
-   "Czech",
-   "Danish",
-   "Djibouti",
-   "Dominican",
-   "Dutch",
-   "East Timorese",
-   "Ecuadorean",
-   "Egyptian",
-   "Emirian",
-   "Equatorial Guinean",
-   "Eritrean",
-   "Estonian",
-   "Ethiopian",
-   "Fijian",
-   "Filipino",
-   "Finnish",
-   "Française",
-   "Gabonese",
-   "Gambian",
-   "Georgian",
-   "German",
-   "Ghanaian",
-   "Greek",
-   "Grenadian",
-   "Guatemalan",
-   "Guinea-Bissauan",
-   "Guinean",
-   "Guyanese",
-   "Haitian",
-   "Herzegovinian",
-   "Honduran",
-   "Hungarian",
-   "I-Kiribati",
-   "Icelander",
-   "Indian",
-   "Indonesian",
-   "Iranian",
-   "Iraqi",
-   "Irish",
-   "Israeli",
-   "Italian",
-   "Ivorian",
-   "Jamaican",
-   "Japanese",
-   "Jordanian",
-   "Kazakhstani",
-   "Kenyan",
-   "Kittian and Nevisian",
-   "Kuwaiti",
-   "Kyrgyz",
-   "Laotian",
-   "Latvian",
-   "Lebanese",
-   "Liberian",
-   "Libyan",
-   "Liechtensteiner",
-   "Lithuanian",
-   "luxembourgeoise",
-   "Macedonian",
-   "Malagasy",
-   "Malawian",
-   "Malaysian",
-   "Maldivan",
-   "Malian",
-   "Maltese",
-   "Marshallese",
-   "Mauritanian",
-   "Mauritian",
-   "Mexican",
-   "Micronesian",
-   "Moldovan",
-   "Monégasque",
-   "Mongolian",
-   "Moroccan",
-   "Mosotho",
-   "Motswana",
-   "Mozambican",
-   "Namibian",
-   "Nauruan",
-   "Nepalese",
-   "New Zealander",
-   "Nicaraguan",
-   "Nigerian",
-   "Nigerien",
-   "North Korean",
-   "Northern Irish",
-   "Norwegian",
-   "Omani",
-   "Pakistani",
-   "Palauan",
-   "Panamanian",
-   "Papua New Guinean",
-   "Paraguayan",
-   "Peruvian",
-   "Polish",
-   "Portuguese",
-   "Qatari",
-   "Romanian",
-   "Russian",
-   "Rwandan",
-   "Saint Lucian",
-   "Salvadoran",
-   "Samoan",
-   "San Marinese",
-   "Sao Tomean",
-   "Saudi",
-   "Scottish",
-   "Senegalese",
-   "Serbian",
-   "Seychellois",
-   "Sierra Leonean",
-   "Singaporean",
-   "Slovakian",
-   "Slovenian",
-   "Solomon Islander",
-   "Somali",
-   "South African",
-   "South Korean",
-   "Spanish",
-   "Sri Lankan",
-   "Sudanese",
-   "Surinamer",
-   "Swazi",
-   "Swedish",
-   "Suisse",
-   "Syrian",
-   "Taiwanese",
-   "Tajik",
-   "Tanzanian",
-   "Thai",
-   "Togolese",
-   "Tongan",
-   "Trinidadian or Tobagonian",
-   "Tunisian",
-   "Turkish",
-   "Tuvaluan",
-   "Ugandan",
-   "Ukrainian",
-   "Uruguayan",
-   "Uzbekistani",
-   "Venezuelan",
-   "Vietnamese",
-   "Welsh",
-   "Yemenite",
-   "Zambian",
-   "Zimbabwean"
-];
-          
         this.serverUrl = this.$.meta.byKey("server-url");
       },
       attributeChanged : function(name, type){
@@ -731,14 +484,37 @@
         return {"Authorization": "JWT " + storedData.token };
       },
       _generateRequests: function() {
+          this.language = this.storedData.language || 'fr';
           this.$.champsRequest.generateRequest();
           this.$.historiqueEnvoyeRequest.generateRequest();
+          this.$.dateLimiteRequest.generateRequest();
       },
       _handleChampsResponse: function(res) {
-          console.log(this.champs);
+          //console.log(this.champs);
           for (var i = 0; i < this.champs.length; i++) {
             this.champs[i].saisie = {};
           }
+          
+          console.log(this.champs);
+          
+          this._setSteps();
+      },
+      _setSteps: function() {
+          
+          var steps = [
+                        "accueil"
+                      ];
+          
+          for(var i=0; i < this.steps.length; i++) {
+              for(var j=0; j < this.champs.length; j++) {
+                if(this.steps[i] == this.champs[j].etape && (steps.indexOf(this.steps[i]) == -1)) {
+                    steps.push(this.steps[i]);
+                }
+              }
+          }
+          
+          steps.push("envoi");
+          this.set('steps', steps);
       },
       _showNext: function(event) {
           if(this.steps[this.steps.indexOf(this.currentStep) + 1]) {
@@ -804,7 +580,8 @@
           //var item = event.model.get('item');
           for(var i=0 ; i < this.fichiers.length; i++) {
                     if(this.fichiers[i].identifiantChamp == item.identifiant) {
-                        return 'Fichier selectionné:' + this.fichiers[i].fichier.name;
+                        return 'Fichier selectionné: ' + this.fichiers[i].fichier.name + ' - ' + this._bytesToKo(this.fichiers[i].fichier.size);
+                        console.log(this.fichiers[i].fichier);
                     }
           }
 //          
@@ -829,8 +606,13 @@
               return true;
           }
       },
+      _bytesToKo: function(a, b) {
+          if(0==a)return"0 Bytes";
+          var c=1e3,d=b||2,e=["Bytes","KB","MB","GB","TB","PB","EB","ZB","YB"],f=Math.floor(Math.log(a)/Math.log(c));
+          return parseFloat((a/Math.pow(c,f)).toFixed(d))+" "+e[f];
+      },
       _sendBiodatas: function() {
-          //this.chargement = true;
+          this.chargement = true;
           var formData = new FormData();
           
           /* Ajout des fichiers à la requette */
@@ -846,8 +628,8 @@
       },
       _handleBiodatasResponse: function(event) {
           if(event.detail.response == true) {
-             //this.biodatasOk = true;
-             //this.chargement = false;
+             this.biodatasOk = true;
+             this.chargement = false;
           } else {
              this.erreurs = event.detail.response;
              this.fire('iron-signal', {name: 'open-erreur-biodatas-modal', data: { erreurs: this.erreurs }});
@@ -868,11 +650,15 @@
       _aucunItem: function(event) {
           this.hoveredItemIdentifiant = -1;
       },
-      _afficherFormulaire: function(biodatasOk, biodatasEnvoyees) {
-          if(biodatasEnvoyees == false) {
-            return biodatasOk == false;
+      _afficherFormulaire: function(biodatasOk, biodatasEnvoyees, dateLimite) {
+          if(dateLimite < moment().startOf('day').format('x')) {
+             return false;
           } else {
-            return false;
+              if(biodatasEnvoyees == false) {
+                return biodatasOk == false;
+              } else {
+                return false;
+              }   
           }
       }
     });

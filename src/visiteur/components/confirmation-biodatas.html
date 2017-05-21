@@ -3,6 +3,9 @@
 <link rel="import" href="../../app-data.html">
 <link rel="import" href="../../../bower_components/app-localize-behavior/app-localize-behavior.html">
 
+<script src="../../../bower_components/moment/moment.js"></script>
+<script src="../../../bower_components/moment/locale/fr.js"></script>
+
 <dom-module id="confirmation-biodatas">
   <template>
     <style include="shared-styles">
@@ -21,9 +24,9 @@
                 <div class="card">
                     <div class="text-center">
                         <iron-icon class="large-icon" icon="icons:check"></iron-icon>
-                        <p>{{localize('confirmation-biodatas')}}</p>
-                        <p>{{localize('header10')}}</p>
-                        <p>{{localize('header11')}}</p>
+                        <p>{{localize('confirmation-biodatas-titre')}}</p>
+                        <p>{{localize('confirmation-biodatas-info-1')}}</p>
+                        <p>{{localize('confirmation-biodatas-info-2')}}</p>
                     </div>
                 </div>
               </div>
@@ -33,7 +36,16 @@
                 <div class="card">
                     <div class="text-center">
                         <iron-icon class="large-icon" icon="icons:check"></iron-icon>
-                        <p>{{localize('header12')}}</p>
+                        <p>{{localize('confirmation-biodatas-deja-envoye')}}</p>
+                    </div>
+                </div>
+              </div>
+      </template>
+      <template is="dom-if" if="{{_isDateLimiteAtteinte(dateLimite)}}">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="card">
+                    <div class="text-center">
+                        <p>{{localize('confirmation-biodatas-date-limite')}}</p>
                     </div>
                 </div>
               </div>
@@ -56,6 +68,9 @@
       },
       attached: function() {
         this.loadResources(this.resolveUrl('../../locales.json'));
+      },
+      _isDateLimiteAtteinte: function(dateLimite) {
+          return dateLimite < moment().startOf('day').format('x') && dateLimite > 0;
       }
     });
   </script>

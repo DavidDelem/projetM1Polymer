@@ -26,11 +26,11 @@
     on-error="_handleRemoveDelegationError"></iron-ajax>
       
     <paper-dialog id="dialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
-        <h2>{{localize('annulation-delegation-modal')}}</h2>
-        <p>{{localize('header48')}} [[invitation.email]]</p>
+        <h2>{{localize('annulation-delegation-modal-titre')}}</h2>
+        <p>{{localize('annulation-delegation-modal-detail')}} [[invitation.email]]</p>
         <div class="buttons">
-            <paper-button dialog-dismiss>{{localize('header49')}}</paper-button>
-            <paper-button autofocus on-tap="_removeDelegation">{{localize('header50')}}</paper-button>
+            <paper-button dialog-dismiss>{{localize('btn-annuler')}}</paper-button>
+            <paper-button autofocus on-tap="_removeDelegation">{{localize('btn-valider')}}</paper-button>
         </div>
     </paper-dialog>
       
@@ -45,7 +45,7 @@
       properties: {
         invitattion: Object,
         language: {
-          value: 'en'
+          value: 'fr'
         },
         serverUrl: String
       },

@@ -18,7 +18,7 @@
     method="DELETE"
     content-type="application/x-www-form-urlencoded"   
     headers="{{_computeHeaders(storedData)}}"
-    url="{{serverUrl}}/administrateurs"
+    url="{{serverUrl}}/administration/administrateurs"
     on-response="_handleRemoveAdministrateurResponse"
     on-error="_handleRemoveAdministrateurError"></iron-ajax>    
       
@@ -41,7 +41,11 @@
       is: 'suppression-administrateur-modal',
       properties: {
         identifiant: String,
-        serverUrl: String
+        serverUrl: String,
+        chargement: {
+            type: Boolean,
+            value: false
+        }
       },
       ready: function () {
         this.serverUrl = this.$.meta.byKey("server-url");

@@ -31,20 +31,19 @@
         <div class="champ-obligatoire" >
             <div tabindex="0">
                 <iron-icon icon="icons:error-outline" hidden$=[[!obligatoire]]></iron-icon>
-                <paper-tooltip position="top">{{localize('informations-champ')}}</paper-tooltip>
+                <paper-tooltip position="top">{{localize('champ-obligatoire')}}</paper-tooltip>
             </div>
         </div>
-      
         <div class="champ-erreur">
             <div tabindex="0">
                 <iron-icon icon="icons:report-problem" hidden$="[[!_hasErreur(nom, erreurs)]]"></iron-icon>
-                <paper-tooltip position="right">{{localize('header17')}}</paper-tooltip>
+                <paper-tooltip position="right">{{localize('champ-erreur')}}</paper-tooltip>
             </div>
         </div>
         <div class="champ-valide">
             <div tabindex="0">
                 <iron-icon icon="icons:check-circle" hidden$="[[!_isValide(nom, erreurs)]]"></iron-icon>
-                <paper-tooltip position="right">{{localize('header18')}}</paper-tooltip>
+                <paper-tooltip position="right">{{localize('champ-valide')}}</paper-tooltip>
             </div>
         </div>
       </div>
@@ -75,7 +74,7 @@
           return false;
       },
       _isValide: function(nom, erreurs) {
-          if(erreurs.length != 0) {
+          if(erreurs.length > 0) {
               for(i=0; i<erreurs.length; i++) {
                   if(erreurs[i].nom === nom) { 
                     return false;

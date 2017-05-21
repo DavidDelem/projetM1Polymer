@@ -1,10 +1,18 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../shared-styles.html">
 <link rel="import" href="../../app-data.html">
+<link rel="import" href="../components/date-format.html">
+
+<script src="../../../bower_components/moment/moment.js"></script>
+<script src="../../../bower_components/moment/locale/fr.js"></script>
 
 <dom-module id="ajout-projet-modal">
   <template>
     <style include="shared-styles">  
+        
+        paper-dropdown-menu {
+            max-width: 300px;
+        }
     </style>
     
     <iron-meta id="meta"></iron-meta>
@@ -26,7 +34,7 @@
     id="profilsRequest"
     method="GET"
     headers="{{_computeHeaders(storedData)}}"
-    url="{{serverUrl}}/profils"
+    url="{{serverUrl}}/administration/profils"
     handle-as="json"
     last-response="{{profils}}"></iron-ajax>      
       
@@ -36,17 +44,28 @@
             <label>Nom du projet</label>
             <input is="iron-input" id="projet" type="text" bind-value="{{projet}}">
         </paper-input-container>
-        <paper-dropdown-menu label="Profil de formulaire">
-          <paper-listbox attr-for-selected="value" selected="{{selectedProfil}}" class="dropdown-content">
-              <template is="dom-repeat" items="{{profils}}">
-                    <paper-item value="{{item.identifiant}}">{{item.nom}}</paper-item>
-              </template>
-          </paper-listbox>
-        </paper-dropdown-menu>
-        <vaadin-date-picker value="{{selectedDateLimite}}" label="Date limite"></vaadin-date-picker>
+        <date-format date-format="{{dateFormat}}"></date-format>
+        <vaadin-date-picker i18n="{{dateFormat}}" min="{{dateMin}}" value="{{selectedDateLimite}}" label="Date limite"></vaadin-date-picker>
+        <div>
+            <paper-dropdown-menu label="Profil de formulaire">
+                  <paper-listbox attr-for-selected="value" selected="{{selectedProfil}}" class="dropdown-content">
+                      <template is="dom-repeat" items="{{profils}}">
+                            <paper-item value="{{item.identifiant}}">{{item.nom}}</paper-item>
+                      </template>
+                  </paper-listbox>
+            </paper-dropdown-menu>
+        </div>
+        <div>
+            <paper-dropdown-menu label="Langue de contact">
+                  <paper-listbox attr-for-selected="value" selected="{{langue}}" class="dropdown-content">
+                        <paper-item value="fr">Français</paper-item>
+                      <paper-item value="en">Anglais</paper-item>
+                  </paper-listbox>
+            </paper-dropdown-menu>
+        </div>
         <div class="buttons">
             <paper-button disabled$="{{chargement}}" dialog-dismiss>Annuler</paper-button>
-            <paper-button autofocus on-tap="_addProjet" disabled$="{{_validateForm(projet, selectedProfil, selectedDateLimite, chargement)}}">
+            <paper-button autofocus on-tap="_addProjet" disabled$="{{_validateForm(projet, selectedProfil, selectedDateLimite, langue, chargement)}}">
                 <span hidden$="{{chargement}}">Valider</span>
                 <paper-spinner hidden$="{{!chargement}}" class="paper-spinner-validation" active={{chargement}}></paper-spinner>
             </paper-button>
@@ -61,18 +80,27 @@
       properties: {
         projet: {
             type: String,
-            value: "",
-            notify: true
+            value: ''
         },
         selectedProfil: {
             type: String,
-            value: "",
-            notify: true
+            value: ''
         },
         selectedDateLimite: {
             type: String,
-            value: "",
-            notify: true
+            value: ''
+        },
+        langue: {
+            type: String,
+            value: ''
+        },
+        chargement: {
+            type: Boolean,
+            value: false
+        },
+        dateMin: {
+            type: String,
+            value: moment().format("YYYY-MM-DD")
         },
         profils: Object,
         serverUrl: String
@@ -90,15 +118,12 @@
         this.$.dialog.open();
         this._generateRequests();
       },
-      _validateForm: function(projet, profil, dateLimite, chargement) {
-          if((projet == '' || profil == '' || dateLimite == '') || chargement == true) {
-            return true;
-          }
+      _validateForm: function(projet, profil, dateLimite, langue, chargement) {
+          return ((projet == '' || profil == '' || dateLimite == '' || langue == '') || chargement == true);
       },
       _addProjet: function() {
-        this.$.addProjetRequest.body = { projet: this.projet, profil: this.selectedProfil, dateLimite: moment(this.selectedDateLimite, 'YYYY-MM-DD').format('x') };
+        this.$.addProjetRequest.body = { projet: this.projet, profil: this.selectedProfil, langue: this.langue, dateLimite: moment(this.selectedDateLimite, 'YYYY-MM-DD').format('x') };
         this.chargement = true;
-          
         this.$.addProjetRequest.generateRequest();
       },
       _handleAddProjetResponse: function(response) {
@@ -112,9 +137,7 @@
         this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Le projet à été ajouté'}});
       },
       _handleAddProjetError: function(error) {
-        this.$.dialog.close();
         this.chargement = false;
-          
         this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Echec lors de l\'ajout du projet'}});
       }
         

@@ -128,6 +128,7 @@
         handle-as="json"
         last-response="{{historique}}"
         on-error="_handleHttpError"></iron-ajax>
+      
     <div class="timeline">
         <template is="dom-repeat" items="{{historique}}">
             <template is="dom-if" if="{{_computeHidden(item, 'RECEPTION_INVITATION')}}">

@@ -58,7 +58,7 @@
         id="administrateursRequest" 
         method="GET"
         headers="{{_computeHeaders(storedData.token)}}"
-        url="{{serverUrl}}/administrateurs"
+        url="{{serverUrl}}/administration/administrateurs"
         handle-as="json"
         last-response="{{administrateurs}}"
         on-error="_handleAdministrateursError"></iron-ajax>
@@ -105,7 +105,9 @@
         this.$.administrateursRequest.generateRequest();
       },
       _handleAdministrateursError: function(event) {
-        this.fire('connexion-administrateur-denied-event', {});
+        if(event.detail.request.__data__.status == 401) {
+            this.fire('connexion-administrateur-denied-event', {});
+        }
       },
       _openRemoveAdministrateurModal: function(event) {
         this.fire('iron-signal', {name: 'open-suppression-administrateur-modal', data: {identifiant: event.model.get('item').identifiant}});

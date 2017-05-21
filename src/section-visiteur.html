@@ -66,8 +66,8 @@
       <app-header-layout fullbleed has-scrolling-region>
         <app-header condenses reveals fixed full effects="waterfall">
           <app-toolbar>
-            <paper-icon-button icon="my-icons:menu" on-tap="_toggleMenu" drawer-toggle></paper-icon-button>
-            <div main-title>Sea Test Base Biodatas</div>
+            <paper-icon-button icon="icons:menu" on-tap="_toggleMenu" drawer-toggle></paper-icon-button>
+            <div main-title>Sea Test Base Biodata</div>
             <a href="{{baseUrl}}/public/page-connexion-visiteur/">
                 <paper-icon-button icon="icons:power-settings-new"></paper-icon-button>
             </a>
@@ -78,9 +78,9 @@
           <app-drawer id="drawer">
             <app-toolbar>Menu</app-toolbar>
             <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-                <a class="drawer-elem" name="page-dossier" href="{{baseUrl}}/visiteur/page-dossier">{{localize('section-visiteur')}}</a>
-                <a class="drawer-elem" name="page-biodatas" href="{{baseUrl}}/visiteur/page-biodatas">{{localize('header2')}}</a>
-                <a class="drawer-elem" name="page-delegation" href="{{baseUrl}}/visiteur/page-delegation">{{localize('header3')}}</a>
+                <a class="drawer-elem" name="page-dossier" href="{{baseUrl}}/visiteur/page-dossier">{{localize('menu-1')}}</a>
+                <a class="drawer-elem" name="page-biodatas" href="{{baseUrl}}/visiteur/page-biodatas">{{localize('menu-2')}}</a>
+                <a class="drawer-elem" name="page-delegation" href="{{baseUrl}}/visiteur/page-delegation">{{localize('menu-3')}}</a>
             </iron-selector>
             <img class="logo-stb" src="/images/logo.png">
           </app-drawer>
@@ -93,7 +93,6 @@
               <page-dossier name="page-dossier"></page-dossier>
               <page-biodatas name="page-biodatas"></page-biodatas>
               <page-delegation name="page-delegation"></page-delegation>
-              <view-404 name="view404"></view-404>
             </iron-pages>
             
         </app-drawer-layout>
@@ -129,23 +128,21 @@
       ],
       attached: function() {
         this.loadResources(this.resolveUrl('locales.json'));
-        console.log(this.resolveUrl('locales.json'));
       },
       _handleConnexionVisiteurDeniedEvent: function(event) {
         this._disconnect();
       },
-//      _disconnect: function() {
-//          this.storedData = null;
-//          page.redirect('/#/section-public/page-connexion-visiteur'); 
-//      },
+      _disconnect: function() {
+        //page.redirect('/#/section-public/page-connexion-visiteur'); 
+        window.location.href = this.baseUrl + '/public/page-connexion-administrateur';
+      },
       _routePageChanged: function(page) {
-        this.page = page || 'page-actualite';
+        this.page = page || 'page-dossier';
         if (!this.$.drawer.persistent) {
           this.$.drawer.close();
         }
       },
       _pageChanged: function(page) {
-        // Load page import on demand. Show 404 page if fails
         var resolvedPageUrl = this.resolveUrl('visiteur/' + page + '.html');
         this.importHref(resolvedPageUrl, null, this._showPage404, true);    
       },
@@ -153,7 +150,7 @@
         this.page = 'page-dossier';
       },
       _toggleMenu: function() {
-          this.$.drawer.opened = !this.$.drawer.opened;
+        this.$.drawer.opened = !this.$.drawer.opened;
       },
       _selectLangue: function() {
         this.language = this.storedData.language || 'fr';

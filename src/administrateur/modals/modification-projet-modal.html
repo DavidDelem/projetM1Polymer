@@ -1,6 +1,7 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../shared-styles.html">
 <link rel="import" href="../../app-data.html">
+<link rel="import" href="../components/date-format.html">
 
 <script src="../../../bower_components/moment/moment.js"></script>
 <script src="../../../bower_components/moment/locale/fr.js"></script>
@@ -29,7 +30,7 @@
     id="profilsRequest"
     method="GET"
     headers="{{_computeHeaders(storedData)}}"
-    url="{{serverUrl}}/profils"
+    url="{{serverUrl}}/administration/profils"
     handle-as="json"
     last-response="{{profils}}"></iron-ajax>      
       
@@ -39,17 +40,28 @@
             <label>Nom du projet</label>
             <input is="iron-input" id="projet" type="text" bind-value="{{projet}}">
         </paper-input-container>
-        <paper-dropdown-menu label="Profil de formulaire">
-          <paper-listbox attr-for-selected="value" selected="{{profil}}" class="dropdown-content">
-              <template is="dom-repeat" items="{{profils}}">
-                    <paper-item value="{{item.identifiant}}">{{item.nom}}</paper-item>
-              </template>
-          </paper-listbox>
-        </paper-dropdown-menu>
-        <vaadin-date-picker value="{{dateLimite}}" label="Date limite"></vaadin-date-picker>
+        <date-format date-format="{{dateFormat}}"></date-format>
+        <vaadin-date-picker i18n="{{dateFormat}}" min="{{dateMin}}" value="{{dateLimite}}" label="Date limite"></vaadin-date-picker>
+        <div>
+            <paper-dropdown-menu label="Profil de formulaire">
+              <paper-listbox attr-for-selected="value" selected="{{profil}}" class="dropdown-content">
+                  <template is="dom-repeat" items="{{profils}}">
+                        <paper-item value="{{item.identifiant}}">{{item.nom}}</paper-item>
+                  </template>
+              </paper-listbox>
+            </paper-dropdown-menu>
+        </div>
+        <div>
+            <paper-dropdown-menu label="Langue de contact">
+                  <paper-listbox attr-for-selected="value" selected="{{langue}}" class="dropdown-content">
+                        <paper-item value="fr">Français</paper-item>
+                      <paper-item value="en">Anglais</paper-item>
+                  </paper-listbox>
+            </paper-dropdown-menu>
+        </div>
         <div class="buttons">
             <paper-button disabled$="{{chargement}}" dialog-dismiss>Annuler</paper-button>
-            <paper-button autofocus on-tap="_modifierProjet" disabled$="{{_validateForm(projet, profil, dateLimite, chargement)}}">
+            <paper-button autofocus on-tap="_modifierProjet" disabled$="{{_validateForm(projet, profil, dateLimite, langue, chargement)}}">
                 <span hidden$="{{chargement}}">Valider</span>
                 <paper-spinner hidden$="{{!chargement}}" class="paper-spinner-validation" active={{chargement}}></paper-spinner>
             </paper-button>
@@ -64,19 +76,28 @@
       properties: {
         projet: {
             type: String,
-            value: "",
-            notify: true
+            value: ''
         },
         identifiantProjet: String,
         profil: {
             type: String,
-            value: "",
-            notify: true
+            value: ''
         },
         dateLimite: {
             type: String,
-            value: "",
-            notify: true
+            value: ''
+        },
+        langue: {
+            type: String,
+            value: ''
+        },
+        chargement: {
+            type: Boolean,
+            value: false
+        },
+        dateMin: {
+            type: String,
+            value: moment().format("YYYY-MM-DD")
         },
         profils: Object,
         serverUrl: String
@@ -95,18 +116,16 @@
         this.projet = event.detail.projet.nom;
         this.identifiantProjet = event.detail.projet.identifiant;
         this.profil = event.detail.projet.profil;
+        this.langue = event.detail.projet.langue;
         this.dateLimite =  moment(event.detail.projet.dateLimite, 'x').format('YYYY-MM-DD');
         this.$.dialog.open();
       },
-      _validateForm: function(projet, profil, dateLimite, chargement) {
-          if((projet == '' || profil == '' || dateLimite == '') || chargement == true) {
-            return true;
-          }
+      _validateForm: function(projet, profil, dateLimite, langue, chargement) {
+        return ((projet == '' || profil == '' || dateLimite == '' || langue == '') || chargement == true);
       },
       _modifierProjet: function() {
-        this.$.modificationProjetRequest.body = { nom: this.projet, profil: this.profil, dateLimite: moment(this.dateLimite, 'YYYY-MM-DD').format('x') };
+        this.$.modificationProjetRequest.body = { nom: this.projet, profil: this.profil, langue: this.langue, dateLimite: moment(this.dateLimite, 'YYYY-MM-DD').format('x') };
         this.$.modificationProjetRequest.generateRequest();
-        this.projet =  "";
         this.chargement = true;
       },
       _handleModificationProjetResponse: function(response) {
@@ -117,9 +136,7 @@
         this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Les modifications du projet sont enregistrées'}});
       },
       _handleModificationProjetError: function(error) {
-        this.$.dialog.close();
         this.chargement = false;
-          
         this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Echec lors de la modification du projet'}});
       },
       _getDate: function(timestamp) {

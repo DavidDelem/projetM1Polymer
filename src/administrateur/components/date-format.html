@@ -1,0 +1,101 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../shared-styles.html">
+<link rel="import" href="../../app-data.html">
+<link rel="import" href="../../../bower_components/app-localize-behavior/app-localize-behavior.html">
+
+<script src="../../../bower_components/moment/moment.js"></script>
+<script src="../../../bower_components/moment/locale/fr.js"></script>
+
+<dom-module id="date-format">
+  <template>
+      <style>
+          :host {
+              display: none;
+          }
+      </style>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'date-format',
+      properties: {
+        dateFormat: {
+            type: Object,
+            notify: true
+        }
+      },
+      ready: function() {
+        
+            this.dateFormat = {
+              // An array with the full names of months starting
+              // with January.
+              monthNames: [
+                'Janvier', 'Février', 'Mars', 'Avril', 'Mai',
+                'Juin', 'Juillet', 'Août', 'Septembre',
+                'Octobre', 'Novembre', 'Décembre'
+              ],
+
+              // An array of weekday names starting with Sunday. Used
+              // in screen reader announcements.
+              weekdays: [
+                'Dimanche', 'Lundi', 'Mardi', 'Mercredi',
+                'Jeudi', 'Vendredi', 'Samedi'
+              ],
+
+              // An array of short weekday names starting with Sunday.
+              // Displayed in the calendar.
+              weekdaysShort: [
+                'Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'
+              ],
+
+              // An integer indicating the first day of the week
+              // (0 = Sunday, 1 = Monday, etc.).
+              firstDayOfWeek: 0,
+
+              // Used in screen reader announcements along with week
+              // numbers, if they are displayed.
+              week: 'Semaine',
+
+              // Translation of the Calendar icon button title.
+              calendar: 'Calendrier',
+
+              // Translation of the Clear icon button title.
+              clear: 'Effacer',
+
+              // Translation of the Today shortcut button text.
+              today: 'Aujourd\'hui',
+
+              // Translation of the Cancel button text.
+              cancel: 'Annuler',
+
+              // A function to format given `Date` object as
+              // date string.
+              formatDate: function(d) {
+                // returns a string representation of the given
+                // Date object in 'MM/DD/YYYY' -format
+                return moment(d).format(moment.localeData().longDateFormat('L'));
+              },
+
+              // A function to parse the given text to a `Date`
+              // object. Must properly parse (at least) text
+              // formatted by `formatDate`.
+              // Setting the property to null will disable
+              // keyboard input feature.
+              parseDate: function(text) {
+                // Parses a string in 'MM/DD/YY', 'MM/DD' or 'DD' -format to
+                // a Date object
+                return moment(text, moment.localeData().longDateFormat('L')).toDate();
+              },
+
+              // A function to format given `monthName` and
+              // `fullYear` integer as calendar title string.
+              formatTitle: function(monthName, fullYear) {
+                return monthName + ' ' + fullYear;
+              }
+
+            }
+        
+      }
+    });
+  </script>
+</dom-module>

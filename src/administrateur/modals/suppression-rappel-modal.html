@@ -45,7 +45,11 @@
       is: 'suppression-rappel-modal',
       properties: {
         selectedRappel: String,
-        serverUrl: String
+        serverUrl: String,
+        chargement: {
+            type: Boolean,
+            value: false
+        }
       },
       ready: function () {
         this.serverUrl = this.$.meta.byKey("server-url");

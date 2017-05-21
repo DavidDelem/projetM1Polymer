@@ -15,13 +15,13 @@
     <iron-signals on-iron-signal-open-erreur-biodatas-modal="_handleOpenErreurBiodatasModalEvent"></iron-signals>  
       
     <paper-dialog id="dialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
-        <h2>{{localize('erreur-biodatas-modal')}}</h2>
-        <p>{{localize('header51')}}</p>
+        <h2>{{localize('erreur-biodatas-modal-titre')}}</h2>
+        <p>{{localize('erreur-biodatas-modal-detail')}}</p>
         <template is="dom-repeat" items="[[erreurs]]">
             <p>[[item.nom]]</p>
         </template>
         <div class="buttons">
-            <paper-button dialog-dismiss>{{localize('header52')}}</paper-button>
+            <paper-button dialog-dismiss>{{localize('btn-retour')}}</paper-button>
         </div>
     </paper-dialog>
   </template>
@@ -35,8 +35,8 @@
         properties: {
            erreurs: Object,
            language: {
-          value: 'en'
-        }
+              value: 'fr'
+            }
         },
       attached: function() {
         this.loadResources(this.resolveUrl('../../locales.json'));

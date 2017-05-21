@@ -15,8 +15,8 @@
         
         .paper-fab-section {
             position: absolute;
-            bottom: 5px;
-            right: 40px;
+            bottom: 0px;
+            right: 15px;
         }
         
         .paper-fab-section paper-fab {
@@ -53,6 +53,7 @@
                     <p><iron-icon icon="icons:description"></iron-icon> Profil: [[projetDetail.nomProfil]]</p>
                     <p><iron-icon icon="icons:event"></iron-icon> Date de création: [[_getDate(projetDetail.dateCreation)]]</p>
                     <p><iron-icon icon="icons:date-range"></iron-icon> Date limite: [[_getDate(projetDetail.dateLimite)]]</p>
+                    <p><iron-icon icon="icons:language"></iron-icon> Langue de contact: [[_getLangue(projetDetail.langue)]]</p>
                     <div class="paper-fab-section">
                         <paper-fab class="paper-fab" icon="icons:create" on-tap="_openModificationProjetModal"></paper-fab>
                         <paper-fab class="paper-fab" icon="icons:delete" on-tap="_openSuppressionProjetModal"></paper-fab>
@@ -119,6 +120,13 @@
     },
     _getDate: function(timestamp) {
         return moment(timestamp, 'x').format('DD/MM/YYYY');
+    },
+    _getLangue: function(langue) {
+        if(langue == 'fr') {
+            return 'Français';
+        } else {
+            return 'Anglais';
+        }
     }
       
   });

@@ -42,12 +42,12 @@
     </iron-ajax> 
       
     <paper-dialog id="dialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
-        <h2>{{localize('ajout-delegation-modal')}}</h2>
-        <p>{{localize('header44')}}</p>
+        <h2>{{localize('ajout-delegation-modal-titre')}}</h2>
+        <p>{{localize('ajout-delegation-modal-detail')}}</p>
         <template id="emails" is="dom-repeat" items="{{emailsList}}">
             <div class="email-element">
                 <paper-input-container>
-                    <label>{{localize('header45')}}</label>
+                    <label>Email</label>
                     <input is="iron-input" type="email" on-input="_onEmailChanged" bind-value="{{item.value}}">
                 </paper-input-container>
                 <span class="paper-input-delete-button">
@@ -56,8 +56,8 @@
             </div>
         </template>
         <div class="buttons">
-            <paper-button dialog-dismiss>{{localize('header46')}}</paper-button>
-            <paper-button autofocus on-tap="_addInvitation">{{localize('header47')}}</paper-button>
+            <paper-button dialog-dismiss>{{localize('btn-annuler')}}</paper-button>
+            <paper-button autofocus on-tap="_addInvitation">{{localize('btn-valider')}}</paper-button>
         </div>
     </paper-dialog>
       
@@ -76,7 +76,7 @@
             notify: true
         },
         language: {
-          value: 'en'
+          value: 'fr'
         },
         serverUrl: String
       },

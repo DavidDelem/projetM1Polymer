@@ -57,10 +57,10 @@
           <app-toolbar>
             <paper-icon-button icon="my-icons:menu" drawer-toggle></paper-icon-button>
               <template is="dom-if" if="[[_isPage('page-connexion-administrateur', page)]]">
-                <div main-title>Administration des biodatas</div>
+                <div main-title>Sea Test Base Biodata Administration</div>
               </template>
               <template is="dom-if" if="[[_isPage('page-connexion-visiteur', page)]]">
-                <div main-title>Sea Test Base Biodatas</div>
+                <div main-title>Sea Test Base Biodata</div>
               </template>
           </app-toolbar>
         </app-header>
@@ -72,7 +72,6 @@
             role="main">
           <page-connexion-administrateur name="page-connexion-administrateur"></page-connexion-administrateur>
           <page-connexion-visiteur name="page-connexion-visiteur"></page-connexion-visiteur>
-          <view-404 name="view404"></view-404>
         </iron-pages>
       </app-header-layout>
     </app-drawer-layout>
@@ -98,17 +97,16 @@
         '_routePageChanged(routeData.sub_page)',
       ],
       _routePageChanged: function(page) {
-        this.page = page || 'view1';
+        this.page = page || 'page-connexion-visiteur';
       },
       _pageChanged: function(page) {
-        // Load page import on demand. Show 404 page if fails
         var resolvedPageUrl = this.resolveUrl('public/' + page + '.html');
         this.importHref(resolvedPageUrl, null, this._showPage404, true);
           console.log(this.importHref(resolvedPageUrl, null, this._showPage404, true));
           
       },
       _showPage404: function() {
-        this.page = 'view404';
+        this.page = 'page-connexion-visiteur';
       },
       _isPage: function(selectedPage, page) {
           return selectedPage === page;

@@ -38,7 +38,7 @@
     id="champsRequest"
     method="GET"
     headers="{{_computeHeaders(storedData)}}"
-    url="{{serverUrl}}/administrateur/profils/champs"
+    url="{{serverUrl}}/administration/profils/champs"
     handle-as="json"
     last-response="{{champs}}"></iron-ajax>
       
@@ -82,7 +82,11 @@
       properties: {
         selectedProfil: String,
         champs: Object,
-        serverUrl: String
+        serverUrl: String,
+        chargement: {
+            type: Boolean,
+            value: false
+        }
       },
       ready: function () {
         this.serverUrl = this.$.meta.byKey("server-url");
