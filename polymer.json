@@ -2,7 +2,6 @@
   "entrypoint": "index.html",
   "shell": "src/my-app.html",
   "fragments": [
-    "src/view404.html",
     "src/administrateur/page-actualite.html",
     "src/administrateur/page-invitations.html",
     "src/administrateur/page-invitations-detail.html",
@@ -24,6 +23,7 @@
   "sourceGlobs": [
     "src/**/*",
     "src/**/**/*",
+    "images/*",
     "images/**/*",
     "bower.json"
   ],

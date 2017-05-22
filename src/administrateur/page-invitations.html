@@ -104,7 +104,6 @@
                             <paper-item on-tap="_reloadListePeriode">[[item.nom]]</paper-item>
                         </template>
                     </paper-menu>
-<!--                    <div><paper-input label="Date de début"></paper-input> au <paper-input label="Date de fin"></paper-input></div>-->
                 </div>
             </paper-menu-button>
             <paper-menu-button dynamic-align="true" class="special-paper-menu">
@@ -185,6 +184,7 @@
           this.selectedTris = this.tris[0];
       },
       attributeChanged : function(name, type){
+          console.log('invit');
           if(this.getAttribute('class').includes('iron-selected')){
             this._generateRequests();
           }

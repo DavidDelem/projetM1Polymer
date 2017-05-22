@@ -105,7 +105,8 @@
                 selected="[[page]]"
                 attr-for-selected="name"
                 fallback-selection="view404"
-                role="main">
+                role="main"
+                        on-iron-select="_select">
               <page-actualite name="page-actualite"></page-actualite>
               <page-invitations name="page-invitations"></page-invitations> 
               <page-invitations-detail projet="{{routeData.p2}}" name="page-invitations-detail"></page-invitations-detail>
@@ -194,6 +195,9 @@
       },
       _toggleMenu: function() {
           this.$.drawer.opened = !this.$.drawer.opened;
+      },
+      _select: function(e, data) {
+            this.fire('iron-signal', {name: 'page-changed', data: {}});
       }
     });
   </script>

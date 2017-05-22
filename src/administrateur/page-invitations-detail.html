@@ -108,6 +108,7 @@
     <iron-signals on-iron-signal-action-success="_handleActionSuccessEvent"></iron-signals> 
     <iron-signals on-iron-signal-modal-projet-success="_handleModalProjetSuccessEvent"></iron-signals> 
     <iron-signals on-iron-signal-modal-suppression-success="_handleModalSuppressionSuccessEvent"></iron-signals> 
+    <iron-signals on-iron-signal-page-changed="_generateRequests"></iron-signals> 
       
     <iron-ajax 
         id="invitationsRequest"
@@ -218,7 +219,7 @@
         this.serverUrl = this.$.meta.byKey("server-url");
         this.baseUrl = this.$.meta.byKey("base-url");
       },
-      attributeChanged : function(name, type){
+      attributeChanged : function(name, type) {
           if(this.getAttribute('class').includes('iron-selected')){
             this._generateRequests();
           }

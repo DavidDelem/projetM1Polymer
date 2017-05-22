@@ -82,7 +82,7 @@
                 <a class="drawer-elem" name="page-biodatas" href="{{baseUrl}}/visiteur/page-biodatas">{{localize('menu-2')}}</a>
                 <a class="drawer-elem" name="page-delegation" href="{{baseUrl}}/visiteur/page-delegation">{{localize('menu-3')}}</a>
             </iron-selector>
-            <img class="logo-stb" src="/images/logo.png">
+            <img class="logo-stb" src="[[nomDomaine]]/images/logo.png">
           </app-drawer>
     
             <iron-pages
@@ -107,6 +107,7 @@
       is: 'section-visiteur',
       ready: function () {
         this.baseUrl = this.$.meta.byKey("base-url");
+        this.nomDomaine = this.$.meta.byKey("nom-domaine");
         this.language = this.$.meta.byKey("langue") || "fr";
       },
       behaviors: [

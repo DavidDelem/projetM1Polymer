@@ -94,6 +94,7 @@
         this.serverUrl = this.$.meta.byKey("server-url");
       },
       attributeChanged : function(name, type){
+          console.log('invit');
           if(this.getAttribute('class').includes('iron-selected')){
              this._generateRequests();
           }
