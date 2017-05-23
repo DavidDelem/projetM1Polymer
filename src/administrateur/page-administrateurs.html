@@ -67,11 +67,12 @@
         <p class="floating-text">Liste des comptes administrateurs</p>
     </div>
     <template is="dom-repeat" items="{{administrateurs}}">
-        <div class="col-md-3">
+        <div class="col-md-4">
             <paper-card>
                 <div class="card-actions">
                     <span class="titre-rappel">[[item.identifiant]]</span>
                     <div class="rappel-btn">
+                        <paper-icon-button icon="icons:create" on-tap="_openModifierAdministrateurModal"></paper-icon-button>
                         <paper-icon-button class="delete-icon" icon="icons:clear" on-tap="_openRemoveAdministrateurModal"></paper-icon-button>
                     </div>
                 </div>                                                                                       
@@ -112,6 +113,9 @@
       },
       _openRemoveAdministrateurModal: function(event) {
         this.fire('iron-signal', {name: 'open-suppression-administrateur-modal', data: {identifiant: event.model.get('item').identifiant}});
+      },
+      _openModifierAdministrateurModal: function(event) {
+        this.fire('iron-signal', {name: 'open-modification-administrateur-modal', data: {identifiant: event.model.get('item').identifiant}});  
       },
       _openAddAdministrateurModal: function(event) {
         this.fire('iron-signal', {name: 'open-ajout-administrateur-modal', data: {}});

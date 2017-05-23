@@ -143,6 +143,19 @@
             bottom: -20px;
             z-index: 15;
         }
+        
+        @media screen and (max-width: 640px) {
+            .card {
+                margin-left: 0;
+                margin-right: 0;
+                padding-bottom: 35px;
+                margin-bottom: 60px;
+            }
+            
+            .see-previous, .see-next {
+                bottom: -28px;
+            }
+        }
     </style>
     
     <iron-meta id="meta"></iron-meta>
@@ -150,14 +163,14 @@
     <app-data key="storedData" data="{{storedData}}"></app-data>
     
     <iron-ajax 
-    id="champsRequest"
-    method="GET"
-    headers="{{_computeHeaders(storedData)}}"
-    url="{{serverUrl}}/visiteurs/profils/champs"
-    handle-as="json"
-    last-response="{{champs}}"
-    on-response="_handleChampsResponse"
-    on-error="_handleHttpError"></iron-ajax>
+        id="champsRequest"
+        method="GET"
+        headers="{{_computeHeaders(storedData)}}"
+        url="{{serverUrl}}/visiteurs/profils/champs"
+        handle-as="json"
+        last-response="{{champs}}"
+        on-response="_handleChampsResponse"
+        on-error="_handleHttpError"></iron-ajax>
       
     <iron-ajax 
         id="historiqueEnvoyeRequest" 
@@ -169,21 +182,21 @@
         on-error="_handleHttpError"></iron-ajax>
     
     <iron-ajax 
-    id="dateLimiteRequest"
-    method="GET"
-    headers="{{_computeHeaders(storedData)}}"
-    url="{{serverUrl}}/visiteurs/projets/datelimite"
-    handle-as="json"
-    last-response="{{dateLimite}}"
-    on-error="_handleHttpError"></iron-ajax>
+        id="dateLimiteRequest"
+        method="GET"
+        headers="{{_computeHeaders(storedData)}}"
+        url="{{serverUrl}}/visiteurs/projets/datelimite"
+        handle-as="json"
+        last-response="{{dateLimite}}"
+        on-error="_handleHttpError"></iron-ajax>
       
     <iron-ajax 
-    id="biodatasRequest"
-    method="POST"
-    headers="{{_computeHeaders(storedData)}}"
-    url="{{serverUrl}}/visiteurs/biodatas"
-    on-response="_handleBiodatasResponse"
-    on-error="_handleBiodatasError"></iron-ajax>
+        id="biodatasRequest"
+        method="POST"
+        headers="{{_computeHeaders(storedData)}}"
+        url="{{serverUrl}}/visiteurs/biodatas"
+        on-response="_handleBiodatasResponse"
+        on-error="_handleBiodatasError"></iron-ajax>
     
     <template is="dom-if" if="{{_afficherFormulaire(biodatasOk, biodatasEnvoyees, dateLimite)}}">
             <div class="col-md-8">

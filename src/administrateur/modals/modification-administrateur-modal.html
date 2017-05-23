@@ -1,0 +1,93 @@
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../shared-styles.html">
+<link rel="import" href="../../app-data.html">
+
+<dom-module id="modification-administrateur-modal">
+  <template>
+    <style include="shared-styles">  
+        paper-input-container {
+            margin-bottom: 30px;
+        }
+    </style>
+    
+    <iron-meta id="meta"></iron-meta>
+    <iron-localstorage name="data-storage" value="{{storedData}}"></iron-localstorage>
+    <app-data key="storedData" data="{{storedData}}"></app-data>
+      
+    <iron-signals on-iron-signal-open-modification-administrateur-modal="_handleOpenModificationAdministrateurModalEvent"></iron-signals>  
+      
+    <iron-ajax 
+    id="modifierAdministrateurRequest"
+    method="PUT"
+    content-type="application/x-www-form-urlencoded"   
+    headers="{{_computeHeaders(storedData)}}"
+    url="{{serverUrl}}/administration/administrateurs"
+    on-response="_handleModificationAdministrateurResponse"
+    on-error="_handleModificationAdministrateurError"></iron-ajax>    
+      
+    <paper-dialog id="dialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
+        <h2>Modification du compte administrateur</h2>
+        <p>Le mot de passe doit contenir plus de 5 caractères</p>
+        <paper-input-container>
+            <label>Nouveau mot de passe</label>
+            <input is="iron-input" type="text" bind-value="{{password}}">
+            <paper-input-char-counter></paper-input-char-counter>
+        </paper-input-container>
+        <div class="buttons">
+            <paper-button disabled$="{{chargement}}" dialog-dismiss>Annuler</paper-button>
+            <paper-button disabled$="{{_disableButton(password, chargement)}}" autofocus on-tap="_modifierAdministrateur">
+                <span hidden$="{{chargement}}">Valider</span>
+                <paper-spinner hidden$="{{!chargement}}" class="paper-spinner-validation" active={{chargement}}></paper-spinner>
+            </paper-button>
+        </div>
+    </paper-dialog>
+      
+  </template>
+
+  <script>
+    Polymer({
+      is: 'modification-administrateur-modal',
+      properties: {
+        identifiant: String,
+        serverUrl: String,
+        chargement: {
+            type: Boolean,
+            value: false
+        },
+        password: {
+            type: String,
+            value: ''
+        }
+      },
+      ready: function () {
+        this.serverUrl = this.$.meta.byKey("server-url");
+      },
+      _computeHeaders: function(storedData) {
+        return {"Authorization": "JWT " + storedData.token };
+      },
+      _handleOpenModificationAdministrateurModalEvent: function(event) {
+        this.identifiant = event.detail.identifiant;
+        this.$.dialog.open();
+      },
+      _disableButton: function(password, chargement) {
+        return ((password.length < 5) || chargement == true);
+      },
+      _modifierAdministrateur: function() {
+        this.$.modifierAdministrateurRequest.body = { identifiant: this.identifiant, password: this.password }
+        this.$.modifierAdministrateurRequest.generateRequest();
+        this.chargement = true;
+      },
+      _handleModificationAdministrateurResponse: function(response) {
+        this.$.dialog.close();
+        this.chargement = false;
+        this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Le mot de passe à été modifié'}});
+      },
+      _handleModificationAdministrateurError: function(error) {
+        this.$.dialog.close();
+        this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Echec lors de la modification du mot de passe'}});
+        this.chargement = false;
+      }
+        
+    });
+  </script>
+</dom-module>
