@@ -3,6 +3,7 @@
 <link rel="import" href="visiteur/modals/ajout-delegation-modal.html">
 <link rel="import" href="visiteur/modals/annulation-delegation-modal.html">
 <link rel="import" href="visiteur/modals/erreur-biodatas-modal.html">
+<link rel="import" href="visiteur/modals/envoi-message-modal.html">
 <link rel="import" href="../bower_components/app-localize-behavior/app-localize-behavior.html">
 
 <dom-module id="section-visiteur">
@@ -53,6 +54,7 @@
             max-width: 230px;
         }
     </style>
+
       
       <iron-meta id="meta"></iron-meta>
       <iron-localstorage name="data-storage" value="{{storedData}}" on-iron-localstorage-load="_selectLangue"></iron-localstorage>
@@ -62,12 +64,26 @@
     route="{{route}}"
     pattern="/:sub_page"
     data="{{routeData}}"></app-route>
+
+     <iron-ajax 
+        id="suppRequest" 
+        method="DELETE"
+        content-type="application/x-www-form-urlencoded"
+        headers="{{_computeHeaders(storedData.token)}}"
+        url="{{serverUrl}}/visiteurs/invitation"
+        handle-as="json"
+        last-response="{{historique}}"
+        on-error="_handleHttpError"></iron-ajax>
       
       <app-header-layout fullbleed has-scrolling-region>
         <app-header condenses reveals fixed full effects="waterfall">
           <app-toolbar>
             <paper-icon-button icon="icons:menu" on-tap="_toggleMenu" drawer-toggle></paper-icon-button>
             <div main-title>Sea Test Base Biodata</div>
+
+            <paper-icon-button on-tap="_suppinvitation" icon="icons:delete"></paper-icon-button>
+            <paper-icon-button on-tap="_openMessageModal" icon="icons:mail"></paper-icon-button>
+
             <a href="{{baseUrl}}/public/page-connexion-visiteur/">
                 <paper-icon-button icon="icons:power-settings-new"></paper-icon-button>
             </a>
@@ -100,6 +116,7 @@
     <ajout-delegation-modal></ajout-delegation-modal>
     <annulation-delegation-modal></annulation-delegation-modal>
     <erreur-biodatas-modal></erreur-biodatas-modal>
+    <envoi-message-modal></envoi-message-modal>
   </template>
 
   <script>
@@ -109,6 +126,7 @@
         this.baseUrl = this.$.meta.byKey("base-url");
         this.nomDomaine = this.$.meta.byKey("nom-domaine");
         this.language = this.$.meta.byKey("langue") || "fr";
+        this.serverUrl = this.$.meta.byKey("server-url");
       },
       behaviors: [
         Polymer.AppLocalizeBehavior
@@ -129,6 +147,9 @@
       ],
       attached: function() {
         this.loadResources(this.resolveUrl('locales.json'));
+      },
+      _computeHeaders: function(token) {
+        return {"Authorization": "JWT " + token };
       },
       _handleConnexionVisiteurDeniedEvent: function(event) {
         this._disconnect();
@@ -152,6 +173,12 @@
       },
       _toggleMenu: function() {
         this.$.drawer.opened = !this.$.drawer.opened;
+      },
+      _suppinvitation: function(){
+        this.$.suppRequest.generateRequest();
+      },
+      _openMessageModal: function(){
+        this.fire('iron-signal', {name: 'open-envoi-message-modal', data: {}});
       },
       _selectLangue: function() {
         this.language = this.storedData.language || 'fr';

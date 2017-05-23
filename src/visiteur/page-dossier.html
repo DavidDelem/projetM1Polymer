@@ -118,16 +118,6 @@
         handle-as="json"
         last-response="{{historique}}"
         on-error="_handleHttpError"></iron-ajax>
-
-    <iron-ajax 
-        id="suppRequest" 
-        method="DELETE"
-        content-type="application/x-www-form-urlencoded"
-        headers="{{_computeHeaders(storedData.token)}}"
-        url="{{serverUrl}}/invitation"
-        handle-as="json"
-        last-response="{{historique}}"
-        on-error="_handleHttpError"></iron-ajax>
       
     <div class="timeline">
         <template is="dom-repeat" items="{{historique}}">
@@ -139,8 +129,7 @@
                             <paper-fab icon="icons:account-circle"></paper-fab>
                             <h3>{{localize('invitation-recue-titre')}}</h3>
                             <p>{{localize('invitation-recue-detail-1')}} {{_getDate(dateLimite)}} {{localize('invitation-recue-detail-2')}}</p>
-<!--                            Il vous reste [[_getTempsRestant(dateLimite)]] -->
-<!--                            <paper-button raised class="size" on-tap="_suppinvitation">Supprimer mon dossier<iron-icon icon="icons:delete"></iron-icon></paper-button>-->
+                           <!--<paper-button raised class="size" on-tap="_suppinvitation">Supprimer mon dossier<iron-icon icon="icons:delete"></iron-icon></paper-button>-->
                         </div>     
                     </div>
                 </div>
