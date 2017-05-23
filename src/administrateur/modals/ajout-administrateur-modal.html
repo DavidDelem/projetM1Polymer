@@ -38,7 +38,7 @@
       
     <paper-dialog id="dialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
         <h2>Ajout d'administrateurs</h2>
-        <p>Le mot de passe pourra être modifié après la première connexion</p>
+        <p>Le mot de passe initial doit contenir plus de 5 caractères</p>
 
         
         <template id="emails" is="dom-repeat" items="{{emailsList}}">
@@ -53,6 +53,7 @@
                 <paper-input-container>
                     <label>Mot de passe initial</label>
                     <input is="iron-input" type="text" on-input="_onEmailChanged" bind-value="{{item.password}}">
+                    <paper-input-char-counter></paper-input-char-counter>
                 </paper-input-container>
             </div>
             <div class="col-md-1">
@@ -100,7 +101,7 @@
       },
       _onEmailChanged: function(event) {
           var re = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-          if(re.test(this.emailsList[this.emailsList.length-1].email) && this.emailsList[this.emailsList.length-1].password != '') {
+          if(re.test(this.emailsList[this.emailsList.length-1].email) && this.emailsList[this.emailsList.length-1].password.length > 5) {
             this.push('emailsList', {email: '', password: ''});
             this.$.emails.render();
           }

@@ -111,13 +111,11 @@
       _handleUpdateChampsResponse: function(response) {
         this.$.dialog.close();
         this.chargement = false;
-          
         this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Les modifications du profil sont enregistrées'}});
       },
       _handleUpdateChampsError: function(error) {
         this.$.dialog.close();
         this.chargement = false;
-          
         this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Echec lors de l\'enregistrement des modifications du profil'}});
       },
         

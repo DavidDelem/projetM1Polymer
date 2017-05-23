@@ -76,6 +76,31 @@
             left: 28px;
         }
         
+        
+        @media screen and (max-width: 640px) {
+            .step:not(:first-child) .step-element::after {
+                display: none;
+            }
+            
+            .step-element {
+                font-size: 12px;
+            }
+            
+            .step-element::before {
+                display: inline-block;
+                margin-right: 5px;
+                margin-left: 10px;
+                margin-bottom: 0px;
+            }
+            
+            .step {
+                margin: 0px;
+                padding: 10px 0px;
+                width: 55px;
+                width: initial;
+            }
+        }
+        
     </style>
 
         <div class="steps" >
