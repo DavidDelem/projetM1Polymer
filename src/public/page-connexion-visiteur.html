@@ -19,6 +19,10 @@
             text-align: center;
         }
         
+        .card-connexion-header h1 {
+           margin: 0.25em 0 0.5em 0;
+        }
+        
         .btn-connexion {
             width: 100%;
             margin: 15px 0 0 0;
@@ -39,13 +43,23 @@
         
         .langue-btns {
             text-align: center;
-            padding: 10px 0;
+            padding: 5px 0 0 0;
         }
         
         paper-radio-button {
             --paper-radio-button-checked-color: #000;
             --paper-radio-button-checked-ink-color: #000;
             --paper-radio-button-unchecked-ink-color: #000;
+        }
+        
+        .credits {
+            color: #7d7d7d;
+            font-size: 12px;
+            text-align: center;
+        }
+        
+        .credis a {
+            text-decoration: none;
         }
         
     </style>
@@ -99,6 +113,14 @@
             </div>
             <div class="forgotten-password">
                 <paper-button noink class="primary btn-forgotten-password" on-tap="_openRecuperationIdentifiantsModal">Identifiant ou mot de passe oublié ?</paper-button>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="credits">
+                <p>Merci de contacter biodata@celadon.asso.fr pour tout renseignement<br/>
+                Site réalisé par <a target="_blank" href="https://www.linkedin.com/in/delemottedavid/">David Delemotte</a>
+                et <a target="_blank" href="https://www.linkedin.com/in/nader-el-akoum-177baa143/">Nader El Akoum</a>, étudiants à l'ISEN Brest
+                </p>
             </div>
         </div>
     </div>
