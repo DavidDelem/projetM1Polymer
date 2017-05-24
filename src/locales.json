@@ -94,7 +94,10 @@
     "header63": "Choose a file",
     "header64": "I confirm the validity of the data entered",
     "header65": "I accept the transmission of the data to the authorities",
-    "header66": "Send my data"
+    "header66": "Send my data",
+    "suppression-invitation-modal-titre": "Delete my invitation",
+    "suppression-invitation-modal-detail-1": "If you don't want to access to Sea Test Base, you can delete your invitation.",
+    "suppression-invitation-modal-detail-2": "There is no return possible."
   },
   "fr": {
     "menu-1": "Mon dossier",
@@ -191,6 +194,10 @@
     "header63": "Choisir un fichier",
     "header64": "Je confirme la validité des données saisies",
     "header65": "J'accepte la transmission des données aux autorités",
-    "header66": "Envoyer mes données"
+    "header66": "Envoyer mes données",
+    "suppression-invitation-modal-titre": "Supprimer mon invitation",
+    "suppression-invitation-modal-detail-1": "Si vous ne souhaitez pas accéder à Sea Test Base, vous pouvez supprimer votre invitation.",
+    "suppression-invitation-modal-detail-2": "Cette action est irréversible."
+      
   }
 }

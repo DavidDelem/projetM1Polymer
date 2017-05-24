@@ -80,10 +80,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <section-public name="public" route="{{subroute}}"></section-public>
     </iron-pages>
       
-    <iron-meta key="nom-domaine" value="https://194.250.113.93"></iron-meta>
-    <iron-meta key="base-url" value="/#"></iron-meta>
-    <iron-meta key="langue" value="fr"></iron-meta>
-    <iron-meta key="server-url" value="http://localhost:8088"></iron-meta>
+    <!-- CONFIGURATION POUR LE BUILD -->
+      
+    <iron-meta key="nom-domaine" value="https://biodata.seatestbase.com"></iron-meta> <!-- INDIQUER ICI LE NOM DE DOMAINE -->
+    <iron-meta key="base-url" value="/#"></iron-meta> <!-- INDIQUER ICI LA BASE DE L'URL DU CLIENT APRES LE NOM DE DOMAINE -->
+    <iron-meta key="langue" value="fr"></iron-meta> <!-- INDIQUER ICI LA LANGUE PAR DEFAUT -->
+    <iron-meta key="server-url" value="https://biodata.seatestbase.com/node"></iron-meta> <!-- INDIQUER ICI L'URL DU SERVEUR -->
+      
   </template>
 
   <script>      
