@@ -1,6 +1,7 @@
 <link rel="import" href="../../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../shared-styles.html">
 <link rel="import" href="../../app-data.html">
+<link rel="import" href="../../../bower_components/app-localize-behavior/app-localize-behavior.html">
 
 <dom-module id="recuperation-identifiants-modal">
   <template>
@@ -24,21 +25,21 @@
     on-error="_handleRecuperationIdentifiantsError"></iron-ajax>    
       
     <paper-dialog id="dialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
-        <h2>Récupération des identifiants</h2>
-        <p>Saissisez votre adresse email afin de recevoir vos identifiants</p>
+        <h2>{{localize('recuperation-identifiants-modal')}}</h2>
+        <p>{{localize('header73')}}</p>
         <paper-input-container>
-            <label>Email</label>
+            <label>{{localize('header74')}}</label>
             <input is="iron-input" id="email" type="email" bind-value="{{email}}">
         </paper-input-container>
         <template is="dom-if" if="{{error}}"> <!--affichage d'erreur -->
-            <h3><iron-icon icon="icons:report-problem"></iron-icon>identifiant non valable</h3>
+            <h3><iron-icon icon="icons:report-problem"></iron-icon>{{localize('header75')}}</h3>
         </template>
         <template is="dom-if" if="{{success}}"> <!--affichage d'erreur -->
-            <h3>identifiant est envoyé par mail</h3>
+            <h3>{{localize('header76')}}</h3>
         </template>
         <div class="buttons">
-            <paper-button dialog-dismiss>Annuler</paper-button>
-            <paper-button autofocus on-tap="_recupererIdentifiants" disabled$="{{_validateForm(email)}}">Valider</paper-button>
+            <paper-button dialog-dismiss>{{localize('header77')}}</paper-button>
+            <paper-button autofocus on-tap="_recupererIdentifiants" disabled$="{{_validateForm(email)}}">{{localize('header78')}}</paper-button>
         </div>
     </paper-dialog>
       
@@ -47,16 +48,27 @@
   <script>
     Polymer({
       is: 'recuperation-identifiants-modal',
+      behaviors: [
+        Polymer.AppLocalizeBehavior
+      ],
       properties: {
         email: String,
         serverUrl: String,
         error: Boolean,
-        success: Boolean
+        success: Boolean,
+        language: {
+            type: String,
+            value: 'fr'
+        }
       },
       ready: function () {
         this.serverUrl = this.$.meta.byKey("server-url");
       },
+      attached: function() {
+        this.loadResources(this.resolveUrl('../../locales.json'));
+      },
       _handleOpenRecuperationIdentifiantsModalEvent: function(event) {
+        this.language = event.detail.language;
         this.$.dialog.open();
       },
       _validateForm: function(email) {
