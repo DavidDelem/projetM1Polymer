@@ -97,7 +97,14 @@
     "header66": "Send my data",
     "suppression-invitation-modal-titre": "Delete my invitation",
     "suppression-invitation-modal-detail-1": "If you don't want to access to Sea Test Base, you can delete your invitation.",
-    "suppression-invitation-modal-detail-2": "There is no return possible."
+    "suppression-invitation-modal-detail-2": "There is no return possible.",
+    "page-connexion-visiteur": "connection",
+    "header67": "Login",
+    "header68": "Password",
+    "header69": "French",
+    "header70": "English",
+    "header71": "connection",
+    "header72": "Forgot username or password ?"
   },
   "fr": {
     "menu-1": "Mon dossier",
@@ -197,7 +204,14 @@
     "header66": "Envoyer mes données",
     "suppression-invitation-modal-titre": "Supprimer mon invitation",
     "suppression-invitation-modal-detail-1": "Si vous ne souhaitez pas accéder à Sea Test Base, vous pouvez supprimer votre invitation.",
-    "suppression-invitation-modal-detail-2": "Cette action est irréversible."
+    "suppression-invitation-modal-detail-2": "Cette action est irréversible.",
+    "page-connexion-visiteur": "Connexion",
+    "header67": "Identifiant",
+    "header68": "Mot de passe",
+    "header69": "Français",
+    "header70": "English",
+    "header71": "Connexion",
+    "header72": "Identifiant ou mot de passe oublié ?"
       
   }
 }
