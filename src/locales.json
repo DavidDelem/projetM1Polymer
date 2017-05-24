@@ -104,7 +104,14 @@
     "header69": "French",
     "header70": "English",
     "header71": "connection",
-    "header72": "Forgot username or password ?"
+    "header72": "Forgot username or password ?",
+    "recuperation-identifiants-modal": "Recovery of identifiers",
+    "header73": "Please enter your email address in order to receive your login details",
+    "header74": "E-mail",
+    "header75": "Invalid identifier",
+    "header76": "Identifier is sent by mail",
+    "header77": "Cancel",
+    "header78": "Validate" 
   },
   "fr": {
     "menu-1": "Mon dossier",
@@ -211,7 +218,13 @@
     "header69": "Français",
     "header70": "English",
     "header71": "Connexion",
-    "header72": "Identifiant ou mot de passe oublié ?"
-      
+    "header72": "Identifiant ou mot de passe oublié ?",
+    "recuperation-identifiants-modal": "Récupération des identifiants",
+    "header73": "Saissisez votre adresse email afin de recevoir vos identifiants",
+    "header74": "Email",
+    "header75": "identifiant non valable",
+    "header76": "identifiant est envoyé par mail",
+    "header77": "Annuler",
+    "header78": "Valider"    
   }
 }
