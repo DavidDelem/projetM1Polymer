@@ -111,7 +111,11 @@
     "header75": "Invalid identifier",
     "header76": "Identifier is sent by mail",
     "header77": "Cancel",
-    "header78": "Validate" 
+    "header78": "Validate",
+    "credits-contact": "Please contact biodata@celadon.asso.fr for any further information",
+    "credits-realisateurs-1": "Site created by",
+      "credits-realisateurs-2": "and",
+      "credits-realisateurs-3": "ISEN Brest students"
   },
   "fr": {
     "menu-1": "Mon dossier",
@@ -225,6 +229,10 @@
     "header75": "identifiant non valable",
     "header76": "identifiant est envoyé par mail",
     "header77": "Annuler",
-    "header78": "Valider"    
+    "header78": "Valider",
+    "credits-contact": "Merci de contacter biodata@celadon.asso.fr pour tout renseignement",
+    "credits-realisateurs-1": "Site réalisé par",
+      "credits-realisateurs-2": "et",
+      "credits-realisateurs-3": "étudiants à l'ISEN Brest"
   }
 }
