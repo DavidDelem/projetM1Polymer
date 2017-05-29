@@ -173,7 +173,10 @@
                     <brainy-table-column width="20px" align-right>
                         <template>
                             <template is="dom-if" if="{{item.identifiantParent}}">
-                                <iron-icon icon="av:recent-actors"></iron-icon>
+                                <div class="label-elem" tabindex="0">
+                                    <iron-icon icon="av:recent-actors"></iron-icon>
+                                    <paper-tooltip>Invitation déléguée</paper-tooltip>
+                               </div> 
                             </template>
                         </template>
                     </brainy-table-column>

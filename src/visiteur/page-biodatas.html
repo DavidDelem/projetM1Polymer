@@ -254,16 +254,10 @@
                                                         <input is="iron-input" id="username" type="number" bind-value="{{item.saisie.numero}}">
                                                     </paper-input-container>
                                                 </div>
-                                                <div class="col-md-6">
+                                                <div class="col-md-9">
                                                     <paper-input-container>
                                                         <label>{{localize('header55')}}</label>
                                                         <input is="iron-input" id="username" type="text" bind-value="{{item.saisie.rue}}">
-                                                    </paper-input-container>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <paper-input-container>
-                                                        <label>{{localize('header56')}}</label>
-                                                        <input is="iron-input" id="codepostal" type="number" bind-value="{{item.saisie.codePostal}}">
                                                     </paper-input-container>
                                                 </div>
                                                 <!--*****************-->
@@ -274,13 +268,19 @@
                                                     </paper-input-container>
                                                 </div>
                                                 <!--*****************-->
-                                                <div class="col-md-5">
+                                                <div class="col-sm-4">
+                                                    <paper-input-container>
+                                                        <label>{{localize('header56')}}</label>
+                                                        <input is="iron-input" id="codepostal" type="number" bind-value="{{item.saisie.codePostal}}">
+                                                    </paper-input-container>
+                                                </div>
+                                                <div class="col-sm-4">
                                                     <paper-input-container>
                                                         <label>{{localize('header58')}}</label>
                                                         <input is="iron-input" id="username" type="text" bind-value="{{item.saisie.ville}}">
                                                     </paper-input-container>
                                                 </div>
-                                                <div class="col-md-7">
+                                                <div class="col-sm-4">
                                                     <paper-countries country="[[country]]" value="{{item.saisie.pays}}" max-suggestions="3" auto-validate="true" label="Pays" placeholder="Saisir le pays"></paper-countries>
                                                 </div>
                                                 <informations-champ obligatoire="[[item.obligatoire]]" nom="[[item.nom]]" erreurs="[[erreurs]]" language="{{storedData.language}}"></informations-champ>
