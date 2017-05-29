@@ -95,6 +95,10 @@
         .size{
            font-size: 12px;
         }
+        
+        .fix-height {
+            height: 100px;
+        }
     </style>
       
     <iron-meta id="meta"></iron-meta>
@@ -185,7 +189,7 @@
                 </div>
             </template>
             <template is="dom-if" if="{{_computeHidden(item, 'DEMANDE_ACCESS_OK')}}">
-                 <div class="col-lg-10 col-lg-offset-1">
+                 <div class="col-lg-10 col-lg-offset-1 fix-height">
                     <div class="timeline-element">
                         <span class="timeline-date">[[_getDate(item.date)]]</span>
                         <div class="card card-timeline">
@@ -200,7 +204,7 @@
                 </div>
             </template>
             <template is="dom-if" if="{{_computeHidden(item, 'DEMANDE_ACCESS_KO')}}">
-                <div class="col-lg-10 col-lg-offset-1">
+                <div class="col-lg-10 col-lg-offset-1 fix-height">
                     <div class="timeline-element">
                         <span class="timeline-date">[[_getDate(item.date)]]</span>
                         <div class="card card-timeline">

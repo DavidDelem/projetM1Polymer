@@ -23,7 +23,7 @@
       
     <paper-dialog id="dialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
         <h2>Suppression du projet [[projet.nom]]</h2>
-        <p>La suppression d'un projet est définitive. Toutes les invitations associées ainsi que leur historique seront perdues</p>
+        <p>La suppression d'un projet est définitive.<br/>Toutes les invitations associées ainsi que leur historique seront perdus</p>
         <div class="buttons">
             <paper-button disabled$="{{chargement}}" dialog-dismiss>Annuler</paper-button>
             <paper-button disabled$="{{chargement}}" autofocus on-tap="_supprimerProjet">
@@ -64,8 +64,9 @@
         this.$.dialog.close();
         this.chargement = false;
           
+        this.fire('iron-signal', {name: 'modal-success'});
         this.fire('iron-signal', {name: 'modal-suppression-success'});
-        this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Le projet à été définitivement supprimé'}});
+        this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Le projet a été définitivement supprimé'}});
       },
       _handleSupppressionProjetError: function(error) {
         this.$.dialog.close();

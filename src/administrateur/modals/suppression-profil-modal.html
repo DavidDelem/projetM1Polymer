@@ -71,7 +71,7 @@
         this.chargement = false;
           
         this.fire('iron-signal', {name: 'modal-success'});
-        this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Le profil de formulaire à été définitivement supprimé'}});
+        this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Le profil de formulaire a été définitivement supprimé'}});
       },
       _handleRemoveProfilError: function(error) {
         this.$.dialog.close();

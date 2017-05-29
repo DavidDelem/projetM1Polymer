@@ -39,6 +39,8 @@
         
     </style>
 
+    <iron-meta id="meta"></iron-meta>
+      
     <div class="col-md-12">
         <template is="dom-if" if="{{_currentStepIs('accueil', currentStep)}}">
             <p class="floating-text question-text">{{localize('conseils-biodatas')}}</p>
@@ -83,21 +85,21 @@
                 <p class="floating-text question-text" on-tap="_setHoveredItemIdentifiant" data-identifiant="7"><iron-icon icon="icons:help"></iron-icon> {{localize('header29')}}</p>
                 <div class="details" hidden$="{{_hideDetails(7, hoveredItemIdentifiant)}}">
                     <p>{{localize('header30')}}</p>
-                    <img alt="carte identite" src="/images/carte-identite.png">
+                    <img alt="carte identite" src="[[nomDomaine]]/images/carte-identite.png">
                 </div>
             </div>
             <div class="passeport">
                 <p class="floating-text question-text" on-tap="_setHoveredItemIdentifiant" data-identifiant="8"><iron-icon icon="icons:help"></iron-icon> {{localize('header31')}}</p>
                 <div class="details" hidden$="{{_hideDetails(8, hoveredItemIdentifiant)}}">
                     <p>{{localize('header32')}}</p>
-                    <img alt="passeport" src="/images/passeport.png">
+                    <img alt="passeport" src="[[nomDomaine]]/images/passeport.png">
                 </div>
             </div>
             <div class="carte-sejour">
                 <p class="floating-text question-text" on-tap="_setHoveredItemIdentifiant" data-identifiant="9"><iron-icon icon="icons:help"></iron-icon>{{localize('header33')}}</p>
                 <div class="details" hidden$="{{_hideDetails(9, hoveredItemIdentifiant)}}">
                     <p>{{localize('header34')}}</p>
-                    <img alt="carte-sejour" src="/images/carte-sejour.jpg">
+                    <img alt="carte-sejour" src="[[nomDomaine]]/images/carte-sejour.jpg">
                 </div>
             </div>
         </template>
@@ -106,15 +108,15 @@
                 <p class="floating-text question-text"  on-tap="_setHoveredItemIdentifiant" data-identifiant="10"><iron-icon icon="icons:help"></iron-icon>{{localize('header35')}}</p>
                 <div class="details" hidden$="{{_hideDetails(10, hoveredItemIdentifiant)}}">
                     <p>{{localize('header36')}}</p>
-                    <img alt="passeport" src="/images/nouveau-permis.png">
-                    <img alt="passeport" src="/images/ancien-permis.png">
+                    <img alt="passeport" src="[[nomDomaine]]/images/nouveau-permis.png">
+                    <img alt="passeport" src="[[nomDomaine]]/images/ancien-permis.png">
                 </div>
             </div>
             <div class="immatriculation">
                 <p class="floating-text question-text"  on-tap="_setHoveredItemIdentifiant" data-identifiant="13"><iron-icon icon="icons:help"></iron-icon>{{localize('header37')}}</p>
                 <div class="details" hidden$="{{_hideDetails(13, hoveredItemIdentifiant)}}">
                     <p>{{localize('header38')}}</p>
-                    <img alt="passeport" src="/images/immatriculation.png">
+                    <img alt="passeport" src="[[nomDomaine]]/images/immatriculation.png">
                     <p>{{localize('header39')}}</p>
                 </div>
             </div>
@@ -157,7 +159,7 @@
       },
       ready: function() {
           this.hoveredItemIdentifiant = -1;
-          //this.language = this.$.meta.byKey("langue") || "fr";
+          this.nomDomaine = this.$.meta.byKey("nom-domaine");
       },
       attached: function() {
         this.loadResources(this.resolveUrl('../../locales.json'));

@@ -1,7 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../shared-styles.html">
 <link rel="import" href="../app-data.html">
-<link rel="import" href="../../../bower_components/app-localize-behavior/app-localize-behavior.html">
+<link rel="import" href="../../bower_components/app-localize-behavior/app-localize-behavior.html">
 
 <dom-module id="page-connexion-visiteur">
   <template>
@@ -73,6 +73,15 @@
         .credis a {
             text-decoration: none;
         }
+        .admin {
+            font-size: 12px;
+            position: absolute;
+            bottom: 0;
+            right: 20px;
+        }
+        .admin a {
+            text-decoration: none;
+        }
         
     </style>
       
@@ -129,10 +138,13 @@
         </div>
         <div class="col-lg-12">
             <div class="credits">
-                <p>[[localize('credits-contact')]]<br/>
+                <p>[[localize('credits-contact-1')]] <a href="mailto:biodata@celadon.asso.fr" target="_blank">biodata@celadon.asso.fr</a> [[localize('credits-contact-2')]] <br/><br/>
                 [[localize('credits-realisateurs-1')]] <a target="_blank" href="https://www.linkedin.com/in/delemottedavid/">David Delemotte</a>
                 [[localize('credits-realisateurs-2')]] <a target="_blank" href="https://www.linkedin.com/in/nader-el-akoum-177baa143/">Nader El Akoum</a>, [[localize('credits-realisateurs-3')]]
                 </p>
+            </div>
+            <div class="admin">
+                <a target="_blank" href="{{baseUrl}}/public/page-connexion-administrateur">Administration</a>
             </div>
         </div>
     </div>

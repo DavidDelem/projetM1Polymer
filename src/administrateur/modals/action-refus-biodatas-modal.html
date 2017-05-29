@@ -35,7 +35,7 @@
         on-error="_handleRefusBiodatasError"></iron-ajax>
       
     <paper-dialog id="dialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
-        <h2>Refus des biodatas de [[invitation.email]]</h2>
+        <h2>Refus des biodata de [[invitation.email]]</h2>
         <div class="paper-dialog-margin">
             <paper-checkbox checked="{{envoiMail}}">Avertir le visiteur par mail</paper-checkbox>
             <paper-checkbox disabled$="{{!envoiMail}}" checked="{{activationMessageExplicatif}}">Ajouter une explication personalisée</paper-checkbox>
@@ -93,7 +93,7 @@
         this.chargement = false;
           
         this.fire('iron-signal', {name: 'action-success'});
-        this.fire('iron-signal', {name: 'open-toast', data: {texte: 'L\'état de l\'invitation à été mis à jours'}});
+        this.fire('iron-signal', {name: 'open-toast', data: {texte: 'L\'état de l\'invitation a été mis à jours'}});
       },
       _handleRefusBiodatasError: function(error) {
         this.$.dialog.close();

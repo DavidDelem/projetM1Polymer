@@ -101,9 +101,7 @@
       },
       _pageChanged: function(page) {
         var resolvedPageUrl = this.resolveUrl('public/' + page + '.html');
-        this.importHref(resolvedPageUrl, null, this._showPage404, true);
-          console.log(this.importHref(resolvedPageUrl, null, this._showPage404, true));
-          
+        this.importHref(resolvedPageUrl, null, this._showPage404, true);          
       },
       _showPage404: function() {
         this.page = 'page-connexion-visiteur';

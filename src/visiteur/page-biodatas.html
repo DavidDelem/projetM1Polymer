@@ -7,7 +7,7 @@
 <link rel="import" href="./components/etapes-biodatas.html">
 <link rel="import" href="./components/accueil-biodatas.html">
 <link rel="import" href="./components/confirmation-biodatas.html">
-<link rel="import" href="./components/date-format.html">
+<link rel="import" href="./components/date-format-visiteur.html">
 <link rel="import" href="./components/liste-nationalites.html">
 <link rel="import" href="../../bower_components/app-localize-behavior/app-localize-behavior.html">
 
@@ -22,22 +22,22 @@
         padding: 10px;
       }
         
-        paper-fab {
-            --paper-fab-background: #5bb47d;
-        }
+      paper-fab {
+        --paper-fab-background: #5bb47d;
+      }
         
-        paper-checkbox {
-               --paper-checkbox-checked-color: #5bb47d;
-               --paper-checkbox-checked-ink-color: #5bb47d;
-               --paper-checkbox-unchecked-color: #008975;
-               --paper-checkbox-unchecked-ink-color: #5bb47d;
-        }
+      paper-checkbox {
+        --paper-checkbox-checked-color: #5bb47d;
+        --paper-checkbox-checked-ink-color: #5bb47d;
+        --paper-checkbox-unchecked-color: #008975;
+        --paper-checkbox-unchecked-ink-color: #5bb47d;
+      }
         
-        paper-toggle-button {
-            --paper-toggle-button-checked-bar-color:  #00aa8d;
-            --paper-toggle-button-checked-button-color:  #008975;
-            --paper-toggle-button-checked-ink-color: #00aa8d;
-        }
+      paper-toggle-button {
+        --paper-toggle-button-checked-bar-color:  #00aa8d;
+        --paper-toggle-button-checked-button-color:  #008975;
+        --paper-toggle-button-checked-ink-color: #00aa8d;
+      }
         
       .floating-text {
         color: #555555;
@@ -234,7 +234,7 @@
                                         <template is="dom-if" if="{{_computeHidden(item, 'texte_date')}}">
                                             <div class="row row-champ datenaissance" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
                                                 <div class="col-md-12">
-                                                    <date-format date-format="{{dateFormat}}" language="{{storedData.language}}"></date-format>
+                                                    <date-format-visiteur date-format="{{dateFormat}}" language="{{storedData.language}}"></date-format-visiteur>
                                                     <vaadin-date-picker i18n="{{dateFormat}}" min="1900-01-01" max="{{dateMax}}" value="{{item.saisie.date}}" label="Date de naissance"></vaadin-date-picker>
                                                 </div>
                                                 <informations-champ obligatoire="[[item.obligatoire]]" nom="[[item.nom]]" erreurs="[[erreurs]]" language="{{storedData.language}}"></informations-champ>
@@ -265,7 +265,6 @@
                                                         <label>{{localize('header56')}}</label>
                                                         <input is="iron-input" id="codepostal" type="number" bind-value="{{item.saisie.codePostal}}">
                                                     </paper-input-container>
-<!--                                                    <gold-zip-input label="Code postal" value="{{item.saisie.codepostal}}"></gold-zip-input>-->
                                                 </div>
                                                 <!--*****************-->
                                                 <div class="col-md-12">
@@ -324,23 +323,34 @@
                     <div class="card">
                         <div class="row">
                             <div class="col-md-8 col-md-offset-2">
-                                <div class="row row-champ">
-                                    <div class="col-md-12">
-                                        <div class="text-center">
-                                            <p>{{localize('header59')}}</p>
+                                <!-- AFFICHAGE DU CHOIX DE LA NATIONALITE SI ELLE EST ACTIVEE POUR CE PROFIL -->
+                                <template is="dom-repeat" items="{{champs}}">
+                                    <template is="dom-if" if="{{_computeHidden(item, 'identite_nationalite')}}">
+                                        <div class="row row-champ">
+                                            <div class="col-md-12">
+                                                <div class="text-center">
+                                                    <p>{{localize('header59')}}</p>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="row row-champ">
-                                    <div class="col-md-12">
-                                        <liste-nationalites nationalites="{{nationalites}}"></liste-nationalites>
-                                        <paper-autocomplete label="Nationalité" source="{{nationalites}}" value="{{selectedNationalite}}"></paper-autocomplete>
-                                        <informations-champ obligatoire="true" nom="" erreurs="[[erreurs]]" language="{{storedData.language}}"></informations-champ>
-                                    </div>
-                                </div>
+                                        <div class="row row-champ">
+                                            <div class="col-md-12">
+                                                <liste-nationalites nationalites="{{nationalites}}"></liste-nationalites>
+                                                <paper-autocomplete label="Nationalité" source="{{nationalites}}" value="{{item.saisie.nationalite}}" on-value-changed="_saisieNationalite"></paper-autocomplete>
+<!--                                                <informations-champ obligatoire="true" nom="" erreurs="[[erreurs]]" language="{{storedData.language}}"></informations-champ>-->
+                                                <informations-champ obligatoire="[[item.obligatoire]]" nom="[[item.nom]]" erreurs="[[erreurs]]" language="{{storedData.language}}"></informations-champ>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </template>
+                                
+                                <!-- AFFICHAGE DES CHAMPS POUR LES FICHIERS -->
+                                <!-- SI LA NATIONALITE EST ACTIVEE, LES CHAMPS CORRESPONDANT A LA NATIONALITE S'AFFICHENT -->
+                                <!-- SINON, ILS S'AFFICHENT TOUS -->
+                                
                                 <template is="dom-repeat" items="{{champs}}">
                                     <template is="dom-if" if="{{_computeHidden(item, 'identite_fichier')}}">
-                                        <template is="dom-if" if="{{_isNationality(item, selectedNationalite)}}">
+                                       <template is="dom-if" if="{{_isNationality(item, saisieNationalite)}}">
                                             <div class="row row-champ row-champ-fichier">
                                                 <div class="col-md-12" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
                                                     <div class="file-upload-zone file-upload-zone-identite">
@@ -354,7 +364,7 @@
                                                 </div>
                                                 <informations-champ obligatoire="[[item.obligatoire]]" nom="[[item.nom]]" erreurs="[[erreurs]]" language="{{storedData.language}}"></informations-champ>
                                             </div>
-                                        </template>
+                                      </template>
                                     </template>
                                 </template>   
                             </div>
@@ -442,7 +452,11 @@
         },
         serverUrl: String,
         nationalites: Object,
-        selectedNationalite: String,
+        saisieNationalite: {
+            type: Boolean,
+            value: true,
+            notify: true
+        },
         fichiers: {
             type: Object,
             value: [],
@@ -548,7 +562,19 @@
       _isObligatoire: function(item) {
           return item.obligatoire
       },
-      _isNationality: function(item, selectedNationalite) {
+      _isNationality: function(item) {
+          
+          var nationaliteDemandee = false;
+          var selectedNationalite = "";
+          
+          for(var i=0; i < this.champs.length; i++) {
+            if(this.champs[i].type == 'identite_nationalite') {
+                nationaliteDemandee = true;
+                selectedNationalite = this.champs[i].saisie.nationalite || "";
+            }
+          }
+          
+          if(nationaliteDemandee == true && selectedNationalite != "") {
             if(selectedNationalite.toLowerCase() == 'française' || selectedNationalite.toLowerCase() == 'francaise'
                || selectedNationalite.toLowerCase() == 'français' || selectedNationalite.toLowerCase() == 'francais') {
                 if(item.nom == "Carte d'identité" || item.nom == "Passeport") {
@@ -563,6 +589,11 @@
                     return false;
                 }   
             }
+          } else if(selectedNationalite == "") {
+              return false;
+          } else {
+              return true;
+          }
       },
       _addFile: function(event) {
           var item = event.model.get('item');
@@ -636,6 +667,7 @@
           /* Ajout des champs à la requette */
         
           formData.append("champs", JSON.stringify(this.champs));
+          console.log(this.champs);
           this.$.biodatasRequest.body = formData;
           this.$.biodatasRequest.generateRequest();
       },
@@ -673,6 +705,9 @@
                 return false;
               }   
           }
+      },
+      _saisieNationalite: function() {
+         this.saisieNationalite = !this.saisieNationalite;
       }
     });
   </script>
