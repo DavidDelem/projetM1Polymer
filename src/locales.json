@@ -122,13 +122,8 @@
     "menu-1": "Mon dossier",
     "menu-2": "Envoi des biodata",
     "menu-3": "Délégation d'invitation",
-<<<<<<< HEAD
     "accueil-biodatas-titre": "Saisie des biodata",
     "accueil-biodatas-header": "Sea Test Base est situé dans une zone à accés réglementé, obtenir des autorisations est nécessaire pour y accéder. Remplir et envoyer ce formulaire est une étape importante qui nous permettra de transférer votre demande aux autorités.",
-=======
-    "accueil-biodatas-titre": "Saisie des biodatas",
-    "accueil-biodatas-header": "Sea Test Base est situé dans une zone à accès réglementé, obtenir des autorisations est nécessaire pour y accéder. Remplir et envoyer ce formulaire est une étape importante qui nous permettra de transférer votre demande aux autorités.",
->>>>>>> 1a9dd449abbea17592ebdd67aee6f09f3f5e78b0
     "accueil-biodatas-info-1": "Le temps estimé pour saisir vos données est de 5 à 10 minutes",
     "accueil-biodatas-info-2": "Vous pouvez remplir ce formulaire jusqu'au",
     "accueil-biodatas-info-2-bis": "à 23:59",
@@ -136,15 +131,9 @@
     "accueil-biodatas-info-4": "Les données non envoyées ne sont pas sauvegardées",
     "confirmation-biodatas-titre": "Vos biodata ont bien été envoyées",
     "confirmation-biodatas-info-1": "Vous recevrez un mail de confirmation dans les prochaines minutes",
-<<<<<<< HEAD
     "confirmation-biodatas-info-2": "Après controle par un administrateur, elles seront transférées aux autorités.",
     "confirmation-biodatas-deja-envoye": "Merci, vous avez déjà envoyé vos biodata",
     "confirmation-biodatas-date-limite": "La date limite d'envoi des biodata est dépassée, l'envoi des biodata n'est plus possible. Si vous avez déjà envoyé vos biodata, vous pouvez toujours consulter l'avancée de votre dossier",
-=======
-    "confirmation-biodatas-info-2": "Après contrôle par un administrateur, elles seront transférées aux autorités.",
-    "confirmation-biodatas-deja-envoye": "Merci, vous avez déjà envoyé vos biodatas",
-    "confirmation-biodatas-date-limite": "La date limite d'envoi des biodatas est dépassée, l'envoi des biodatas n'est plus possible. Si vous avez déjà envoyé vos biodatas, vous pouvez toujours consulter l'avancée de votre dossier",
->>>>>>> 1a9dd449abbea17592ebdd67aee6f09f3f5e78b0
     "etape-biodata-1": "Accueil",
     "etape-biodata-2": "Identité",
     "etape-biodata-3": "Documents",
@@ -156,7 +145,6 @@
     "invitation-recue-titre": "Invitation reçue",
     "invitation-recue-detail-1": "Vous pouvez envoyer vos biodata jusqu'au",
     "invitation-recue-detail-2": "à 23:59",
-<<<<<<< HEAD
     "biodatas-envoyes-titre": "Biodata envoyées",
     "biodatas-envoyes-detail": "Vos biodata vont être controlées par un administrateur",
     "biodatas-valides-titre": "Biodata validées",
@@ -164,15 +152,6 @@
     "biodatas-refusees-titre": "Biodata refusées",
     "biodatas-refusees-detail": "Vos biodata sont invalides, merci de les renvoyer avant la date limite",
     "biodatas-transferees-titre": "Biodata transférées aux autorités",
-=======
-    "biodatas-envoyes-titre": "Biodatas envoyées",
-    "biodatas-envoyes-detail": "Vos biodatas vont être contrôlées par un administrateur",
-    "biodatas-valides-titre": "Biodatas validées",
-    "biodatas-valides-detail": "Vos biodatas sont valides et vont prochainement être transmises aux autorités",
-    "biodatas-refusees-titre": "Biodatas refusées",
-    "biodatas-refusees-detail": "Vos biodatas sont invalides, merci de les renvoyer avant la date limite",
-    "biodatas-transferees-titre": "Biodatas transférées aux autorités",
->>>>>>> 1a9dd449abbea17592ebdd67aee6f09f3f5e78b0
     "biodatas-transferees-detail": "Votre demande est en cours de traitement par les autorités",
     "demande-ok-titre": "Demande d'accès acceptée",
     "demande-ok-detail": "Sur la base des renseignements fournis, les autorités ont accepté votre demande d'accès",
@@ -208,15 +187,9 @@
     "header38": "Indiquez les chiffres et les tirets se situant dans la partie blanche, sans espace.",
     "header39": "Pour cette plaque, la saisie est AB-344-CA",
     "header40": "Que se passe t-il si les données sont invalides ?",
-<<<<<<< HEAD
     "header41": "Vous devrez renvoyer à nouveau vos biodata. Faites particulièrement attention a transmettre des scan de bonne qualité.",
     "header42": "Que vont faire les autoritées avec mes données ?",
     "header43": "Ce sont les autoritées qui, après contrôle de vos données, vous accorderons ou non le droit d'accéder à Sea Test Base.",
-=======
-    "header41": "Vous devrez renvoyer à nouveau vos biodatas. Faites particulièrement attention a transmettre des scan de bonne qualité.",
-    "header42": "Que vont faire les autorités avec mes données ?",
-    "header43": "Ce sont les autorités qui, après contrôle de vos données, vous accorderons ou non le droit d'accéder à Sea Test Base.",
->>>>>>> 1a9dd449abbea17592ebdd67aee6f09f3f5e78b0
     "ajout-delegation-modal-titre": "Délégation de l'invitation",
     "ajout-delegation-modal-detail": "Indiquez les adresses email des visiteurs à ajouter.",
     "btn-annuler": "Annuler",
