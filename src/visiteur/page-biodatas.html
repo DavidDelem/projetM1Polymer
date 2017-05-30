@@ -203,12 +203,12 @@
                 <div class="col-md-12">
                     <etapes-biodatas steps={{steps}} current={{currentStep}} erreurs="[[erreurs]]" language={{storedData.language}}></etapes-biodatas>
                 </div>
-                <div class="col-lg-12" hidden$="{{_hideStep('accueil', currentStep)}}">
+                <div class="col-md-12" hidden$="{{_hideStep('accueil', currentStep)}}">
                     <div class="card">
                         <accueil-biodatas language="{{storedData.language}}"></accueil-biodatas>
                     </div>
                 </div>
-                <div class="col-lg-12" hidden$="{{_hideStep('identite', currentStep)}}">
+                <div class="col-md-12" hidden$="{{_hideStep('identite', currentStep)}}">
                     <div class="card">
                         <div class="row">
                             <div class="col-md-8 col-md-offset-2">
@@ -218,13 +218,13 @@
                                             <div class="row row-champ nomprenom">
                                                 <div class="col-md-6">
                                                     <paper-input-container>
-                                                        <label>{{localize('page-biodatas')}}</label>
+                                                        <label>{{localize('biodata-nom-famille')}}</label>
                                                         <input is="iron-input" id="nom" type="text" bind-value="{{item.saisie.nom}}">
                                                     </paper-input-container>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <paper-input-container>
-                                                        <label>{{localize('header53')}}</label>
+                                                        <label>{{localize('biodata-prenom')}}</label>
                                                         <input is="iron-input" id="prenom" type="text" bind-value="{{item.saisie.prenom}}">
                                                     </paper-input-container>
                                                 </div>
@@ -250,33 +250,33 @@
                                                 </div>
                                                 <div class="col-md-3"> 
                                                     <paper-input-container>
-                                                        <label>{{localize('header54')}}</label>
+                                                        <label>{{localize('adresse-numero')}}</label>
                                                         <input is="iron-input" id="username" type="number" bind-value="{{item.saisie.numero}}">
                                                     </paper-input-container>
                                                 </div>
                                                 <div class="col-md-9">
                                                     <paper-input-container>
-                                                        <label>{{localize('header55')}}</label>
+                                                        <label>{{localize('adresse-rue')}}</label>
                                                         <input is="iron-input" id="username" type="text" bind-value="{{item.saisie.rue}}">
                                                     </paper-input-container>
                                                 </div>
                                                 <!--*****************-->
                                                 <div class="col-md-12">
                                                     <paper-input-container>
-                                                        <label>{{localize('header57')}}</label>
+                                                        <label>{{localize('adresse-suite')}}</label>
                                                         <input is="iron-input" id="username" type="text" bind-value="{{item.saisie.autreReponse}}">
                                                     </paper-input-container>
                                                 </div>
                                                 <!--*****************-->
                                                 <div class="col-sm-4">
                                                     <paper-input-container>
-                                                        <label>{{localize('header56')}}</label>
+                                                        <label>{{localize('adresse-cp')}}</label>
                                                         <input is="iron-input" id="codepostal" type="number" bind-value="{{item.saisie.codePostal}}">
                                                     </paper-input-container>
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <paper-input-container>
-                                                        <label>{{localize('header58')}}</label>
+                                                        <label>{{localize('adresse-ville')}}</label>
                                                         <input is="iron-input" id="username" type="text" bind-value="{{item.saisie.ville}}">
                                                     </paper-input-container>
                                                 </div>
@@ -319,7 +319,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-12" hidden$="{{_hideStep('fichiers', currentStep)}}">
+                <div class="col-md-12" hidden$="{{_hideStep('fichiers', currentStep)}}">
                     <div class="card">
                         <div class="row">
                             <div class="col-md-8 col-md-offset-2">
@@ -329,7 +329,7 @@
                                         <div class="row row-champ">
                                             <div class="col-md-12">
                                                 <div class="text-center">
-                                                    <p>{{localize('header59')}}</p>
+                                                    <p>{{localize('biodata-nationalite-titre')}}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -354,7 +354,7 @@
                                             <div class="row row-champ row-champ-fichier">
                                                 <div class="col-md-12" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
                                                     <div class="file-upload-zone file-upload-zone-identite">
-                                                        <span class="file-upload-button"><iron-icon icon="icons:file-upload"></iron-icon>{{localize('header60')}}</span>
+                                                        <span class="file-upload-button"><iron-icon icon="icons:file-upload"></iron-icon>{{localize('choix-fichier')}}</span>
                                                         <label for="fichier[[item.identifiant]]">{{item.nom}}</label>
                                                         <div>
                                                             <span class="file-details">{{_getFileName(item, fichiers)}}</span>
@@ -371,12 +371,12 @@
                         </div>
                     </div> 
                 </div>
-                <div class="col-lg-12" hidden$="{{_hideStep('vehicule', currentStep)}}">
+                <div class="col-md-12" hidden$="{{_hideStep('vehicule', currentStep)}}">
                     <div class="card">
                         <div class="row">
                             <div class="col-md-8 col-md-offset-2 text-center">
-                                <p>{{localize('header61')}}</p>
-                                <paper-toggle-button class="toggle-button-vehicule" checked="{{vehicule}}">{{localize('header62')}}</paper-toggle-button>
+                                <p>{{localize('biodata-vehicule-titre')}}</p>
+                                <paper-toggle-button class="toggle-button-vehicule" checked="{{vehicule}}">{{localize('biodata-vehicule-choix')}}</paper-toggle-button>
                             </div> 
                             <div class="col-md-8 col-md-offset-2">
                                 <template is="dom-if" if="{{vehicule}}">
@@ -385,7 +385,7 @@
                                                 <div class="row row-champ">
                                                     <div class="col-md-12" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
                                                         <div class="file-upload-zone">
-                                                            <span class="file-upload-button"><iron-icon icon="icons:file-upload"></iron-icon>{{localize('header63')}}</span>
+                                                            <span class="file-upload-button"><iron-icon icon="icons:file-upload"></iron-icon>{{localize('choix-fichier')}}</span>
                                                             <label for="fichier[[item.identifiant]]">{{item.nom}}</label>
                                                             <input class="file-upload" id="fichier[[item.identifiant]]" type="file" on-change="_addFile">
                                                         </div>
@@ -410,16 +410,16 @@
                         </div>
                     </div>  
                 </div>
-                <div class="col-lg-12" hidden$="{{_hideStep('envoi', currentStep)}}">
+                <div class="col-md-12" hidden$="{{_hideStep('envoi', currentStep)}}">
                     <div class="card">
                         <div class="row">
                             <div class="col-md-8 col-md-offset-2">
                                 <div class="margin-top-bottom">
-                                    <paper-checkbox checked="{{confirmationValidite}}">{{localize('header64')}}</paper-checkbox>
-                                    <paper-checkbox checked="{{confirmationAutorite}}">{{localize('header65')}}</paper-checkbox>
+                                    <paper-checkbox checked="{{confirmationValidite}}">{{localize('biodata-confirmation-1')}}</paper-checkbox>
+                                    <paper-checkbox checked="{{confirmationAutorite}}">{{localize('biodata-confirmation-2')}}</paper-checkbox>
                                 </div>
                                 <div class="text-center margin-top-bottom">
-                                    <paper-button on-tap="_sendBiodatas" hidden$="{{chargement}}" disabled$="{{_validateBiodatas(champs, confirmationValidite, confirmationAutorite)}}">{{localize('header66')}}</paper-button>
+                                    <paper-button on-tap="_sendBiodatas" hidden$="{{chargement}}" disabled$="{{_validateBiodatas(champs, confirmationValidite, confirmationAutorite)}}">{{localize('biodata-envoi')}}</paper-button>
                                     <paper-spinner hidden$="{{!chargement}}" active={{chargement}}></paper-spinner>
                                 </div>
                             </div>

@@ -71,7 +71,7 @@
             fallback-selection="view404"
             role="main">
           <page-connexion-administrateur name="page-connexion-administrateur"></page-connexion-administrateur>
-          <page-connexion-visiteur name="page-connexion-visiteur"></page-connexion-visiteur>
+          <page-connexion-visiteur name="page-connexion-visiteur" identifiant="[[identifiant]]" password="[[password]]"></page-connexion-visiteur>
         </iron-pages>
       </app-header-layout>
     </app-drawer-layout>
@@ -97,7 +97,18 @@
         '_routePageChanged(routeData.sub_page)',
       ],
       _routePageChanged: function(page) {
-        this.page = page || 'page-connexion-visiteur';
+        
+        if(this.routeData.sub_page) {  
+            var finalPage = this.routeData.sub_page.split('?identifiant=')[0];
+        }
+          
+        if(page && page.indexOf('?identifiant=') !== -1 && page.indexOf('&password=') !== -1) {
+            var identifiants = this.routeData.sub_page.split('?identifiant=')[1];
+            this.identifiant = identifiants.split('&password=')[0];
+            this.password = identifiants.split('&password=')[1];
+        }
+
+        this.page = finalPage || 'page-connexion-visiteur';
       },
       _pageChanged: function(page) {
         var resolvedPageUrl = this.resolveUrl('public/' + page + '.html');

@@ -56,6 +56,10 @@
             top: calc(100% - 230px);
             max-width: 230px;
         }
+        
+        .large-icon {
+            min-width: 50px;
+	    }
     </style>
 
       <iron-meta id="meta"></iron-meta>
@@ -70,7 +74,9 @@
       <app-header-layout fullbleed has-scrolling-region>
         <app-header condenses reveals fixed full effects="waterfall">
           <app-toolbar>
-            <paper-icon-button icon="icons:menu" on-tap="_toggleMenu" drawer-toggle></paper-icon-button>
+            <div class="large-icon">
+                <paper-icon-button icon="icons:menu" on-tap="_toggleMenu" drawer-toggle></paper-icon-button>  
+            </div>
             <div main-title>Sea Test Base Biodata</div>
             <div class="label-elem" tabindex="0">
                   <paper-icon-button on-tap="_openSuppressionInvitationModal" icon="icons:delete-forever"></paper-icon-button>

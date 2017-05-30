@@ -12,10 +12,10 @@
 
 module.exports = {
   staticFileGlobs: [
-    '/biodata2/index.html',
-    '/biodata2/manifest.json',
-    '/biodata2/bower_components/webcomponentsjs/webcomponents-lite.min.js',
+    '/index.html',
+    '/manifest.json',
+    '/bower_components/webcomponentsjs/webcomponents-lite.min.js',
   ],
-  navigateFallback: '/biodata2/index.html',
-  replacePrefix: '/biodata2',
+  navigateFallback: '/index.html',
+  replacePrefix: '',
 };

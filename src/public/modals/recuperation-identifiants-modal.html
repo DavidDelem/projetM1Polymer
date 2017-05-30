@@ -25,21 +25,24 @@
     on-error="_handleRecuperationIdentifiantsError"></iron-ajax>    
       
     <paper-dialog id="dialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
-        <h2>{{localize('recuperation-identifiants-modal')}}</h2>
-        <p>{{localize('header73')}}</p>
+        <h2>{{localize('recuperation-identifiants-modal-titre')}}</h2>
+        <p>{{localize('recuperation-identifiants-modal-texte')}}</p>
         <paper-input-container>
-            <label>{{localize('header74')}}</label>
+            <label>{{localize('recuperation-identifiants-modal-email')}}</label>
             <input is="iron-input" id="email" type="email" bind-value="{{email}}">
         </paper-input-container>
         <template is="dom-if" if="{{error}}"> <!--affichage d'erreur -->
-            <h3><iron-icon icon="icons:report-problem"></iron-icon>{{localize('header75')}}</h3>
+            <h3>
+                <iron-icon icon="icons:report-problem"></iron-icon>
+                {{localize('recuperation-identifiants-modal-erreur')}}           
+            </h3>
         </template>
         <template is="dom-if" if="{{success}}"> <!--affichage d'erreur -->
-            <h3>{{localize('header76')}}</h3>
+            <h3>{{localize('recuperation-identifiants-modal-success')}}</h3>
         </template>
         <div class="buttons">
-            <paper-button dialog-dismiss>{{localize('header77')}}</paper-button>
-            <paper-button autofocus on-tap="_recupererIdentifiants" disabled$="{{_validateForm(email)}}">{{localize('header78')}}</paper-button>
+            <paper-button dialog-dismiss>{{localize('btn-annuler')}}</paper-button>
+            <paper-button autofocus on-tap="_recupererIdentifiants" disabled$="{{_validateForm(email)}}">{{localize('btn-valider')}}</paper-button>
         </div>
     </paper-dialog>
       

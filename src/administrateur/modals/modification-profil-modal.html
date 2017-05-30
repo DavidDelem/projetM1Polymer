@@ -15,17 +15,28 @@
       }
         
       paper-dialog.size-position {
-         width: 90%;
-         min-height: 300px;
+         width: 98%;
+         min-height: 400px;
       }
         
       .well {
-         padding: 10px;
+         padding: 12px 7px;
+         width: calc(100% + 12px);
          margin-bottom: 20px;
          background-color: #f5f5f5;
          border: 1px solid transparent;
          border-radius: 3px;
       }
+        
+        .paper-toggle-button {
+            font-size: 0.5em;
+        }
+        
+        .text-obligatoire {
+            font-size: 12px;
+            padding-left: 3px;
+            float: right;
+        }
     </style>
     
     <iron-meta id="meta"></iron-meta>
@@ -53,16 +64,19 @@
       
     <paper-dialog class="size-position" id="dialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
         <h2>Modification du profil de formulaire [[selectedProfil.nom]]</h2>
-        <div clas="row">
-            <template is="dom-repeat" items="{{champs}}">
-                <div class="col-md-3">
-                    <div class="well">
-                        <paper-checkbox checked="{{item.coche}}">{{item.nom}}</paper-checkbox>
-                        <paper-toggle-button hidden$="{{!item.coche}}" checked="{{item.obligatoire}}">Obligatoire</paper-toggle-button>
-                    </div>   
-                </div>
-            </template>
-        </div>
+        <paper-dialog-scrollable>
+            <div class="row">
+                <template is="dom-repeat" items="{{champs}}">
+                    <div class="col-lg-4">
+                        <div class="well">
+                            <paper-checkbox checked="{{item.coche}}">{{item.nom}}</paper-checkbox>
+                            <span hidden$="{{!item.coche}}" class="text-obligatoire">Obligatoire</span>
+                            <paper-toggle-button hidden$="{{!item.coche}}" checked="{{item.obligatoire}}"></paper-toggle-button>
+                        </div>   
+                    </div>
+                </template>
+            </div>
+        </paper-dialog-scrollable>
         <div class="row">
             <div class="col-md-12 buttons">
                 <paper-button disabled$="{{chargement}}" dialog-dismiss>Annuler</paper-button>

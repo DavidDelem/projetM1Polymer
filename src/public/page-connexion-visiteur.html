@@ -68,6 +68,7 @@
         
         .credits p {
             margin-bottom: 0;
+            margin-top: 5px;
         }
         
         .credis a {
@@ -75,14 +76,23 @@
         }
         .admin {
             font-size: 12px;
-            position: absolute;
-            bottom: 0;
-            right: 20px;
+            padding: 4px 8px;
+            border-radius: 3px;
+            position: fixed;
+            bottom: 10px;
+            right: 12px;
+            background: #e2e2e2;
+            transition: all 0.3s ease;
+        }
+        
+        .admin:hover {
+            background: #dcdcdc;
+            transition: all 0.3s ease;
         }
         .admin a {
             text-decoration: none;
+            color: #7d7d7d;
         }
-        
     </style>
       
     <iron-meta id="meta"></iron-meta>
@@ -109,42 +119,42 @@
             </div>
             <div class="card card-connexion">
                 <div class="card-connexion-header">
-                    <h1>{{localize('page-connexion-visiteur')}}</h1>
+                    <h1>{{localize('connexion-visiteur-titre')}}</h1>
                 </div>
                 <paper-input-container>
-                    <label>{{localize('header67')}}</label>
-                    <input is="iron-input" id="username" type="text" bind-value="{{formData.identifiant}}">
+                    <label>{{localize('connexion-visiteur-login')}}</label>
+                    <input is="iron-input" id="username" type="text" bind-value="{{identifiant}}">
                 </paper-input-container>
 
                 <paper-input-container>
-                    <label>{{localize('header68')}}</label>
-                    <input is="iron-input" id="password" type="password" bind-value="{{formData.password}}">
+                    <label>{{localize('connexion-visiteur-password')}}</label>
+                    <input is="iron-input" id="password" type="password" bind-value="{{password}}">
                 </paper-input-container>
                 
                 <div class="langue-btns">
                     <paper-radio-group selected="{{language}}">
-                      <paper-radio-button name="fr">{{localize('header69')}}</paper-radio-button>
-                      <paper-radio-button name="en">{{localize('header70')}}</paper-radio-button>
+                      <paper-radio-button name="fr">{{localize('connexion-visiteur-fr')}}</paper-radio-button>
+                      <paper-radio-button name="en">{{localize('connexion-visiteur-en')}}</paper-radio-button>
                     </paper-radio-group>
                 </div>
                 
                 <div class="wrapper-btns">
-                    <paper-button raised class="primary btn-connexion" on-tap="_postLogin" disabled$="{{_validateForm(formData.identifiant, formData.password)}}">{{localize('header71')}}</paper-button>
+                    <paper-button raised class="primary btn-connexion" on-tap="_postLogin" disabled$="{{_validateForm(identifiant, password)}}">{{localize('connexion-visiteur-connect')}}</paper-button>
                 </div>
                 <div class="forgotten-password">
-                <p noink class="btn-forgotten-password" on-tap="_openRecuperationIdentifiantsModal">{{localize('header72')}}</paper-button>
+                <p noink class="btn-forgotten-password" on-tap="_openRecuperationIdentifiantsModal">{{localize('connexion-visiteur-recup')}}</paper-button>
             </div>
             </div>
         </div>
         <div class="col-lg-12">
             <div class="credits">
-                <p>[[localize('credits-contact-1')]] <a href="mailto:biodata@celadon.asso.fr" target="_blank">biodata@celadon.asso.fr</a> [[localize('credits-contact-2')]] <br/><br/>
-                [[localize('credits-realisateurs-1')]] <a target="_blank" href="https://www.linkedin.com/in/delemottedavid/">David Delemotte</a>
+                <p class="little-margin-bottom">[[localize('credits-contact-1')]] <a href="mailto:biodata@celadon.asso.fr" target="_blank">biodata@celadon.asso.fr</a> [[localize('credits-contact-2')]]</p>
+                <p>[[localize('credits-realisateurs-1')]] <a target="_blank" href="https://www.linkedin.com/in/delemottedavid/">David Delemotte</a>
                 [[localize('credits-realisateurs-2')]] <a target="_blank" href="https://www.linkedin.com/in/nader-el-akoum-177baa143/">Nader El Akoum</a>, [[localize('credits-realisateurs-3')]]
                 </p>
             </div>
             <div class="admin">
-                <a target="_blank" href="{{baseUrl}}/public/page-connexion-administrateur">Administration</a>
+                <a href="{{baseUrl}}/public/page-connexion-administrateur">Administration</a>
             </div>
         </div>
     </div>
@@ -158,14 +168,6 @@
       ],
       properties: {
         storedData: Object,
-        formData: {
-            type: Object,
-            value: {
-                identifiant: '',
-                password: ''
-            },
-            notify: true
-        },
         serverUrl: String,
         baseUrl: String,
         nomDomaine: String,
@@ -183,6 +185,7 @@
         this.loadResources(this.resolveUrl('../locales.json'));
       },
       _postLogin: function() {
+        this.$.tokenRequest.body = { identifiant: this.identifiant, password: this.password };
         this.$.tokenRequest.generateRequest();
       },
       _validateForm: function(identifiant, password) {
@@ -198,17 +201,16 @@
 				loggedin: true,
                 language: this.language
             };
-            this.formData = {};
+            this.identifiant = '';
+            this.password = '';
             window.location.href = this.baseUrl + '/visiteur/page-dossier/';
         } else {
             _handleTokenError();
         }
       },
       _handleTokenError: function(event) {
-        this.formData = {
-                identifiant: '',
-                password: ''
-        }
+        this.identifiant = '';
+        this.password = '';
         this.$.toast.open();
       },
       _openRecuperationIdentifiantsModal: function(event) {
