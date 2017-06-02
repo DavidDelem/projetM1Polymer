@@ -129,10 +129,15 @@
         }
         
         .file-details {
+            position: relative;
+            top: 14px;
             font-size: 0.8em;
         }
+        .row file-upload-zone-identite:first-of-type {
+            display: none;
+        }
         
-        .row-champ-fichier:not(:last-of-type) .file-upload-zone:after {
+        .fichiers-identite > div:not(:last-of-type) .file-upload-zone:before {
             content: 'Ou';
             text-transform: uppercase;
             background: #eee;
@@ -161,7 +166,8 @@
     <iron-meta id="meta"></iron-meta>
     <iron-localstorage name="data-storage" value="{{storedData}}" on-iron-localstorage-load="_generateRequests"></iron-localstorage>
     <app-data key="storedData" data="{{storedData}}"></app-data>
-    
+    <date-format-visiteur date-format="{{dateFormat}}" language="{{storedData.language}}"></date-format-visiteur>
+      
     <iron-ajax 
         id="champsRequest"
         method="GET"
@@ -218,13 +224,13 @@
                                             <div class="row row-champ nomprenom">
                                                 <div class="col-md-6">
                                                     <paper-input-container>
-                                                        <label>{{localize('biodata-nom-famille')}}</label>
+                                                        <label>[[localize('biodata-nom-famille')]]</label>
                                                         <input is="iron-input" id="nom" type="text" bind-value="{{item.saisie.nom}}">
                                                     </paper-input-container>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <paper-input-container>
-                                                        <label>{{localize('biodata-prenom')}}</label>
+                                                        <label>[[localize('biodata-prenom')]]</label>
                                                         <input is="iron-input" id="prenom" type="text" bind-value="{{item.saisie.prenom}}">
                                                     </paper-input-container>
                                                 </div>
@@ -234,8 +240,35 @@
                                         <template is="dom-if" if="{{_computeHidden(item, 'texte_date')}}">
                                             <div class="row row-champ datenaissance" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
                                                 <div class="col-md-12">
-                                                    <date-format-visiteur date-format="{{dateFormat}}" language="{{storedData.language}}"></date-format-visiteur>
-                                                    <vaadin-date-picker i18n="{{dateFormat}}" min="1900-01-01" max="{{dateMax}}" value="{{item.saisie.date}}" label="Date de naissance"></vaadin-date-picker>
+                                                    <vaadin-date-picker i18n="{{dateFormat}}" min="1900-01-01" max="{{dateMax}}" value="{{item.saisie.date}}" label="[[localize('biodata-naissance')]]"></vaadin-date-picker>
+                                                </div>
+                                                <informations-champ obligatoire="[[item.obligatoire]]" nom="[[item.nom]]" erreurs="[[erreurs]]" language="{{storedData.language}}"></informations-champ>
+                                            </div>
+                                        </template>
+                                        
+                                        <!-- LIEU DE NAISSANCE -->
+                                        
+                                        <template is="dom-if" if="{{_computeHidden(item, 'texte_lieu')}}">
+                                            <div class="row row-champ" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
+                                                <div class="col-md-12">
+                                                    <paper-input-container>
+                                                        <label>[[localize('biodata-lieu-naissance')]]</label>
+                                                        <input is="iron-input" id="lieu" bind-value="{{item.saisie.texte}}"></input>
+                                                    </paper-input-container>
+                                                </div>
+                                                <informations-champ obligatoire="[[item.obligatoire]]" nom="[[item.nom]]" erreurs="[[erreurs]]" language="{{storedData.language}}"></informations-champ>
+                                            </div>
+                                        </template>
+                                    
+                                        <!-- DEPARTEMENT DE NAISSANCE -->
+                                    
+                                        <template is="dom-if" if="{{_computeHidden(item, 'texte_lieu')}}">
+                                            <div class="row row-champ" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
+                                                <div class="col-md-12">
+                                                    <paper-input-container>
+                                                        <label>[[localize('biodata-dep-naissance')]]</label>
+                                                        <input is="iron-input" id="departement" bind-value="{{item.saisie.texte}}"></input>
+                                                    </paper-input-container>
                                                 </div>
                                                 <informations-champ obligatoire="[[item.obligatoire]]" nom="[[item.nom]]" erreurs="[[erreurs]]" language="{{storedData.language}}"></informations-champ>
                                             </div>
@@ -246,37 +279,37 @@
                                         <template is="dom-if" if="{{_computeHidden(item, 'texte_adresse')}}">
                                             <div class="row row-champ adresse" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
                                                 <div class="col-md-12 titre-adresse">
-                                                    <p>[[item.nom]]</p>
+                                                    <p>[[localize('adresse-titre')]]</p>
                                                 </div>
                                                 <div class="col-md-3"> 
                                                     <paper-input-container>
-                                                        <label>{{localize('adresse-numero')}}</label>
+                                                        <label>[[localize('adresse-numero')]]</label>
                                                         <input is="iron-input" id="username" type="number" bind-value="{{item.saisie.numero}}">
                                                     </paper-input-container>
                                                 </div>
                                                 <div class="col-md-9">
                                                     <paper-input-container>
-                                                        <label>{{localize('adresse-rue')}}</label>
+                                                        <label>[[localize('adresse-rue')]]</label>
                                                         <input is="iron-input" id="username" type="text" bind-value="{{item.saisie.rue}}">
                                                     </paper-input-container>
                                                 </div>
                                                 <!--*****************-->
                                                 <div class="col-md-12">
                                                     <paper-input-container>
-                                                        <label>{{localize('adresse-suite')}}</label>
+                                                        <label>[[localize('adresse-suite')]]</label>
                                                         <input is="iron-input" id="username" type="text" bind-value="{{item.saisie.autreReponse}}">
                                                     </paper-input-container>
                                                 </div>
                                                 <!--*****************-->
                                                 <div class="col-sm-4">
                                                     <paper-input-container>
-                                                        <label>{{localize('adresse-cp')}}</label>
+                                                        <label>[[localize('adresse-cp')]]</label>
                                                         <input is="iron-input" id="codepostal" type="number" bind-value="{{item.saisie.codePostal}}">
                                                     </paper-input-container>
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <paper-input-container>
-                                                        <label>{{localize('adresse-ville')}}</label>
+                                                        <label>[[localize('adresse-ville')]]</label>
                                                         <input is="iron-input" id="username" type="text" bind-value="{{item.saisie.ville}}">
                                                     </paper-input-container>
                                                 </div>
@@ -287,13 +320,27 @@
                                             </div>
                                         </template>
 
-                                        <!-- NUMERO DE TELEPHONE -->
+                                        <!-- NUMERO DE TELEPHONE PERSONNEL-->
 
-                                        <template is="dom-if" if="{{_computeHidden(item, 'texte_telephone')}}">
+                                        <template is="dom-if" if="{{_computeHidden(item, 'texte_telephone_personnel')}}">
                                             <div class="row row-champ telephone" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
                                                 <div class="col-md-12">
                                                     <paper-input-container>
-                                                        <label>[[item.nom]]</label>
+                                                        <label>[[localize('numero-telephone-personnel')]]</label>
+                                                        <input is="iron-input" id="telephone" bind-value="{{item.saisie.telephone}}"></input>
+                                                    </paper-input-container>
+                                                </div>
+                                                <informations-champ obligatoire="[[item.obligatoire]]" nom="[[item.nom]]" erreurs="[[erreurs]]" language="{{storedData.language}}"></informations-champ>
+                                            </div>
+                                        </template>
+                            
+                                        <!-- NUMERO DE TELEPHONE PROFESIONNEL -->
+
+                                        <template is="dom-if" if="{{_computeHidden(item, 'texte_telephone_profesionnel')}}">
+                                            <div class="row row-champ telephone" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
+                                                <div class="col-md-12">
+                                                    <paper-input-container>
+                                                        <label>[[localize('numero-telephone-profesionnel')]]</label>
                                                         <input is="iron-input" id="telephone" bind-value="{{item.saisie.telephone}}"></input>
                                                     </paper-input-container>
                                                 </div>
@@ -306,7 +353,7 @@
                                             <div class="row row-champ texte" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
                                                 <div class="col-md-12">
                                                     <paper-input-container>
-                                                        <label>[[item.nom]]</label>
+                                                        <label>[[localize('biodata-remarques')]]</label>
                                                         <iron-autogrow-textarea class="paper-input-input" bind-value="{{item.saisie.remarques}}"></iron-autogrow-textarea>
                                                     </paper-input-container>
                                                 </div>
@@ -329,7 +376,7 @@
                                         <div class="row row-champ">
                                             <div class="col-md-12">
                                                 <div class="text-center">
-                                                    <p>{{localize('biodata-nationalite-titre')}}</p>
+                                                    <p>[[localize('biodata-nationalite-titre')]]</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -337,7 +384,6 @@
                                             <div class="col-md-12">
                                                 <liste-nationalites nationalites="{{nationalites}}"></liste-nationalites>
                                                 <paper-autocomplete label="Nationalité" source="{{nationalites}}" value="{{item.saisie.nationalite}}" on-value-changed="_saisieNationalite"></paper-autocomplete>
-<!--                                                <informations-champ obligatoire="true" nom="" erreurs="[[erreurs]]" language="{{storedData.language}}"></informations-champ>-->
                                                 <informations-champ obligatoire="[[item.obligatoire]]" nom="[[item.nom]]" erreurs="[[erreurs]]" language="{{storedData.language}}"></informations-champ>
                                             </div>
                                         </div>
@@ -347,26 +393,58 @@
                                 <!-- AFFICHAGE DES CHAMPS POUR LES FICHIERS -->
                                 <!-- SI LA NATIONALITE EST ACTIVEE, LES CHAMPS CORRESPONDANT A LA NATIONALITE S'AFFICHENT -->
                                 <!-- SINON, ILS S'AFFICHENT TOUS -->
-                                
-                                <template is="dom-repeat" items="{{champs}}">
-                                    <template is="dom-if" if="{{_computeHidden(item, 'identite_fichier')}}">
-                                       <template is="dom-if" if="{{_isNationality(item, saisieNationalite)}}">
-                                            <div class="row row-champ row-champ-fichier">
-                                                <div class="col-md-12" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
-                                                    <div class="file-upload-zone file-upload-zone-identite">
-                                                        <span class="file-upload-button"><iron-icon icon="icons:file-upload"></iron-icon>{{localize('choix-fichier')}}</span>
-                                                        <label for="fichier[[item.identifiant]]">{{item.nom}}</label>
-                                                        <div>
-                                                            <span class="file-details">{{_getFileName(item, fichiers)}}</span>
+                                <div class="fichiers-identite">
+                                    <template is="dom-repeat" items="{{champs}}">
+                                        <template is="dom-if" if="{{_computeHidden(item, 'identite_fichier')}}">
+                                           <template is="dom-if" if="{{_isNationality(item, saisieNationalite)}}">
+                                                <div class="row row-champ row-champ-fichier">
+                                                    <div class="col-md-12" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
+                                                        <div class="file-upload-zone file-upload-zone-identite">
+                                                            <span class="file-upload-button"><iron-icon icon="icons:file-upload"></iron-icon>[[localize('choix-fichier')]]</span>
+                                                            <label for="fichier[[item.identifiant]]">[[item.nom]]</label>
+                                                            <div>
+                                                                <span class="file-details">{{_getFileName(item, fichiers)}}</span>
+                                                            </div>
+                                                            <input class="file-upload" id="fichier[[item.identifiant]]" type="file" on-change="_addFile">
                                                         </div>
-                                                        <input class="file-upload" id="fichier[[item.identifiant]]" type="file" on-change="_addFile">
                                                     </div>
+                                                    <informations-champ obligatoire="[[item.obligatoire]]" nom="[[item.nom]]" erreurs="[[erreurs]]" language="{{storedData.language}}"></informations-champ>
+                                                </div>
+                                          </template>
+                                        </template>
+                                    </template>  
+                                </div>
+                                <template is="dom-if" if="{{_isNationaliteSaisie(champs, saisieNationalite)}}">
+                                    <template is="dom-repeat" items="{{champs}}">
+                                        <template is="dom-if" if="{{_computeHidden(item, 'identite_texte_date_delivrance')}}">
+                                            <div class="row row-champ" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
+                                                <div class="col-md-12">
+                                                    <vaadin-date-picker i18n="{{dateFormat}}" min="1900-01-01" max="{{dateMax}}" value="{{item.saisie.date}}" label="[[localize('date-delivrance')]]"></vaadin-date-picker>
                                                 </div>
                                                 <informations-champ obligatoire="[[item.obligatoire]]" nom="[[item.nom]]" erreurs="[[erreurs]]" language="{{storedData.language}}"></informations-champ>
                                             </div>
-                                      </template>
+                                          </template>
+                                          <template is="dom-if" if="{{_computeHidden(item, 'identite_texte_date_expiration')}}">
+                                            <div class="row row-champ" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
+                                                <div class="col-md-12">
+                                                    <vaadin-date-picker i18n="{{dateFormat}}" min="{{dateMax}}" value="{{item.saisie.date}}" label="[[localize('date-expiration')]]"></vaadin-date-picker>
+                                                </div>
+                                                <informations-champ obligatoire="[[item.obligatoire]]" nom="[[item.nom]]" erreurs="[[erreurs]]" language="{{storedData.language}}"></informations-champ>
+                                            </div>
+                                          </template>
+                                          <template is="dom-if" if="{{_computeHidden(item, 'identite_texte_delivrance')}}">
+                                            <div class="row row-champ" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
+                                                <div class="col-md-12">
+                                                    <paper-input-container>
+                                                        <label>[[localize('autorite-delivrance')]]</label>
+                                                        <input is="iron-input" id="telephone" bind-value="{{item.saisie.texte}}"></input>
+                                                    </paper-input-container>
+                                                </div>
+                                                <informations-champ obligatoire="[[item.obligatoire]]" nom="[[item.nom]]" erreurs="[[erreurs]]" language="{{storedData.language}}"></informations-champ>
+                                            </div>
+                                          </template>
                                     </template>
-                                </template>   
+                                </template>
                             </div>
                         </div>
                     </div> 
@@ -375,8 +453,8 @@
                     <div class="card">
                         <div class="row">
                             <div class="col-md-8 col-md-offset-2 text-center">
-                                <p>{{localize('biodata-vehicule-titre')}}</p>
-                                <paper-toggle-button class="toggle-button-vehicule" checked="{{vehicule}}">{{localize('biodata-vehicule-choix')}}</paper-toggle-button>
+                                <p>[[localize('biodata-vehicule-titre')]]</p>
+                                <paper-toggle-button class="toggle-button-vehicule" checked="{{vehicule}}">[[localize('biodata-vehicule-choix')]]</paper-toggle-button>
                             </div> 
                             <div class="col-md-8 col-md-offset-2">
                                 <template is="dom-if" if="{{vehicule}}">
@@ -385,8 +463,11 @@
                                                 <div class="row row-champ">
                                                     <div class="col-md-12" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
                                                         <div class="file-upload-zone">
-                                                            <span class="file-upload-button"><iron-icon icon="icons:file-upload"></iron-icon>{{localize('choix-fichier')}}</span>
-                                                            <label for="fichier[[item.identifiant]]">{{item.nom}}</label>
+                                                            <span class="file-upload-button"><iron-icon icon="icons:file-upload"></iron-icon>[[localize('choix-fichier')]]</span>
+                                                            <label for="fichier[[item.identifiant]]">[[item.nom]]</label>
+                                                            <div>
+                                                                <span class="file-details">{{_getFileName(item, fichiers)}}</span>
+                                                            </div>
                                                             <input class="file-upload" id="fichier[[item.identifiant]]" type="file" on-change="_addFile">
                                                         </div>
                                                     </div>
@@ -397,7 +478,7 @@
                                                 <div class="row row-champ">
                                                     <div class="col-md-12" on-mouseover="_itemHovered" on-mouseout="_aucunItem">
                                                         <paper-input-container>
-                                                            <label >{{item.nom}}</label>
+                                                            <label >[[localize('biodata-vehicule-texte')]]</label>
                                                             <input is="iron-input" id="username" type="text" bind-value="{{item.saisie.immatriculation}}">
                                                         </paper-input-container>
                                                     </div>
@@ -415,11 +496,11 @@
                         <div class="row">
                             <div class="col-md-8 col-md-offset-2">
                                 <div class="margin-top-bottom">
-                                    <paper-checkbox checked="{{confirmationValidite}}">{{localize('biodata-confirmation-1')}}</paper-checkbox>
-                                    <paper-checkbox checked="{{confirmationAutorite}}">{{localize('biodata-confirmation-2')}}</paper-checkbox>
+                                    <paper-checkbox checked="{{confirmationValidite}}">[[localize('biodata-confirmation-1')]]</paper-checkbox>
+                                    <paper-checkbox checked="{{confirmationAutorite}}">[[localize('biodata-confirmation-2')]]</paper-checkbox>
                                 </div>
                                 <div class="text-center margin-top-bottom">
-                                    <paper-button on-tap="_sendBiodatas" hidden$="{{chargement}}" disabled$="{{_validateBiodatas(champs, confirmationValidite, confirmationAutorite)}}">{{localize('biodata-envoi')}}</paper-button>
+                                    <paper-button on-tap="_sendBiodatas" hidden$="{{chargement}}" disabled$="{{_validateBiodatas(champs, confirmationValidite, confirmationAutorite)}}">[[localize('biodata-envoi')]]</paper-button>
                                     <paper-spinner hidden$="{{!chargement}}" active={{chargement}}></paper-spinner>
                                 </div>
                             </div>
@@ -517,13 +598,9 @@
           this.$.dateLimiteRequest.generateRequest();
       },
       _handleChampsResponse: function(res) {
-          //console.log(this.champs);
           for (var i = 0; i < this.champs.length; i++) {
             this.champs[i].saisie = {};
           }
-          
-          console.log(this.champs);
-          
           this._setSteps();
       },
       _setSteps: function() {
@@ -708,6 +785,13 @@
       },
       _saisieNationalite: function() {
          this.saisieNationalite = !this.saisieNationalite;
+      },
+      _isNationaliteSaisie: function(champs, saisieNationalite) {
+          for(var i=0; i < this.champs.length; i++) {
+            if(this.champs[i].type == 'identite_nationalite') {
+                return (this.champs[i].saisie.nationalite && this.champs[i].saisie.nationalite != "");
+            }
+          }
       }
     });
   </script>

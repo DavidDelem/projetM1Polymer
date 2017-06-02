@@ -54,6 +54,12 @@
                     <p><iron-icon icon="icons:event"></iron-icon> Date de création: [[_getDate(projetDetail.dateCreation)]]</p>
                     <p><iron-icon icon="icons:date-range"></iron-icon> Date limite: [[_getDate(projetDetail.dateLimite)]]</p>
                     <p><iron-icon icon="icons:language"></iron-icon> Langue de contact: [[_getLangue(projetDetail.langue)]]</p>
+                    <template is="dom-if" if="[[projetDetail.dateDebut]]">
+                        <p><iron-icon icon="icons:date-range"></iron-icon> Début du projet: [[_getDate(projetDetail.dateDebut)]]</p>
+                    </template>
+                    <template is="dom-if" if="[[projetDetail.dateFin]]">
+                        <p><iron-icon icon="icons:date-range"></iron-icon> Fin du projet: [[_getDate(projetDetail.dateFin)]]</p>
+                    </template>
                     <div class="paper-fab-section">
                         <paper-fab class="paper-fab" icon="icons:create" on-tap="_openModificationProjetModal"></paper-fab>
                         <paper-fab class="paper-fab" icon="icons:delete" on-tap="_openSuppressionProjetModal"></paper-fab>

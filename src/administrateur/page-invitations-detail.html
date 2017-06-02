@@ -141,10 +141,10 @@
             <div class="card">
                 <brainy-table id="brainytable" class="expandable" page-size="5" items="{{invitations}}">
 
-                    <brainy-table-column name="Email" sort-by="email">
+                    <brainy-table-column flex="7" name="Email" sort-by="email">
                         <template>[[item.email]]</template>
                     </brainy-table-column>
-                    <brainy-table-column name="Etat du dossier">
+                    <brainy-table-column flex="3" name="Etat du dossier">
                       <template>
                         <template is="dom-if" if="{{_lastHistoriqueIs(item, 'RECEPTION_INVITATION')}}">
                             Invitation envoyée
@@ -170,7 +170,7 @@
                 
                       </template>
                     </brainy-table-column>
-                    <brainy-table-column width="20px" align-right>
+                    <brainy-table-column flex="1" align-right>
                         <template>
                             <template is="dom-if" if="{{item.identifiantParent}}">
                                 <div class="label-elem" tabindex="0">
@@ -180,7 +180,7 @@
                             </template>
                         </template>
                     </brainy-table-column>
-                    <brainy-table-column width="50px" align-right>
+                    <brainy-table-column flex="2" align-right>
                         <template>
                           <div class="fixposition">
                               <paper-checkbox class="hiddencheckbox" checked="{{expanded}}"></paper-checkbox>
@@ -268,7 +268,7 @@
         return moment(timestamp, 'x').format('DD/MM/YYYY');
       },
       _showBadgeDateLimite: function(dateLimite) {
-         return Date.now() > dateLimite;
+        return dateLimite < moment().startOf('day').format('x');
       }
     });
   </script>

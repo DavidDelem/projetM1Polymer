@@ -47,33 +47,33 @@
         </template>
         <template is="dom-if" if="{{_currentStepIs('identite', currentStep)}}">
             <div class="numero">
-                <p class="floating-text question-text"  on-tap="_setHoveredItemIdentifiant" data-identifiant="4"><iron-icon icon="icons:help"></iron-icon>{{localize('conseils-titre-2')}}</p>
+                <p class="floating-text question-text"  on-tap="_setHoveredItemIdentifiant" data-identifiant="4"><iron-icon icon="icons:help"></iron-icon>{{localize('conseils-titre-2')}}&nbsp;?</p>
                 <div class="details" hidden$="{{_hideDetails(4, hoveredItemIdentifiant)}}">
                     <p>{{localize('conseils-detail-2')}}<br/><br/>
                        {{localize('conseils-detail-2-suite')}}</p>
                 </div>
             </div>
             <div class="numero">
-                <p class="floating-text question-text"  on-tap="_setHoveredItemIdentifiant" data-identifiant="5"><iron-icon icon="icons:help"></iron-icon>{{localize('conseils-titre-2')}}</p>
+                <p class="floating-text question-text"  on-tap="_setHoveredItemIdentifiant" data-identifiant="5"><iron-icon icon="icons:help"></iron-icon>{{localize('conseils-titre-2')}}&nbsp;?</p>
                 <div class="details" hidden$="{{_hideDetails(5, hoveredItemIdentifiant)}}">
                     <p>{{localize('conseils-detail-2')}}<br/><br/>
                        {{localize('conseils-detail-2-suite')}}</p>
                 </div>
             </div>
             <div class="date">
-                <p class="floating-text question-text"  on-tap="_setHoveredItemIdentifiant" data-identifiant="2"><iron-icon icon="icons:help"></iron-icon> {{localize('conseils-titre-3')}}</p>
+                <p class="floating-text question-text"  on-tap="_setHoveredItemIdentifiant" data-identifiant="2"><iron-icon icon="icons:help"></iron-icon> {{localize('conseils-titre-3')}}&nbsp;?</p>
                 <div class="details" hidden$="{{_hideDetails(2, hoveredItemIdentifiant)}}">
                     <p>{{localize('conseils-detail-3')}}</p>
                 </div>
             </div>
             <div class="adresse">
-                <p class="floating-text question-text"  on-tap="_setHoveredItemIdentifiant" data-identifiant="3"><iron-icon icon="icons:help"></iron-icon>{{localize('conseils-titre-4')}}</p>
+                <p class="floating-text question-text"  on-tap="_setHoveredItemIdentifiant" data-identifiant="3"><iron-icon icon="icons:help"></iron-icon>{{localize('conseils-titre-4')}}&nbsp;?</p>
                 <div class="details" hidden$="{{_hideDetails(3, hoveredItemIdentifiant)}}">
                     <p>{{localize('conseils-detail-4')}}</p>
                 </div>
             </div>
             <div class="remarques">
-                <p class="floating-text question-text" on-tap="_setHoveredItemIdentifiant" data-identifiant="15"><iron-icon icon="icons:help"></iron-icon>{{localize('conseils-titre-5')}}</p>
+                <p class="floating-text question-text" on-tap="_setHoveredItemIdentifiant" data-identifiant="15"><iron-icon icon="icons:help"></iron-icon>{{localize('conseils-titre-5')}}&nbsp;?</p>
                 <div class="details" hidden$="{{_hideDetails(15, hoveredItemIdentifiant)}}">
                     <p>{{localize('conseils-detail-5')}}</p>
                 </div>
@@ -81,21 +81,21 @@
         </template>
         <template is="dom-if" if="{{_currentStepIs('fichiers', currentStep)}}">
             <div class="carte-identite">
-                <p class="floating-text question-text" on-tap="_setHoveredItemIdentifiant" data-identifiant="7"><iron-icon icon="icons:help"></iron-icon> {{localize('conseils-titre-6')}}</p>
+                <p class="floating-text question-text" on-tap="_setHoveredItemIdentifiant" data-identifiant="7"><iron-icon icon="icons:help"></iron-icon> {{localize('conseils-titre-6')}}&nbsp;?</p>
                 <div class="details" hidden$="{{_hideDetails(7, hoveredItemIdentifiant)}}">
                     <p>{{localize('conseils-detail-6')}}</p>
                     <img alt="carte identite" src="[[nomDomaine]]/images/carte-identite.png">
                 </div>
             </div>
             <div class="passeport">
-                <p class="floating-text question-text" on-tap="_setHoveredItemIdentifiant" data-identifiant="8"><iron-icon icon="icons:help"></iron-icon> {{localize('conseils-titre-7')}}</p>
+                <p class="floating-text question-text" on-tap="_setHoveredItemIdentifiant" data-identifiant="8"><iron-icon icon="icons:help"></iron-icon> {{localize('conseils-titre-7')}}&nbsp;?</p>
                 <div class="details" hidden$="{{_hideDetails(8, hoveredItemIdentifiant)}}">
                     <p>{{localize('conseils-detail-7')}}</p>
                     <img alt="passeport" src="[[nomDomaine]]/images/passeport.png">
                 </div>
             </div>
             <div class="carte-sejour">
-                <p class="floating-text question-text" on-tap="_setHoveredItemIdentifiant" data-identifiant="9"><iron-icon icon="icons:help"></iron-icon>{{localize('conseils-titre-8')}}</p>
+                <p class="floating-text question-text" on-tap="_setHoveredItemIdentifiant" data-identifiant="9"><iron-icon icon="icons:help"></iron-icon>{{localize('conseils-titre-8')}}&nbsp;?</p>
                 <div class="details" hidden$="{{_hideDetails(9, hoveredItemIdentifiant)}}">
                     <p>{{localize('conseils-detail-8')}}</p>
                     <img alt="carte-sejour" src="[[nomDomaine]]/images/carte-sejour.jpg">
@@ -104,7 +104,7 @@
         </template>
         <template is="dom-if" if="{{_currentStepIs('vehicule', currentStep)}}">
             <div class="permis">
-                <p class="floating-text question-text"  on-tap="_setHoveredItemIdentifiant" data-identifiant="10"><iron-icon icon="icons:help"></iron-icon>{{localize('conseils-titre-9')}}</p>
+                <p class="floating-text question-text"  on-tap="_setHoveredItemIdentifiant" data-identifiant="10"><iron-icon icon="icons:help"></iron-icon>{{localize('conseils-titre-9')}}&nbsp;?</p>
                 <div class="details" hidden$="{{_hideDetails(10, hoveredItemIdentifiant)}}">
                     <p>{{localize('conseils-detail-9')}}</p>
                     <img alt="passeport" src="[[nomDomaine]]/images/nouveau-permis.png">
@@ -112,7 +112,7 @@
                 </div>
             </div>
             <div class="immatriculation">
-                <p class="floating-text question-text"  on-tap="_setHoveredItemIdentifiant" data-identifiant="13"><iron-icon icon="icons:help"></iron-icon>{{localize('conseils-titre-10')}}</p>
+                <p class="floating-text question-text"  on-tap="_setHoveredItemIdentifiant" data-identifiant="13"><iron-icon icon="icons:help"></iron-icon>{{localize('conseils-titre-10')}}&nbsp;?</p>
                 <div class="details" hidden$="{{_hideDetails(13, hoveredItemIdentifiant)}}">
                     <p>{{localize('conseils-detail-10')}}</p>
                     <img alt="passeport" src="[[nomDomaine]]/images/immatriculation.png">
@@ -123,7 +123,7 @@
         <template is="dom-if" if="{{_currentStepIs('envoi', currentStep)}}">
             <div>
                 <p class="floating-text question-text"  on-tap="_setHoveredItemIdentifiant" data-identifiant="100">
-                    <iron-icon icon="icons:help"></iron-icon>{{localize('conseils-titre-11')}}
+                    <iron-icon icon="icons:help"></iron-icon>{{localize('conseils-titre-11')}}&nbsp;?
                 </p>
                 <div class="details" hidden$="{{_hideDetails(100, hoveredItemIdentifiant)}}">
                     <p>{{localize('conseils-detail-11')}}</p>
@@ -131,7 +131,7 @@
             </div>
             <div>
                 <p class="floating-text question-text"  on-tap="_setHoveredItemIdentifiant" data-identifiant="101">
-                    <iron-icon icon="icons:help"></iron-icon> {{localize('conseils-titre-12')}}
+                    <iron-icon icon="icons:help"></iron-icon> {{localize('conseils-titre-12')}}&nbsp;?
                 </p>
                 <div class="details" hidden$="{{_hideDetails(101, hoveredItemIdentifiant)}}">
                     <p>{{localize('conseils-detail-12')}}</p>

@@ -16,7 +16,7 @@
         
       paper-dialog.size-position {
          width: 98%;
-         min-height: 400px;
+         min-height: 500px;
       }
         
       .well {
@@ -36,6 +36,10 @@
             font-size: 12px;
             padding-left: 3px;
             float: right;
+        }
+        
+        .scrollable-zone {
+            min-height: 200px;
         }
     </style>
     
@@ -65,6 +69,7 @@
     <paper-dialog class="size-position" id="dialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
         <h2>Modification du profil de formulaire [[selectedProfil.nom]]</h2>
         <paper-dialog-scrollable>
+            <div class="scrollable-zone">
             <div class="row">
                 <template is="dom-repeat" items="{{champs}}">
                     <div class="col-lg-4">
@@ -75,6 +80,7 @@
                         </div>   
                     </div>
                 </template>
+            </div>
             </div>
         </paper-dialog-scrollable>
         <div class="row">

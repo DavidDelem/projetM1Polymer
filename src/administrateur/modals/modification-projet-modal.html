@@ -9,11 +9,15 @@
 <dom-module id="modification-projet-modal">
   <template>
     <style include="shared-styles"> 
+        vaadin-date-picker {
+            padding-bottom: 8px;
+        }
     </style>
     
     <iron-meta id="meta"></iron-meta>
     <iron-localstorage name="data-storage" value="{{storedData}}"></iron-localstorage>
     <app-data key="storedData" data="{{storedData}}"></app-data>
+    <date-format date-format="{{dateFormat}}"></date-format>
       
     <iron-signals on-iron-signal-open-modification-projet-modal="_handleOpenModificationProjetModalEvent"></iron-signals>  
       
@@ -36,28 +40,35 @@
       
     <paper-dialog id="dialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
         <h2>Modification du projet</h2>
-        <paper-input-container>
-            <label>Nom du projet</label>
-            <input is="iron-input" id="projet" type="text" bind-value="{{projet}}">
-        </paper-input-container>
-        <date-format date-format="{{dateFormat}}"></date-format>
-        <vaadin-date-picker i18n="{{dateFormat}}" min="{{dateMin}}" value="{{dateLimite}}" label="Date limite"></vaadin-date-picker>
-        <div>
-            <paper-dropdown-menu label="Profil de formulaire">
-              <paper-listbox attr-for-selected="value" selected="{{profil}}" class="dropdown-content">
-                  <template is="dom-repeat" items="{{profils}}">
-                        <paper-item value="{{item.identifiant}}">{{item.nom}}</paper-item>
-                  </template>
-              </paper-listbox>
-            </paper-dropdown-menu>
-        </div>
-        <div>
-            <paper-dropdown-menu label="Langue de contact">
-                  <paper-listbox attr-for-selected="value" selected="{{langue}}" class="dropdown-content">
-                        <paper-item value="fr">Français</paper-item>
-                      <paper-item value="en">Anglais</paper-item>
-                  </paper-listbox>
-            </paper-dropdown-menu>
+        <div class="row">
+            <div class="col-md-6">
+                <paper-input-container>
+                    <label>Nom du projet</label>
+                    <input is="iron-input" id="projet" type="text" bind-value="{{projet}}">
+                </paper-input-container>
+                <div>
+                    <paper-dropdown-menu label="Profil de formulaire">
+                      <paper-listbox attr-for-selected="value" selected="{{profil}}" class="dropdown-content">
+                          <template is="dom-repeat" items="{{profils}}">
+                                <paper-item value="{{item.identifiant}}">{{item.nom}}</paper-item>
+                          </template>
+                      </paper-listbox>
+                    </paper-dropdown-menu>
+                </div>
+                <div>
+                    <paper-dropdown-menu label="Langue de contact">
+                          <paper-listbox attr-for-selected="value" selected="{{langue}}" class="dropdown-content">
+                                <paper-item value="fr">Français</paper-item>
+                              <paper-item value="en">Anglais</paper-item>
+                          </paper-listbox>
+                    </paper-dropdown-menu>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <vaadin-date-picker i18n="{{dateFormat}}" min="{{dateMin}}" value="{{dateLimite}}" label="Date limite"></vaadin-date-picker>
+                <vaadin-date-picker i18n="{{dateFormat}}" value="{{dateDebut}}" label="Début du projet"></vaadin-date-picker>
+                <vaadin-date-picker i18n="{{dateFormat}}" value="{{dateFin}}" label="Fin du projet"></vaadin-date-picker>
+            </div>
         </div>
         <div class="buttons">
             <paper-button disabled$="{{chargement}}" dialog-dismiss>Annuler</paper-button>
@@ -84,6 +95,14 @@
             value: ''
         },
         dateLimite: {
+            type: String,
+            value: ''
+        },
+        dateDebut: {
+            type: String,
+            value: ''
+        },
+        dateFin: {
             type: String,
             value: ''
         },
@@ -118,13 +137,33 @@
         this.profil = event.detail.projet.profil;
         this.langue = event.detail.projet.langue;
         this.dateLimite =  moment(event.detail.projet.dateLimite, 'x').format('YYYY-MM-DD');
+        this.dateDebut =  moment(event.detail.projet.dateDebut, 'x').format('YYYY-MM-DD');
+        this.dateFin  =  moment(event.detail.projet.dateFin, 'x').format('YYYY-MM-DD');
         this.$.dialog.open();
       },
       _validateForm: function(projet, profil, dateLimite, langue, chargement) {
         return ((projet == '' || profil == '' || dateLimite == '' || langue == '') || chargement == true);
       },
       _modifierProjet: function() {
-        this.$.modificationProjetRequest.body = { nom: this.projet, profil: this.profil, langue: this.langue, dateLimite: moment(this.dateLimite, 'YYYY-MM-DD').format('x') };
+          
+        var dateDebut = false;
+        var dateFin = false;
+          
+        if(this.dateDebut.length > 1) {
+            dateDebut = moment(this.dateDebut, 'YYYY-MM-DD').format('x');
+        }
+        if(this.dateFin.length > 1) {  
+            dateFin = moment(this.dateFin, 'YYYY-MM-DD').format('x');
+        }
+          
+        this.$.modificationProjetRequest.body = { nom: this.projet,
+                                                  profil: this.profil,
+                                                  langue: this.langue,
+                                                  dateLimite: moment(this.dateLimite, 'YYYY-MM-DD').format('x'),
+                                                  dateDebut: dateDebut,
+                                                  dateFin: dateFin
+                                                };
+          
         this.$.modificationProjetRequest.generateRequest();
         this.chargement = true;
       },

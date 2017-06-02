@@ -134,7 +134,8 @@
         return moment(timestamp, 'x').format('DD/MM/YYYY');
     },
     _showBadgeDateLimite: function(dateLimite) {
-        return Date.now() > dateLimite;
+//        return Date.now() > dateLimite;
+        return dateLimite < moment().startOf('day').format('x');
     },
     _getEtatProjet: function(projet) {
         if(projet.etatProjet.enAttente == 0 && projet.etatProjet.enCours == 0 && projet.etatProjet.termine != 0) {

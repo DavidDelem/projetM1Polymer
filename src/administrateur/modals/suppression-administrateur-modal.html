@@ -66,11 +66,13 @@
         this.$.dialog.close();
         this.chargement = false;
           
+        this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Le compte administrateur a été supprimé'}});
         this.fire('iron-signal', {name: 'modal-success'});
       },
       _handleRemoveAdministrateurError: function(error) {
         this.$.dialog.close();
         this.chargement = false;
+        this.fire('iron-signal', {name: 'open-toast', data: {texte: 'Echec lors de la suppression du compte administrateur'}});
       }
         
     });
