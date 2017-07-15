@@ -383,7 +383,7 @@
                                         <div class="row row-champ">
                                             <div class="col-md-12">
                                                 <liste-nationalites nationalites="{{nationalites}}"></liste-nationalites>
-                                                <paper-autocomplete label="Nationalité" source="{{nationalites}}" value="{{item.saisie.nationalite}}" on-value-changed="_saisieNationalite"></paper-autocomplete>
+                                                <paper-autocomplete label="[[localize('biodata-nationalite-selecteur-titre')]]" source="{{nationalites}}" value="{{item.saisie.nationalite}}" on-value-changed="_saisieNationalite"></paper-autocomplete>
                                                 <informations-champ obligatoire="[[item.obligatoire]]" nom="[[item.nom]]" erreurs="[[erreurs]]" language="{{storedData.language}}"></informations-champ>
                                             </div>
                                         </div>
